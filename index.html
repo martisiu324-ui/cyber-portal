@@ -54,6 +54,30 @@
             animation: popInContainer 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        /* LIVE CLOCK MINI DI ATAS BRAND */
+        .mini-clock-box {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #7a5257; /* Merah pudar agar tidak terlalu mencolok */
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px rgba(255, 30, 39, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(15, 5, 8, 0.4);
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 30, 39, 0.05);
+        }
+
+        .mini-clock-box #live-time {
+            color: #ffffff;
+            text-shadow: 0 0 10px var(--neon-red);
+        }
+
         /* HEADER BRAND - MERAH TSURUGI GLOW */
         .portal-brand {
             font-family: 'Orbitron', sans-serif;
@@ -72,7 +96,7 @@
         .portal-subtitle {
             font-family: 'Orbitron', sans-serif;
             font-size: calc(10px + 0.3vw);
-            color: #7a5257; /* Merah pudar */
+            color: #7a5257; 
             letter-spacing: 4px;
             margin-bottom: 40px;
             text-transform: uppercase;
@@ -94,7 +118,7 @@
             background: var(--panel-glass);
             -webkit-backdrop-filter: blur(16px);
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 30, 39, 0.08); /* Border tipis merah */
+            border: 1px solid rgba(255, 30, 39, 0.08); 
             border-radius: 20px;
             padding: 40px 20px;
             cursor: pointer;
@@ -129,11 +153,11 @@
             top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.6);
             width: 100%; height: 100%;
-            background-image: url('gagak.png');
+            background-image: url('https://openclipart.org/image/800px/273180');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            filter: brightness(0) drop-shadow(0 0 15px var(--neon-red)); /* Siluet hitam aura merah menyala */
+            filter: brightness(0) drop-shadow(0 0 15px var(--neon-red)); 
             opacity: 0;
             z-index: -1;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -142,7 +166,7 @@
 
         .menu-card i {
             font-size: 48px;
-            color: #6e5457; /* Warna default redup */
+            color: #6e5457; 
             transition: all 0.4s ease;
         }
 
@@ -155,20 +179,19 @@
             transition: all 0.4s ease;
         }
 
-        /* HOVER KARTU - MEMANCARKAN WARNA MERAH DARAH & GAGAK MUNCUL */
+        /* HOVER KARTU */
         .menu-card:hover {
             transform: translateY(-8px) scale(1.02);
             background: rgba(22, 6, 10, 0.9);
             border-color: var(--neon-red);
         }
 
-        /* Saat di-hover, paksa gagak di dalam kartu ini muncul */
         .menu-card:hover::after {
-            opacity: 0.35; /* Gagak terlihat samar di latar belakang */
+            opacity: 0.35; 
             transform: translate(-50%, -50%) scale(1.15);
         }
 
-        /* Variasi Cahaya Pendaran Tiap Tombol (Tema Dunia Merah) */
+        /* Variasi Cahaya Pendaran Tiap Tombol */
         .card-red:hover { box-shadow: 0 20px 40px rgba(255, 30, 39, 0.35); }
         .card-red:hover i { color: var(--neon-red) !important; filter: drop-shadow(0 0 10px var(--neon-red)); }
         .card-red:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-red); }
@@ -208,7 +231,7 @@
             transform: scale(0.97);
         }
 
-        /* OVERLAY LOADING SCREEN - MARTIS TSUKUYOMI */
+        /* OVERLAY LOADING SCREEN */
         .loading-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -225,7 +248,6 @@
         }
         .loading-overlay.show { opacity: 1; pointer-events: auto; }
 
-        /* TEKS MARTIS DENGAN KILATAN GLITCH MERAH DARAH */
         .martis-loader-text {
             font-family: 'Orbitron', sans-serif;
             font-size: 48px;
@@ -273,13 +295,20 @@
 <body>
 
     <div class="central-container" id="mainMenuLayout">
+        
+        <div class="mini-clock-box">
+            <span id="live-date">MINGGU, 17 MEI 2026</span>
+            <span>•</span>
+            <span id="live-time">12:00:00 AM</span>
+        </div>
+
         <div class="portal-brand">Core System</div>
-        <div class="portal-subtitle">Tsukuyomi Protocol v3.0</div>
+        <div class="portal-subtitle">Digital Dashboard MYT</div>
         
         <div class="menu-grid">
             <div class="menu-card card-red" onclick="bukaProyek('dashboard_elite.html', 'Shinobi Interface')">
                 <i class="material-icons">dashboard</i>
-                <span>Dashboard Digital MYT</span>
+                <span>Shinobi Interface</span>
             </div>
             
             <div class="menu-card card-cyan" onclick="bukaProyek('ngetik.html', 'Martis Typing')">
@@ -318,7 +347,7 @@
         </div>
     </div>
 
-<script>
+    <script>
         const logsMasuk = [
             "Weaving Tsukuyomi signs...",
             "Expanding Genjutsu field...",
@@ -333,7 +362,6 @@
             "WELCOME BACK TO THE RED WORLD!"
         ];
 
-        // 1. FUNGSI UNTUK MEMBUKA SUB-MENU
         function bukaProyek(namaFile, namaMenu) {
             jalankanLoadingAnimation(logsMasuk, () => {
                 const iframe = document.getElementById('portalFrame');
@@ -345,14 +373,11 @@
                     iframe.style.transform = 'scale(1)'; 
                 }, 50);
                 
-                // MENGGUNAKAN SESSION STORAGE (Agar aman saat di-refresh)
                 sessionStorage.setItem('halamanTerakhir', namaFile);
             });
         }
 
-        // 2. FUNGSI UNTUK TOMBOL KEMBALI KE HOME
         function resetPortal() {
-            // Hapus memori halaman terakhir agar kembali bersih ke menu utama
             sessionStorage.removeItem('halamanTerakhir');
             const iframe = document.getElementById('portalFrame');
             iframe.style.opacity = '0';
@@ -366,7 +391,6 @@
             }, 300);
         }
 
-        // 3. MESIN LOADING ANIMATION PROGRESS BAR
         function jalankanLoadingAnimation(databaseLog, callbackSelesai) {
             const loadingScreen = document.getElementById('loadingScreen');
             const loadBar = document.getElementById('loadBar');
@@ -398,12 +422,31 @@
             }, 25);
         }
 
-        // 4. LOGIKA UTAMA: MENANGANI REFRESH VS LINK UTAMA BARU
+        // ENGINE LIVE CLOCK SINKRON LOKASI MALAYSIA/KUALA LUMPUR (12 JAM FORMAT)
+        function jalankanJamRealTime() {
+            const opsiWaktu = { timeZone: 'Asia/Kuala_Lumpur', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const opsiTanggal = { timeZone: 'Asia/Kuala_Lumpur', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+
+            const waktuSekarang = new Date();
+            
+            let teksWaktu = waktuSekarang.toLocaleTimeString('id-ID', opsiWaktu).toUpperCase();
+            let teksTanggal = waktuSekarang.toLocaleDateString('id-ID', opsiTanggal).toUpperCase();
+
+            // Atur pemisah titik dua jadi format standar browser jika ada keanehan sistem lokal
+            teksWaktu = teksWaktu.replace(/\./g, ':');
+
+            document.getElementById('live-time').innerText = teksWaktu;
+            document.getElementById('live-date').innerText = teksTanggal;
+        }
+
+        // LOGIKA UTAMA WINDOW ONLOAD
         window.onload = function() {
-            // Cek apakah ada memori sub-menu yang aktif
+            // Jalankan dan setel interval jam real-time
+            setInterval(jalankanJamRealTime, 1000);
+            jalankanJamRealTime();
+
             const halamanTerakhir = sessionStorage.getItem('halamanTerakhir');
             
-            // KONDISI A: Jika user sedang di dalam sub-menu lalu di-REFRESH, tetap di halaman tersebut
             if (halamanTerakhir) {
                 const iframe = document.getElementById('portalFrame');
                 document.getElementById('mainMenuLayout').style.display = 'none';
@@ -412,7 +455,6 @@
                 iframe.style.transform = 'scale(1)';
                 iframe.src = halamanTerakhir;
             } 
-            // KONDISI B: Jika baru buka link utama di tab baru, paksa kunci di Menu Utama
             else {
                 document.getElementById('mainMenuLayout').style.display = 'block';
                 const iframe = document.getElementById('portalFrame');
@@ -421,5 +463,5 @@
             }
         };
     </script>
-    </body>
+</body>
 </html>
