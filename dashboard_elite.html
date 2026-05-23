@@ -3,30 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Shinobi Interface - Mini Compact Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght=700;900&display=swap" rel="stylesheet">
-    
     <style>
         :root {
-            --sharingan: #ff1e27;       /* Merah Akatsuki Terang Menyala */
-            --sharingan-dark: #b20000;  /* Merah Darah Khas */
-            --void: #020204;            /* Hitam Pekat Tsukuyomi */
-            --panel-glass: rgba(15, 5, 8, 0.75); /* Kaca Gelap Tint Merah Tua */
-            --shadow-glow: rgba(255, 30, 39, 0.25);
-            --text-gray: #a38588;       /* Abu-abu kemerahan pudar */
+            --sharingan: #b20000;
+            --void: #060711;
+            --shadow-glow: rgba(178, 0, 0, 0.25);
+            --text-gray: #a0a0a0;
         }
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
 
         body {
             background-color: var(--void);
-            /* Efek background genjutsu merah-hitam melingkar */
-            background-image: 
-                radial-gradient(circle at center, rgba(255, 30, 39, 0.1) 0%, transparent 70%),
-                radial-gradient(circle at center, #0d0406 0%, #020204 100%);
+            background-image: radial-gradient(circle at center, #190303 0%, #030408 100%);
             margin: 0;
             padding: 0;
             display: flex;
@@ -38,62 +29,24 @@
             user-select: none;
         }
 
-        /* TOMBOL KEMBALI CORE SYSTEM - SEKARANG TEMA MERAH AKATSUKI GLOW */
-        .btn-back {
-            position: fixed; 
-            top: 25px; 
-            left: 25px; 
-            z-index: 10000; 
-            padding: 12px 24px; 
-            background: rgba(15, 5, 8, 0.6); 
-            -webkit-backdrop-filter: blur(12px); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 30, 39, 0.3); 
-            color: #ffffff; 
-            border-radius: 30px; 
-            font-family: 'Orbitron', sans-serif; 
-            font-size: 13px; 
-            font-weight: 700; 
-            letter-spacing: 2px; 
-            cursor: pointer; 
-            box-shadow: 0 0 15px rgba(255, 30, 39, 0.1), inset 0 0 10px rgba(255, 30, 39, 0.1); 
-            transition: all 0.3s cubic-bezier(0.15, 0.85, 0.33, 1); 
-            display: flex; 
-            align-items: center; 
-            gap: 10px;
-            text-shadow: 0 0 8px var(--sharingan);
-        }
-
-        .btn-back:hover {
-            background: rgba(255, 30, 39, 0.15); 
-            border-color: var(--sharingan);
-            box-shadow: 0 0 25px rgba(255, 30, 39, 0.4); 
-            transform: translateY(-2px) scale(1.03);
-            color: #ffffff;
-        }
-
-        /* CARD UTAMA: INTEGRASI KACA AKATSUKI GLASSMORPHISM */
+        /* CARD UTAMA: PADDING DIPANGKAS BIAR PADAT PAS WINDOWS DIKECILIN */
         .dashboard-container {
-            background: var(--panel-glass);
-            -webkit-backdrop-filter: blur(16px);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 30, 39, 0.12);
-            padding: 25px 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85),
-                        0 0 30px rgba(255, 30, 39, 0.15),
-                        inset 0 1px 2px rgba(255, 30, 39, 0.15);
+            background: rgba(10, 3, 3, 0.9);
+            border: 1px solid rgba(178, 0, 0, 0.15);
+            padding: 25px 40px; /* Diperkecil dari 45px 60px */
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9),
+                        0 0 20px var(--shadow-glow);
             position: relative;
             width: 720px;
             max-width: 95%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 18px;
-            animation: fadeInDashboard 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            gap: 18px; /* Jarak antar komponen dipangkas setengahnya agar super rapat */
         }
 
-        /* AKSEN LINE GLOW ATAS NEON MERAH */
+        /* AKSEN LINE GLOW ATAS */
         .dashboard-container::before {
             content: '';
             position: absolute;
@@ -102,29 +55,26 @@
             width: 70%;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--sharingan), transparent);
-            box-shadow: 0 0 12px var(--sharingan);
+            box-shadow: 0 0 8px var(--sharingan);
         }
 
-        /* TAG LOKASI ATAS */
+        /* TAG LOKASI ATAS: DIRAPATKAN MENEMPEL KE JAM */
         .location-tag {
-            font-family: 'Orbitron', sans-serif;
             font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 5px;
-            color: #7a3a3d; /* Merah pudar gahar */
-            margin-bottom: -18px;
-            font-weight: 700;
-            text-shadow: 0 0 5px rgba(255, 30, 39, 0.2);
+            letter-spacing: 6px;
+            color: #5c1e1e;
+            margin-bottom: -18px; /* Menarik teks menempel ke border angka jam */
+            font-weight: 600;
         }
 
-        /* SEKTOR JAM DIGITAL (MERAH GLOWING) */
+        /* SEKTOR JAM DIGITAL (COMPACT LAYOUT) */
         .time-box {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 85px;
-            font-weight: 900;
+            font-size: 85px; /* Sedikit disesuaikan agar pas di mode mini */
+            font-weight: 700;
             color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 30, 39, 0.4),
-                         0 0 25px var(--sharingan);
+            text-shadow: 0 0 8px rgba(178, 0, 0, 0.3),
+                         0 0 20px var(--sharingan);
             letter-spacing: 2px;
             margin: 0;
             line-height: 0.95;
@@ -142,13 +92,12 @@
 
         @keyframes pulseBlink {
             0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
         .ampm-box {
-            font-family: 'Orbitron', sans-serif;
             font-size: 30px;
-            font-weight: 900;
+            font-weight: 800;
             color: var(--sharingan);
             text-shadow: 0 0 15px var(--sharingan);
             margin-left: 10px;
@@ -156,23 +105,21 @@
             padding-bottom: 6px;
         }
 
-        /* TANGGAL MEPEt */
+        /* TANGGAL: MAKIN MEPEt KE BAWAH JAM */
         .date-box {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            margin-top: -12px;
+            font-size: 15px;
+            margin-top: -12px; /* Ditarik ke atas */
             color: var(--text-gray);
             letter-spacing: 3px;
             text-transform: uppercase;
-            font-weight: 700;
-            text-shadow: 0 0 5px rgba(255, 30, 39, 0.1);
+            font-weight: 500;
         }
 
-        /* SEKAT TIPIS MERAH */
+        /* SEKAT TIPIS YANG LEBIH RINGKAS */
         .divider-line {
             width: 100%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 30, 39, 0.25), transparent);
+            background: linear-gradient(90deg, transparent, rgba(178, 0, 0, 0.3), transparent);
             margin: 2px 0;
         }
 
@@ -185,24 +132,23 @@
         }
 
         .ticker-title {
-            font-family: 'Orbitron', sans-serif;
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 4px;
-            color: #7a3a3d;
-            font-weight: 700;
+            color: #5c1e1e;
+            font-weight: 600;
             text-align: left;
             padding-left: 2px;
         }
 
         .ticker-container {
             width: 100%;
-            background: #050203;
-            border: 1px solid rgba(255, 30, 39, 0.25);
-            border-radius: 8px;
+            background: #020307;
+            border: 1px solid rgba(178, 0, 0, 0.3);
+            border-radius: 5px;
             overflow: hidden;
-            padding: 10px 0;
-            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9);
+            padding: 10px 0; /* Ketebalan box dikurangi agar hemat space */
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
             display: flex;
         }
 
@@ -211,10 +157,11 @@
             padding-left: 100%;
             display: inline-block;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 17px;
+            font-size: 17px; /* Sedikit dikecilkan agar teks panjangnya ga gampang kepotong border */
             font-weight: bold;
             color: #ffffff;
-            text-shadow: 0 0 8px rgba(255, 30, 39, 0.5), 0 0 15px var(--sharingan);
+            text-shadow: 0 0 8px rgba(178, 0, 0, 0.4), 0 0 12px var(--sharingan);
+            
             animation-name: loopMulusMurni;
             animation-timing-function: linear;
             animation-iteration-count: infinite;
@@ -225,48 +172,51 @@
             0% { transform: translate3d(0, 0, 0); }
             100% { transform: translate3d(-100%, 0, 0); }
         }
-
-        @keyframes fadeInDashboard {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
-        }
     </style>
 </head>
 <body>
-
-<button onclick="kembaliKeHome()" class="btn-back">
-    <span>⟵</span> CORE SYSTEM
+<button onclick="kembaliKeHome()" style="position: fixed; top: 25px; left: 25px; z-index: 10000; padding: 12px 22px; background: rgba(6, 7, 17, 0.6); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(0, 210, 255, 0.4); color: #00d2ff; border-radius: 30px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1px; cursor: pointer; box-shadow: 0 0 15px rgba(0, 210, 255, 0.15), inset 0 0 10px rgba(0, 210, 255, 0.1); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;" onmouseover="this.style.background='rgba(0, 210, 255, 0.2)'; this.style.boxShadow='0 0 25px rgba(0, 210, 255, 0.4)'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='rgba(6, 7, 17, 0.6)'; this.style.boxShadow='0 0 15px rgba(0, 210, 255, 0.15)'; this.style.transform='scale(1)'">
+    <span style="font-size: 16px;">⟵</span> CORE SYSTEM
 </button>
 
-<div class="dashboard-container">
-    <div class="location-tag">MALAYSIA &bull; KUALA LUMPUR MYT</div>
-    
-    <div class="time-box">
-        <span id="txt-jam">10</span><span class="dots">:</span><span id="txt-menit">00</span><span class="dots">:</span><span id="txt-detik">00</span>
-        <span id="txt-ampm" class="ampm-box">AM</span>
-    </div>
-    
-    <div class="date-box" id="txt-tanggal">MINGGU, 17 MEI 2026</div>
+<script>
+function kembaliKeHome() {
+    window.parent.resetPortal();
+}
+</script>
 
-    <div class="divider-line"></div>
+<script>
+function kembaliKeHome() {
+    // Fungsi ajaib untuk menyuruh layar utama (parent) me-refresh diri dan kembali ke home
+    window.parent.resetPortal();
+}
+</script>
 
-    <div class="ticker-wrapper">
-        <div class="ticker-title">KATA KATA HARI INI</div>
-        <div class="ticker-container">
-            <div class="ticker-text">
-                12 JAM DUDUK DISITU NGAPAIN AJA?... &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                ADA YANG BISA BANTU JELASKAN? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                YANG GA ADA SECOND DAILY, NOMINAL, DAN CLOSING, SEMUANYA LEMBUR 2 JAM
+    <div class="dashboard-container">
+        <div class="location-tag">MALAYSIA &bull; KUALA LUMPUR MYT</div>
+        
+        <div class="time-box">
+            <span id="txt-jam">10</span><span class="dots">:</span><span id="txt-menit">00</span><span class="dots">:</span><span id="txt-detik">00</span>
+            <span id="txt-ampm" class="ampm-box">AM</span>
+        </div>
+        
+        <div class="date-box" id="txt-tanggal">MINGGU, 17 MEI 2026</div>
+
+        <div class="divider-line"></div>
+
+        <div class="ticker-wrapper">
+            <div class="ticker-title">KATA KATA HARI INI</div>
+            <div class="ticker-container">
+                <div class="ticker-text">
+                    12 JAM DUDUK DISITU NGAPAIN AJA?... &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    ADA YANG BISA BANTU JELASKAN? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    YANG GA ADA SECOND DAILY, NOMINAL, DAN CLOSING, SEMUANYA LEMBUR 2 JAM
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <script>
-    function kembaliKeHome() {
-        window.parent.resetPortal();
-    }
-
     // ENGINE JAM 12 JAM MALAYSIA
     function refreshJamMalaysia() {
         const opsiWaktu = { timeZone: 'Asia/Kuala_Lumpur', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -298,7 +248,7 @@
         const teks = document.querySelector('.ticker-text');
         if (teks) {
             const lebarTeksAsli = teks.offsetWidth;
-            const setelanKecepatan = 80;
+            const setelanKecepatan = 80; // Disesuaikan agar pas dengan resolusi kecil
             const durasiFinal = lebarTeksAsli / setelanKecepatan;
             teks.style.animationDuration = `${durasiFinal}s`;
         }
