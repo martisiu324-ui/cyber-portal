@@ -8,14 +8,15 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
+        /* PALET WARNA AKATSUKI / GENJUTSU TOTAL */
         :root {
-            --bg-dark: #030408;
-            --panel-glass: rgba(6, 9, 22, 0.55);
-            --neon-red: #ff3838;
-            --neon-cyan: #00f3ff;
-            --neon-purple: #b538ff;
-            --neon-orange: #ff9f43;
-            --neon-blue: #00a2ff;
+            --bg-dark: #020204;
+            --panel-glass: rgba(15, 5, 8, 0.65); /* Kaca gelap dengan tint merah tua */
+            --neon-red: #ff1e27;      /* Merah Akatsuki Utama */
+            --neon-crimson: #9e0006;  /* Merah Darah Gelap */
+            --neon-purple: #7000ad;   /* Ungu Genjutsu */
+            --neon-orange: #ff5500;   /* Jingga Api */
+            --neon-gold: #ffaa00;
         }
 
         * {
@@ -26,10 +27,11 @@
 
         body {
             background-color: var(--bg-dark);
+            /* Background Dunia Genjutsu (Merah & Hitam) */
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(181, 56, 255, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at center, #070913 0%, #020306 100%);
+                radial-gradient(circle at 10% 20%, rgba(255, 30, 39, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(112, 0, 173, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at center, #0d0406 0%, #020204 100%);
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: #ffffff;
             min-height: 100vh;
@@ -41,7 +43,7 @@
             padding: 20px;
         }
 
-        /* CONTAINER UTAMA - MENGIKUTI UKURAN LAYAR secara OTOMATIS */
+        /* CONTAINER UTAMA */
         .central-container {
             width: 100%;
             max-width: 1200px;
@@ -52,16 +54,17 @@
             animation: popInContainer 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* HEADER BRAND */
+        /* HEADER BRAND - MERAH TSURUGI GLOW */
         .portal-brand {
             font-family: 'Orbitron', sans-serif;
-            font-size: calc(24px + 2vw); /* Ukuran teks fleksibel ikut layar */
+            font-size: calc(24px + 2vw);
             font-weight: 900;
-            letter-spacing: 6px;
-            background: linear-gradient(135deg, #ffffff 30%, var(--neon-cyan));
-         -webkit-background-clip: text;
-    background-clip: text; /* <--- Tambahkan baris standar ini di bawahnya */
-    -webkit-text-fill-color: transparent;            text-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, #ffffff 20%, var(--neon-red) 80%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(255, 30, 39, 0.55);
             margin-bottom: 8px;
             text-transform: uppercase;
         }
@@ -69,29 +72,29 @@
         .portal-subtitle {
             font-family: 'Orbitron', sans-serif;
             font-size: calc(10px + 0.3vw);
-            color: #4b586e;
+            color: #7a5257; /* Merah pudar */
             letter-spacing: 4px;
             margin-bottom: 40px;
             text-transform: uppercase;
             font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 30, 39, 0.2);
         }
 
-        /* GRID RESPONSIF TOTAL */
+        /* GRID MENU RESPONSIF */
         .menu-grid {
             display: grid;
-            /* Membuat kolom otomatis membesar/mengecil sesuai lebar layar */
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 25px;
             margin-bottom: 40px;
             width: 100%;
         }
 
-        /* KARTU MENU GLASSMORPHISM */
+        /* KARTU MENU AKATSUKI GLASSMORPHISM */
         .menu-card {
             background: var(--panel-glass);
             -webkit-backdrop-filter: blur(16px);
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 30, 39, 0.08); /* Border tipis merah */
             border-radius: 20px;
             padding: 40px 20px;
             cursor: pointer;
@@ -99,58 +102,47 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            position: relative; /* Wajib sebagai jangkar posisi gagak */
+            position: relative;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.15, 0.85, 0.33, 1);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 30, 39, 0.1);
             text-decoration: none;
-            z-index: 1; /* Supaya teks & ikon berada di lapisan atas */
-        }
-/* EFEK MUNCUL GAGAK ITACHI DI DALAM KOTAK SAAT DI-HOVER */
-        .menu-card::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.6); /* Mulai dari ukuran agak kecil */
-            width: 100%;
-            height: 100%;
-            
-            /* URL GAMBAR SILUET GAGAK TRANSPARAN */
-            background-image: url('gagak.png');
-            
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            
-            /* Mengubah gambar jadi siluet hitam pekat + aura ungu genjutsu */
-            filter: brightness(0) drop-shadow(0 0 15px rgba(181, 56, 255, 0.6));
-            
-            opacity: 0; /* Normalnya tersembunyi */
-            z-index: -1; /* Berada di belakang ikon dan tulisan menu */
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek pop-out membal */
-            pointer-events: none;
+            z-index: 1;
         }
 
-        /* TRIGGER SAAT KOTAK MENU DI-HOVER */
-        .menu-card:hover::after {
-            opacity: 0.25; /* Transparansi gagak biar ikon & teks di depannya tetap kelihatan jelas */
-            transform: translate(-50%, -50%) scale(1.1); /* Gagak mengepak membesar */
-        }
-                .menu-card::before {
+        /* Efek kilatan merah saat di-hover */
+        .menu-card::before {
             content: '';
             position: absolute;
             top: 0; left: -100%;
             width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent);
+            background: linear-gradient(to right, transparent, rgba(255, 30, 39, 0.15), transparent);
             transform: skewX(-25deg);
             transition: 0.7s;
         }
         .menu-card:hover::before { left: 150%; }
 
+        /* GAGAK ITACHI BERSEMBUNYI DI SETIAP KARTU */
+        .menu-card::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.6);
+            width: 100%; height: 100%;
+            background-image: url('gagak.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: brightness(0) drop-shadow(0 0 15px var(--neon-red)); /* Siluet hitam aura merah menyala */
+            opacity: 0;
+            z-index: -1;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
         .menu-card i {
             font-size: 48px;
-            color: #525f7a;
+            color: #6e5457; /* Warna default redup */
             transition: all 0.4s ease;
         }
 
@@ -159,62 +151,69 @@
             font-size: 14px;
             font-weight: 700;
             letter-spacing: 1px;
-            color: #8c99b4;
+            color: #a38588;
             transition: all 0.4s ease;
         }
 
-        /* EFEK HOVER INDIVIDU */
+        /* HOVER KARTU - MEMANCARKAN WARNA MERAH DARAH & GAGAK MUNCUL */
         .menu-card:hover {
-            transform: translateY(-8px) scale(1.02) rotateX(3deg);
-            background: rgba(10, 14, 31, 0.8);
-            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(22, 6, 10, 0.9);
+            border-color: var(--neon-red);
         }
 
-        .card-red:hover { box-shadow: 0 20px 40px rgba(255, 56, 56, 0.22); }
+        /* Saat di-hover, paksa gagak di dalam kartu ini muncul */
+        .menu-card:hover::after {
+            opacity: 0.35; /* Gagak terlihat samar di latar belakang */
+            transform: translate(-50%, -50%) scale(1.15);
+        }
+
+        /* Variasi Cahaya Pendaran Tiap Tombol (Tema Dunia Merah) */
+        .card-red:hover { box-shadow: 0 20px 40px rgba(255, 30, 39, 0.35); }
         .card-red:hover i { color: var(--neon-red) !important; filter: drop-shadow(0 0 10px var(--neon-red)); }
         .card-red:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-red); }
 
-        .card-cyan:hover { box-shadow: 0 20px 40px rgba(0, 243, 255, 0.22); }
-        .card-cyan:hover i { color: var(--neon-cyan) !important; filter: drop-shadow(0 0 10px var(--neon-cyan)); }
-        .card-cyan:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-cyan); }
+        .card-cyan:hover { box-shadow: 0 20px 40px rgba(255, 30, 39, 0.35); }
+        .card-cyan:hover i { color: var(--neon-red) !important; filter: drop-shadow(0 0 10px var(--neon-red)); }
+        .card-cyan:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-red); }
 
-        .card-purple:hover { box-shadow: 0 20px 40px rgba(181, 56, 255, 0.22); }
+        .card-purple:hover { box-shadow: 0 20px 40px rgba(112, 0, 173, 0.4); }
         .card-purple:hover i { color: var(--neon-purple) !important; filter: drop-shadow(0 0 10px var(--neon-purple)); }
         .card-purple:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-purple); }
 
-        .card-orange:hover { box-shadow: 0 20px 40px rgba(255, 159, 67, 0.22); }
+        .card-orange:hover { box-shadow: 0 20px 40px rgba(255, 85, 0, 0.4); }
         .card-orange:hover i { color: var(--neon-orange) !important; filter: drop-shadow(0 0 10px var(--neon-orange)); }
         .card-orange:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-orange); }
 
-        .card-blue:hover { box-shadow: 0 20px 40px rgba(0, 162, 255, 0.22); }
-        .card-blue:hover i { color: var(--neon-blue) !important; filter: drop-shadow(0 0 10px var(--neon-blue)); }
-        .card-blue:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-blue); }
+        .card-blue:hover { box-shadow: 0 20px 40px rgba(255, 170, 0, 0.4); }
+        .card-blue:hover i { color: var(--neon-gold) !important; filter: drop-shadow(0 0 10px var(--neon-gold)); }
+        .card-blue:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-gold); }
 
         .central-footer {
             font-family: 'Orbitron', sans-serif;
             font-size: 10px;
-            color: #313b4d;
+            color: #54363a;
             letter-spacing: 2px;
         }
 
-        /* IFRAME FULLSCREEN */
+        /* IFRAME JENDELA KONTEN */
         .content-frame {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
             border: none;
             z-index: 9999;
-            background: #020306;
+            background: #020204;
             transition: all 0.5s ease-in-out;
             transform: scale(0.97);
         }
 
-        /* SUPER KEREN MARTIS LOADING OVERLAY */
+        /* OVERLAY LOADING SCREEN - MARTIS TSUKUYOMI */
         .loading-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: #020306;
+            background: #020204;
             z-index: 10000;
             display: flex;
             flex-direction: column;
@@ -226,7 +225,7 @@
         }
         .loading-overlay.show { opacity: 1; pointer-events: auto; }
 
-        /* MARTIS GLITCH NEON TEXT EFFECT */
+        /* TEKS MARTIS DENGAN KILATAN GLITCH MERAH DARAH */
         .martis-loader-text {
             font-family: 'Orbitron', sans-serif;
             font-size: 48px;
@@ -236,36 +235,33 @@
             margin-bottom: 20px;
             text-transform: uppercase;
             position: relative;
-            text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple), 0 0 40px var(--neon-purple);
-            animation: martisGlow 2s infinite alternate, martisGlitch 1.5s infinite;
+            text-shadow: 0 0 15px var(--neon-red), 0 0 30px var(--neon-crimson);
+            animation: martisGlow 1.5s infinite alternate, martisGlitch 1.2s infinite;
         }
 
         .loading-log { 
             font-family: 'Orbitron', sans-serif; 
             font-size: 11px; 
-            color: #525f7a; 
+            color: #734f53; 
             letter-spacing: 2px; 
             margin-bottom: 25px; 
             height: 15px; 
         }
 
-        .progress-container { width: 300px; max-width: 80%; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(181, 56, 255, 0.2); padding: 4px; border-radius: 30px; }
-        .progress-bar { height: 5px; width: 0%; background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan)); border-radius: 30px; box-shadow: 0 0 15px var(--neon-purple); }
+        .progress-container { width: 300px; max-width: 80%; background: rgba(255, 30, 39, 0.02); border: 1px solid rgba(255, 30, 39, 0.2); padding: 4px; border-radius: 30px; }
+        .progress-bar { height: 5px; width: 0%; background: linear-gradient(90deg, var(--neon-crimson), var(--neon-red)); border-radius: 30px; box-shadow: 0 0 15px var(--neon-red); }
 
-        /* ANIMASI EFEK NYALA MARTIS */
         @keyframes martisGlow {
-            0% { text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple); color: #fff; }
-            100% { text-shadow: 0 0 20px var(--neon-red), 0 0 40px var(--neon-red), 0 0 60px var(--neon-purple); color: #f5f5f5; }
+            0% { text-shadow: 0 0 15px var(--neon-red), 0 0 25px var(--neon-crimson); color: #fff; }
+            100% { text-shadow: 0 0 25px var(--neon-red), 0 0 50px var(--neon-red); color: #ececec; }
         }
 
         @keyframes martisGlitch {
             0%, 100% { transform: skew(0deg); }
-            20% { transform: skew(-3deg); }
-            23% { transform: skew(4deg); }
-            25% { opacity: 0.9; }
-            26% { opacity: 1; }
-            70% { transform: skew(1deg); }
-            72% { transform: skew(-4deg); }
+            20% { transform: skew(-4deg); opacity: 0.8; }
+            23% { transform: skew(5deg); opacity: 1; }
+            70% { transform: skew(2deg); }
+            72% { transform: skew(-3deg); }
         }
 
         @keyframes popInContainer {
@@ -278,7 +274,7 @@
 
     <div class="central-container" id="mainMenuLayout">
         <div class="portal-brand">Core System</div>
-        <div class="portal-subtitle">Cyber Shinobi Portal v2.5</div>
+        <div class="portal-subtitle">Tsukuyomi Protocol v3.0</div>
         
         <div class="menu-grid">
             <div class="menu-card card-red" onclick="bukaProyek('dashboard_elite.html', 'Shinobi Interface')">
@@ -308,7 +304,7 @@
         </div>
 
         <div class="central-footer">
-            SYSTEM STATUS: ONLINE // SECURE PROTOCOL ACTIVE
+            GENJUTSU OVERLAY ACTIVE // INFINITE TSUKUYOMI DEPLOYED
         </div>
     </div>
 
@@ -316,26 +312,25 @@
 
     <div class="loading-overlay" id="loadingScreen">
         <div class="martis-loader-text">MARTIS</div>
-        <div class="loading-log" id="loadingLog">Menghubungkan jaringan core...</div>
+        <div class="loading-log" id="loadingLog">Casting Genjutsu spell...</div>
         <div class="progress-container">
             <div class="progress-bar" id="loadBar"></div>
         </div>
     </div>
 
     <script>
-        // Log Berjalan saat masuk/keluar menu
         const logsMasuk = [
-            "Bypassing mainframe firewall...",
-            "Decrypting secure shinobi nodes...",
-            "Injecting neon plasma protocol...",
-            "ACCESS GRANTED. OVERRIDING SYSTEM!"
+            "Weaving Tsukuyomi signs...",
+            "Expanding Genjutsu field...",
+            "Overriding optic receptors...",
+            "TARGET TRAPPED. ACCESSING MEMORY!"
         ];
 
         const logsKeluar = [
-            "Disconnecting current node...",
-            "Cleaning secure data tracks...",
-            "Rebuilding Core System UI...",
-            "WELCOME BACK TO CENTRAL SYSTEM!"
+            "Releasing current genjutsu...",
+            "Restoring neural data streams...",
+            "Rebuilding Akatsuki Core UI...",
+            "WELCOME BACK TO THE RED WORLD!"
         ];
 
         function bukaProyek(namaFile, namaMenu) {
@@ -352,11 +347,8 @@
             });
         }
 
-        // FUNGSI UTAMA: UNTUK RESET KEMBALI KE HOME DENGAN LOADING MARTIS
         function resetPortal() {
             localStorage.removeItem('halamanTerakhir');
-            
-            // Tampilkan loading screen dulu saat proses kembali
             const iframe = document.getElementById('portalFrame');
             iframe.style.opacity = '0';
             iframe.style.transform = 'scale(0.97)';
@@ -364,12 +356,11 @@
             setTimeout(() => {
                 iframe.style.display = 'none';
                 jalankanLoadingAnimation(logsKeluar, () => {
-                    location.reload(); // Memuat ulang halaman utama ke menu tengah
+                    location.reload();
                 });
             }, 300);
         }
 
-        // Mesin Penggerak Animasi Progress Bar Loading
         function jalankanLoadingAnimation(databaseLog, callbackSelesai) {
             const loadingScreen = document.getElementById('loadingScreen');
             const loadBar = document.getElementById('loadBar');
@@ -401,16 +392,16 @@
             }, 25);
         }
 
+        // PERBAIKAN LOGIKA UTAMA DI SINI
         window.onload = function() {
-            const halamanTerakhir = localStorage.getItem('halamanTerakhir');
-            if (halamanTerakhir) {
-                const iframe = document.getElementById('portalFrame');
-                document.getElementById('mainMenuLayout').style.display = 'none';
-                iframe.style.display = 'block';
-                iframe.style.opacity = '1';
-                iframe.style.transform = 'scale(1)';
-                iframe.src = halamanTerakhir;
-            }
+            // Begitu link dibuka, paksa bersihkan memori halaman terakhir agar selalu kembali ke menu utama
+            localStorage.removeItem('halamanTerakhir');
+            
+            // Pastikan layout menu utama tampil kokoh di tengah
+            document.getElementById('mainMenuLayout').style.display = 'block';
+            const iframe = document.getElementById('portalFrame');
+            iframe.style.display = 'none';
+            iframe.src = "";
         };
     </script>
 </body>
