@@ -290,6 +290,144 @@
             from { opacity: 0; transform: translateY(30px) scale(0.97); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
+
+        /* STYLING DIALOG MODAL PASSWORD */
+        .crypto-modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(2, 2, 4, 0.85);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            z-index: 10005;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .crypto-modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .crypto-modal-box {
+            background: rgba(20, 8, 12, 0.9);
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 35px rgba(112, 0, 173, 0.4), inset 0 0 15px rgba(112, 0, 173, 0.2);
+            border-radius: 24px;
+            padding: 35px 30px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            transform: scale(0.85) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .crypto-modal-overlay.show .crypto-modal-box {
+            transform: scale(1) translateY(0);
+        }
+        .modal-lock-icon {
+            font-size: 55px !important;
+            color: var(--neon-purple);
+            text-shadow: 0 0 15px var(--neon-purple);
+            margin-bottom: 15px;
+            animation: pulseGlow 2s infinite alternate;
+        }
+        .modal-lock-icon.error-state {
+            color: var(--neon-red) !important;
+            text-shadow: 0 0 20px var(--neon-red) !important;
+            animation: shakeError 0.4s ease-in-out;
+        }
+        .crypto-modal-box h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+        .crypto-modal-box p {
+            font-size: 13px;
+            color: #a38588;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            transition: color 0.3s ease;
+        }
+        /* Style teks dinamis ketika password salah */
+        .crypto-modal-box p.error-text {
+            color: var(--neon-red) !important;
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(255, 30, 39, 0.4);
+        }
+        #cyberPasswordInput {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(112, 0, 173, 0.4);
+            padding: 14px 20px;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            font-size: 14px;
+            letter-spacing: 4px;
+            outline: none;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+        #cyberPasswordInput:focus {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 12px rgba(112, 0, 173, 0.5), inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+        #cyberPasswordInput.error-field {
+            border-color: var(--neon-red) !important;
+            box-shadow: 0 0 12px rgba(255, 30, 39, 0.5) !important;
+        }
+        .modal-btn-group {
+            display: flex;
+            gap: 15px;
+        }
+        .modal-btn-group button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            color: #a38588;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .btn-confirm {
+            background: linear-gradient(135deg, var(--neon-purple), #a800ff);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(112, 0, 173, 0.4);
+        }
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(112, 0, 173, 0.6);
+        }
+        
+        @keyframes pulseGlow {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--neon-purple)); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 0 20px #a800ff); }
+        }
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
     </style>
 </head>
 <body>
@@ -316,7 +454,8 @@
                 <span>Tes Typing</span>
             </div>
             
-            <div class="menu-card card-purple" onclick="bukaProyek('Martispanel.html', 'Details Last Product')">
+            <div class="menu-card card-purple" onclick="bukaProyek('Martispanel.html', 'Details Last Product')" style="position: relative;">
+                <i class="material-icons" style="position: absolute; top: 15px; right: 15px; font-size: 18px; color: var(--neon-purple); opacity: 0.7;">lock</i>
                 <i class="material-icons">verified_user</i>
                 <span>Details Last Product</span>
             </div>
@@ -347,7 +486,22 @@
         </div>
     </div>
 
-<script>
+    <div class="crypto-modal-overlay" id="passwordModal">
+        <div class="crypto-modal-box">
+            <i class="material-icons modal-lock-icon" id="modalIcon">security</i>
+            <h3>Akses Terkunci</h3>
+            <p id="modalHintText">Masukkan kunci chakra untuk mendekripsi data Martis Panel.</p>
+            
+            <input type="password" id="cyberPasswordInput" placeholder="ENTER ACCESS KEY..." autocomplete="off">
+            
+            <div class="modal-btn-group">
+                <button class="btn-cancel" onclick="tutupModalPassword()">Batal</button>
+                <button class="btn-confirm" onclick="konfirmasiPassword()">Akses</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
         const logsMasuk = [
             "Weaving Tsukuyomi signs...",
             "Expanding Genjutsu field...",
@@ -361,8 +515,34 @@
             "Rebuilding Akatsuki Core UI...",
             "WELCOME BACK TO THE RED WORLD!"
         ];
+        
+        let fileAntrean = "";
 
+        // ENGINE ROUTER MENU NAVIGASI
         function bukaProyek(namaFile, namaMenu) {
+            if (namaFile === 'Martispanel.html') {
+                fileAntrean = namaFile; 
+                
+                // Kembalikan ke tampilan normal bawaan
+                const hintText = document.getElementById('modalHintText');
+                const modalIcon = document.getElementById('modalIcon');
+                const passwordInput = document.getElementById('cyberPasswordInput');
+                
+                hintText.innerText = "Masukkan kunci chakra untuk mendekripsi data Martis Panel.";
+                hintText.classList.remove('error-text');
+                modalIcon.classList.remove('error-state');
+                passwordInput.classList.remove('error-field');
+                passwordInput.value = ""; 
+
+                document.getElementById('passwordModal').classList.add('show'); 
+                setTimeout(() => { passwordInput.focus(); }, 400);
+                return; 
+            }
+            eksekusiBukaProyek(namaFile);
+        }
+
+        // EKSEKUSI ANIMASI TRANSISI MENU 
+        function eksekusiBukaProyek(namaFile) {
             jalankanLoadingAnimation(logsMasuk, () => {
                 const iframe = document.getElementById('portalFrame');
                 document.getElementById('mainMenuLayout').style.display = 'none';
@@ -377,6 +557,7 @@
             });
         }
 
+        // LOGOUT & KEMBALI KE PORTAL UTAMA
         function resetPortal() {
             sessionStorage.removeItem('halamanTerakhir');
             const iframe = document.getElementById('portalFrame');
@@ -391,6 +572,39 @@
             }, 300);
         }
 
+        // VALIDASI CHAKRA KEY / PASSWORD DI DALAM MODAL
+        function konfirmasiPassword() {
+            const passwordBenar = "martis420"; // SILAKAN GANTI PASSWORD KAMU DI SINI
+            const passwordInput = document.getElementById('cyberPasswordInput');
+            const hintText = document.getElementById('modalHintText');
+            const modalIcon = document.getElementById('modalIcon');
+
+            if (passwordInput.value === passwordBenar) {
+                document.getElementById('passwordModal').classList.remove('show');
+                eksekusiBukaProyek(fileAntrean);
+            } else {
+                // EFEK ERROR REAL-TIME DI LAYAR MODAL (TANPA BROWSER ALERT)
+                modalIcon.classList.remove('error-state');
+                void modalIcon.offsetWidth; // Memicu ulang trigger animasi css shake
+                
+                modalIcon.classList.add('error-state');
+                passwordInput.classList.add('error-field');
+                
+                // Mengubah teks instruksi menjadi peringatan bergaya cyberpunk inggris
+                hintText.innerText = "ACCESS DENIED: Invalid Chakra Key!";
+                hintText.classList.add('error-text');
+                
+                passwordInput.value = "";
+                passwordInput.focus();
+            }
+        }
+
+        function tutupModalPassword() {
+            document.getElementById('passwordModal').classList.remove('show');
+            fileAntrean = "";
+        }
+
+        // ANIMASI LOADING OVERLAY CONTROLLER
         function jalankanLoadingAnimation(databaseLog, callbackSelesai) {
             const loadingScreen = document.getElementById('loadingScreen');
             const loadBar = document.getElementById('loadBar');
@@ -422,7 +636,7 @@
             }, 25);
         }
 
-        // ENGINE LIVE CLOCK SINKRON LOKASI MALAYSIA/KUALA LUMPUR (12 JAM FORMAT)
+        // LIVE JAM KUALA LUMPUR INTERACTION
         function jalankanJamRealTime() {
             const opsiWaktu = { timeZone: 'Asia/Kuala_Lumpur', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
             const opsiTanggal = { timeZone: 'Asia/Kuala_Lumpur', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
@@ -438,16 +652,14 @@
             document.getElementById('live-date').innerText = teksTanggal;
         }
 
-        // LOGIKA UTAMA WINDOW ONLOAD (FIXED: LOADING TETAP ADA DI SETIAP FITUR, NO DOUBLE LOADING)
+        // BINDING UTAMA SELEPAS WINDOW SELESAI DIMUAT
         window.onload = function() {
-            // Jalankan dan setel interval jam real-time
             setInterval(jalankanJamRealTime, 1000);
             jalankanJamRealTime();
 
             const halamanTerakhir = sessionStorage.getItem('halamanTerakhir');
-            const sudahLoginAwal = sessionStorage.getItem('sudahLoginAwal'); // Cek status login pertama kali
+            const sudahLoginAwal = sessionStorage.getItem('sudahLoginAwal'); 
             
-            // Log khusus untuk loading masuk pertama kali selama 3 detik
             const logsLogin = [
                 "Connecting to Cyber Shinobi Network...",
                 "Authenticating chakra signature...",
@@ -456,7 +668,6 @@
             ];
 
             if (halamanTerakhir) {
-                // Jika user refresh saat di dalam jendela/iframe proyek, biarkan tetap di sana
                 const iframe = document.getElementById('portalFrame');
                 document.getElementById('mainMenuLayout').style.display = 'none';
                 iframe.style.display = 'block';
@@ -465,28 +676,29 @@
                 iframe.src = halamanTerakhir;
             } 
             else {
-                // Skenario 1: Jika benar-benar baru pertama kali klik link utama
                 if (!sudahLoginAwal) {
                     document.getElementById('mainMenuLayout').style.display = 'none';
                     const iframe = document.getElementById('portalFrame');
                     iframe.style.display = 'none';
                     iframe.src = "";
 
-                    // Jalankan loading login bawaan (sekitar 3 detik)
                     jalankanLoadingAnimation(logsLogin, () => {
                         document.getElementById('mainMenuLayout').style.display = 'block';
-                        sessionStorage.setItem('sudahLoginAwal', 'true'); // Kunci status agar tidak double saat ditekan tombol keluar
+                        sessionStorage.setItem('sudahLoginAwal', 'true'); 
                     });
                 } 
-                // Skenario 2: Jika kembali dari jendela proyek (efek reload dari fungsi resetPortal)
                 else {
-                    // Langsung tampilkan menu utama secara instan karena user BARU SAJA melihat 'logsKeluar' sebelum reload
                     document.getElementById('mainMenuLayout').style.display = 'block';
                     const iframe = document.getElementById('portalFrame');
                     iframe.style.display = 'none';
                     iframe.src = "";
                 }
             }
+
+            // Integrasi tombol Enter key saat mengetik password
+            document.getElementById('cyberPasswordInput').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') konfirmasiPassword();
+            });
         };
     </script>
 </body>
