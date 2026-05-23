@@ -605,7 +605,7 @@
         }
 
         // ANIMASI LOADING OVERLAY CONTROLLER
-        function jalankanLoadingAnimation(databaseLog, callbackSelesai) {
+function jalankanLoadingAnimation(databaseLog, callbackSelesai, isSlow = false) {
             const loadingScreen = document.getElementById('loadingScreen');
             const loadBar = document.getElementById('loadBar');
             const loadingLog = document.getElementById('loadingLog');
@@ -615,8 +615,15 @@
             loadingScreen.classList.add('show');
 
             let persen = 0;
+            
+            // Jika isSlow bernilai true, angka penambahannya kecil (0.8 - 2.3) sehingga loading jadi jauh lebih lama
+            // Jika false, tetap menggunakan kecepatan normal bawaan kamu yang cepat.
             let intervalLoading = setInterval(() => {
-                persen += Math.floor(Math.random() * 8) + 4;
+                if (isSlow) {
+                    persen += (Math.random() * 1.5) + 0.8; 
+                } else {
+                    persen += Math.floor(Math.random() * 8) + 4;
+                }
                 
                 if (persen >= 100) {
                     persen = 100;
@@ -633,7 +640,7 @@
                     if (persen > 25 && persen <= 55) loadingLog.innerText = databaseLog[1];
                     else if (persen > 55 && persen <= 85) loadingLog.innerText = databaseLog[2];
                 }
-            }, 25);
+            }, 25); // Kecepatan interval tetap 25ms agar pergerakan bar tetap halus
         }
 
         // LIVE JAM KUALA LUMPUR INTERACTION
@@ -682,10 +689,11 @@
                     iframe.style.display = 'none';
                     iframe.src = "";
 
+                    // DI SINI PERUBAHANNYA: Ditambahkan argumen 'true' di akhir agar loading pertama ini berjalan lama
                     jalankanLoadingAnimation(logsLogin, () => {
                         document.getElementById('mainMenuLayout').style.display = 'block';
                         sessionStorage.setItem('sudahLoginAwal', 'true'); 
-                    });
+                    }, true); 
                 } 
                 else {
                     document.getElementById('mainMenuLayout').style.display = 'block';
@@ -700,6 +708,7 @@
                 if (e.key === 'Enter') konfirmasiPassword();
             });
         };
-    </script>
+        
+        </script>
 </body>
 </html>
