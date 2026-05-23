@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6-Stage Accurate Tsukuyomi Evolution with Silhouette & Scroll Control</title>
+    <style>
+        /* Reset & Background */
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle, #1a0000 0%, #050000 70%, #000000 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        .instruction {
+            color: #fff;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            font-size: 13px;
+            opacity: 0.6;
+            text-transform: uppercase;
+            user-select: none;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+            text-align: center;
+        }
+
+        /* ===================================================
+            EFEK KILATAN GENJUTSU
+        =================================================== */
+        .flash-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .flash-mangekyou {
+            background-color: #ffffff;
+            animation: flashMangekyouAnim 0.4s ease-out forwards;
+        }
+
+        .flash-tsukuyomi {
+            background: radial-gradient(circle, #ffffff 0%, #ff1e1e 60%, #4a0000 100%);
+            animation: flashTsukuyomiAnim 0.9s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
+        }
+
+        @keyframes flashMangekyouAnim {
+            0% { opacity: 0; }
+            20% { opacity: 0.85; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes flashTsukuyomiAnim {
+            0% { opacity: 0; transform: scale(1.2); }
+            12% { opacity: 1; transform: scale(1); }
+            40% { opacity: 0.95; }
+            100% { opacity: 0; }
+        }
+
+        /* Canvas khusus Gagak */
+        #crowCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* CONTAINER FILTER FLUIDA API */
+        .fire-filter-container {
+           position: absolute; top: 0; left: 0;
+           width: 100vw; height: 100vh;
+           pointer-events: none; z-index: 7;
+           /* Kunci efek glowing: */
+           filter: blur(8px) contrast(20);
+           mix-blend-mode: screen;
+        }
+        #fxCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Container utama mata */
+        .eye-container {
+            perspective: 1000px;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Base Lingkaran Mata / Bulan */
+        .sharingan {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            background: #000;
+            border-radius: 50%;
+            border: 10px solid #000;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: background 0.6s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease-in-out;
+            transform-origin: center center;
+            box-sizing: border-box;          
+            overflow: hidden; /* Agar siluet tiang listrik tidak keluar lingkaran mata/bulan */
+        }
+
+        /* Pupil Pusat Hitam */
+        .pupil {
+            position: absolute;
+            width: 52px;
+            height: 52px;
+            background-color: #000;
+            border-radius: 50%;
+            z-index: 20;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.5s ease;
+        }
+
+        /* Lapisan Kontainer Pola */
+        .layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Layer Khusus Siluet Itachi & Bulan */
+        .layer-silhouette {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 15;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s ease-in-out, transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+        }
+
+        /* ===================================================
+            MODE TOMOE
+        =================================================== */
+        .sharingan-normal { z-index: 2; transform-origin: center center; }
+        .tomoe-ring {
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            border: 3px double rgba(0, 0, 0, 0.35);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .tomoe {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            background-color: #000;
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            transform-origin: center center;
+            transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .tomoe .tail {
+            position: absolute;
+            width: 36px;
+            height: 24px;
+            background-color: transparent;
+            border-top: 12px solid #000;
+            border-radius: 50% 50% 0 0;
+            top: -5px;
+            left: 8px;
+        }
+        .tomoe-1 { top: 50px; left: 138px; transform: scale(0) rotate(13deg); }
+        .tomoe-2 { bottom: 80px; right: 60px; transform: scale(0) rotate(133deg); }
+        .tomoe-3 { bottom: 80px; left: 58px; transform: scale(0) rotate(253deg); }
+
+        .mangekyou-itachi { z-index: 5; }
+        .mugen-tsukuyomi { z-index: 6; }
+
+        /* FASE MANAGEMENT */
+        /* FASE 1: BULAN PURNAMA MERAH DARAH & SILUET ITACHI */
+        .sharingan.fase-1 {
+         background-image: url('itachi uciha lagi.jpg'); /* <-- Ganti dengan URL gambar kamu */
+         background-size: cover;          /* Gambar menutupi seluruh mata */
+         background-position: center;   /* Gambar rata tengah */
+         border: 10px solid #000;         /* Pastikan border tetap hitam */
+         box-shadow: 0 0 35px rgba(255, 50, 50, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.8);
+}
+        .sharingan.fase-1 .layer-silhouette { opacity: 1; transform: scale(1); }
+        .sharingan.fase-1 .pupil { opacity: 0; transform: scale(0); }
+
+        /* FASE SHARINGAN AKTIF (2-6) */
+        .sharingan.fase-2, .sharingan.fase-3, .sharingan.fase-4 {
+            background: radial-gradient(circle, #ff0000 0%, #b50000 65%, #000000 100%);
+            box-shadow: 0 0 30px #b50000, inset 0 0 40px #000;
+        }
+        .sharingan.fase-2 .pupil, .sharingan.fase-3 .pupil, .sharingan.fase-4 .pupil { opacity: 1; transform: scale(1); }
+        .sharingan.fase-2 .sharingan-normal, .sharingan.fase-3 .sharingan-normal, .sharingan.fase-4 .sharingan-normal { opacity: 1; transform: scale(1); }
+        .sharingan.fase-2 .tomoe-ring, .sharingan.fase-3 .tomoe-ring, .sharingan.fase-4 .tomoe-ring { opacity: 1; }
+        .sharingan.fase-2 .tomoe-1 { opacity: 1; transform: scale(1) rotate(13deg); }
+        .sharingan.fase-3 .tomoe-1 { opacity: 1; transform: scale(1) rotate(13deg); }
+        .sharingan.fase-3 .tomoe-2 { opacity: 1; transform: scale(1) rotate(133deg); }
+        .sharingan.fase-4 .tomoe-1 { opacity: 1; transform: scale(1) rotate(13deg); }
+        .sharingan.fase-4 .tomoe-2 { opacity: 1; transform: scale(1) rotate(133deg); }
+        .sharingan.fase-4 .tomoe-3 { opacity: 1; transform: scale(1) rotate(253deg); }
+
+        .sharingan.fase-5 { background: radial-gradient(circle, #ff0000 0%, #b50000 65%, #000000 100%); box-shadow: 0 0 60px #ff0000, inset 0 0 35px #000; }
+        .sharingan.fase-5 .mangekyou-itachi { opacity: 1; transform: scale(1); }
+        .sharingan.fase-5 .pupil { opacity: 0; transform: scale(0); }
+
+        .sharingan.fase-6 { background: radial-gradient(circle, #ff0000 0%, #b50000 65%, #000000 100%); box-shadow: 0 0 75px #ff3333, inset 0 0 30px #000; }
+        .sharingan.fase-6 .mugen-tsukuyomi { opacity: 1; transform: scale(1); }
+        .sharingan.fase-6 .pupil { opacity: 0; transform: scale(0); }
+
+        @keyframes mangekyouShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-2px, 2px) rotate(-0.5deg); }
+            40% { transform: translate(2px, -1px) rotate(0.5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        @keyframes globalDestructionShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            10% { transform: translate(-8px, 6px) rotate(-1.5deg); }
+            30% { transform: translate(7px, -7px) rotate(1deg); }
+            50% { transform: translate(-5px, 5px) rotate(-1deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flash-effect" id="flashLayer"></div>
+    <canvas id="crowCanvas"></canvas>
+   
+    <div class="fire-filter-container">
+        <canvas id="fxCanvas"></canvas>
+    </div>
+
+<div class="eye-container">
+    <div class="sharingan fase-1" id="sharinganEye"
+         onclick="evolveEye()"
+         oncontextmenu="devolveEye(); return false;">
+       
+        <div class="layer-silhouette">
+            <canvas id="silhouetteCanvas" width="320" height="320"></canvas>
+        </div>
+        <div class="layer sharingan-normal">
+            <div class="tomoe-ring"></div>
+            <div class="tomoe tomoe-1"><div class="tail"></div></div>
+            <div class="tomoe tomoe-2"><div class="tail"></div></div>
+            <div class="tomoe tomoe-3"><div class="tail"></div></div>
+        </div>
+        <div class="layer mangekyou-itachi">
+            <canvas id="mangekyouCanvas" width="300" height="300"></canvas>
+        </div>
+        <div class="layer mugen-tsukuyomi">
+            <canvas id="mugenCanvas" width="300" height="300"></canvas>
+        </div>
+        <div class="pupil"></div>
+        </div>
+</div>
+
+    <script>
+        // ============================================================================
+        // KANVAS 0: GAMBAR SILUET ITACHI & TIANG LISTRIK (FASE 1)
+        // ============================================================================
+        const silCanvas = document.getElementById('silhouetteCanvas');
+        const silCtx = silCanvas.getContext('2d');
+
+        function devolveEye() {
+    // Reset flash layer & stop ongoing animations
+    flashLayer.className = "flash-effect";
+    void flashLayer.offsetWidth;
+
+    document.body.style.animation = 'none';
+    eyeElement.classList.remove('fase-1', 'fase-2', 'fase-3', 'fase-4', 'fase-5', 'fase-6');
+   
+    clearTimeout(speedTimeout);
+    clearTimeout(fireTimeout);
+
+    // LOGIKA MUNDUR
+    currentFase--;
+    if (currentFase < 1) currentFase = 6; // Loop kembali ke fase 6 (Mugen Tsukuyomi)
+   
+    eyeElement.classList.add(`fase-${currentFase}`);
+
+    // Update state berdasarkan fase
+    switch(currentFase) {
+        case 1:
+            isCrowActive = false;
+            isFireActive = false;
+            targetSpeed = 0;
+            currentSpeed = 0;
+            rotationAngle = 0;
+            textGuidance.innerText = "Sharingan kembali ke titik awal.";
+            break;
+        case 2: targetSpeed = 2.0; textGuidance.innerText = "Mundur ke 1 Tomoe."; break;
+        case 3: targetSpeed = 3.5; textGuidance.innerText = "Mundur ke 2 Tomoe."; break;
+        case 4: targetSpeed = 5.0; textGuidance.innerText = "Mundur ke 3 Tomoe."; break;
+        case 5:
+            isCrowActive = true;
+            isFireActive = true;
+            targetSpeed = 45.0;
+            textGuidance.innerText = "Kembali ke Mangekyou Sharingan.";
+            break;
+        case 6:
+            isCrowActive = true;
+            isFireActive = true;
+            targetSpeed = 55.0;
+            textGuidance.innerText = "Kembali ke Mugen Tsukuyomi.";
+            break;
+    }
+}
+
+function drawItachiMission() {
+    silCtx.clearRect(0, 0, 320, 320);
+   
+    // Titik tengah canvas
+    const cx = 160;
+    const cy = 160; // Disesuaikan agar pas di tengah lingkaran fase-1
+    const r = 80;
+
+    // 1. Latar belakang lingkaran (dasar kipas)
+    // Bagian Bawah (Merah)
+    let grad = silCtx.createLinearGradient(cx - r, cy, cx + r, cy);
+    grad.addColorStop(0, '#8B0000');
+    grad.addColorStop(0.5, '#FF0000');
+    grad.addColorStop(1, '#8B0000');
+   
+    silCtx.beginPath();
+    silCtx.arc(cx, cy, r, 0, Math.PI);
+    silCtx.fillStyle = grad;
+    silCtx.fill();
+    silCtx.lineWidth = 4;
+    silCtx.strokeStyle = '#000';
+    silCtx.stroke();
+
+    // Bagian Atas (Putih)
+    silCtx.beginPath();
+    silCtx.arc(cx, cy, r, Math.PI, 0);
+    silCtx.fillStyle = '#FFFFFF';
+    silCtx.fill();
+    silCtx.stroke();
+
+    // 2. Garis Pemisah (Diameter horizontal)
+    silCtx.beginPath();
+    silCtx.moveTo(cx - r, cy);
+    silCtx.lineTo(cx + r, cy);
+    silCtx.stroke();
+
+    // 3. Gagang Kipas (Bawah)
+    silCtx.fillStyle = '#000';
+    silCtx.fillRect(cx - 8, cy, 16, 60);
+
+    // 4. Dua Tomoe di bagian bawah
+    function drawTomoe(x, y) {
+        // Lingkaran utama tomoe
+        silCtx.beginPath();
+        silCtx.arc(x, y, 10, 0, Math.PI * 2);
+        silCtx.fill();
+       
+        // Ekor tomoe (koma)
+        silCtx.beginPath();
+        silCtx.moveTo(x, y - 10);
+        silCtx.quadraticCurveTo(x + 15, y - 10, x + 15, y + 8);
+        silCtx.lineWidth = 6;
+        silCtx.strokeStyle = '#000';
+        silCtx.stroke();
+    }
+   
+    drawTomoe(cx - 35, cy + 35);
+    drawTomoe(cx + 35, cy + 35);
+}
+        // ============================================================================
+        // KANVAS 1: MANGEKYOU ITACHI
+        // ============================================================================
+        const mCanvas = document.getElementById('mangekyouCanvas');
+        const mCtx = mCanvas.getContext('2d');
+        const cx = 150; const cy = 150;
+
+        function drawPerfectMangekyou() {
+            mCtx.clearRect(0, 0, 300, 300);
+            for (let i = 0; i < 3; i++) {
+                mCtx.save(); mCtx.translate(cx, cy); mCtx.scale(1.20, 1.20); mCtx.rotate((i * 120 * Math.PI) / 180);
+                mCtx.beginPath(); mCtx.arc(-39, -54, 65, 0, Math.PI * 2); mCtx.fillStyle = '#000000'; mCtx.fill(); mCtx.closePath();
+                mCtx.globalCompositeOperation = 'destination-out';
+                mCtx.beginPath(); mCtx.arc(-15, -98, 58, 0, Math.PI * 2); mCtx.fill(); mCtx.closePath(); mCtx.restore();
+            }
+            mCtx.save(); mCtx.translate(cx, cy); mCtx.globalCompositeOperation = 'destination-out';
+            mCtx.beginPath(); mCtx.arc(-0.2, 0, 30, 0, Math.PI * 2); mCtx.fill(); mCtx.closePath(); mCtx.restore();
+            mCtx.globalCompositeOperation = 'source-over'; mCtx.save(); mCtx.translate(cx, cy);
+            mCtx.beginPath(); mCtx.arc(0, 0, 105, 0, Math.PI * 2); mCtx.strokeStyle = '#000000'; mCtx.lineWidth = 3.5; mCtx.stroke(); mCtx.closePath(); mCtx.restore();
+        }
+        drawPerfectMangekyou();
+
+        // ============================================================================
+        // KANVAS 2: MUGEN TSUKUYOMI
+        // ============================================================================
+        const mugenCanvas = document.getElementById('mugenCanvas');
+        const mugenCtx = mugenCanvas.getContext('2d');
+
+        function drawMiniTomoeOutward(ctx, x, y, radius, rotateAngle) {
+            ctx.save(); ctx.translate(x, y); ctx.rotate(rotateAngle);
+            ctx.beginPath(); ctx.arc(0, 0, radius, 0, Math.PI * 2); ctx.fillStyle = '#000000'; ctx.fill(); ctx.closePath();
+            ctx.beginPath(); ctx.moveTo(0, -radius);
+            ctx.bezierCurveTo(radius * 1.3, -radius * 1.1, radius * 1.6, radius * 0.2, radius * 0.9, radius * 1.1);
+            ctx.bezierCurveTo(radius * 0.8, radius * 0.3, radius * 0.1, 0, 0, radius);
+            ctx.fillStyle = '#000000'; ctx.fill(); ctx.closePath();
+            ctx.restore();
+        }
+
+        function drawMugenTsukuyomi() {
+            mugenCtx.clearRect(0, 0, 300, 300);
+            mugenCtx.beginPath(); mugenCtx.arc(cx, cy, 15, 0, Math.PI * 2); mugenCtx.fillStyle = '#000000'; mugenCtx.fill(); mapping = []; mugenCtx.closePath();
+            const ringRadii = [46, 81, 116];
+            mugenCtx.strokeStyle = 'rgba(0, 0, 0, 0.85)'; mugenCtx.lineWidth = 3;
+            ringRadii.forEach(r => { mugenCtx.beginPath(); mugenCtx.arc(cx, cy, r, 0, Math.PI * 2); mugenCtx.stroke(); mugenCtx.closePath(); });
+            const tomoeRadius = 9.5;
+            ringRadii.forEach((radius, ringIndex) => {
+                let startAngleOffset = ringIndex * 40;
+                for (let i = 0; i < 3; i++) {
+                    let angleDegree = startAngleOffset + (i * 120);
+                    let angleRadian = (angleDegree * Math.PI) / 180;
+                    let tX = cx + Math.cos(angleRadian) * radius;
+                    let tY = cy + Math.sin(angleRadian) * radius;
+                    let outwardAngle = angleRadian - Math.PI / 2;
+                    drawMiniTomoeOutward(mugenCtx, tX, tY, tomoeRadius, outwardAngle);
+                }
+            });
+        }
+        drawMugenTsukuyomi();
+
+        // ============================================================================
+        // LOGIKA STRUKTUR GAGAK & FX
+        // ============================================================================
+        const crowCanvas = document.getElementById('crowCanvas');
+        const crowCtx = crowCanvas.getContext('2d');
+        let crows = []; let isCrowActive = false;
+
+        const fxCanvas = document.getElementById('fxCanvas');
+        const fxCtx = fxCanvas.getContext('2d');
+        let lightnings = [];
+        let flames = [];            
+        let isFireActive = false;  
+        let fireTimeout;
+
+        function resizeCanvases() {
+            crowCanvas.width = window.innerWidth; crowCanvas.height = window.innerHeight;
+            fxCanvas.width = window.innerWidth; fxCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+
+        class Crow {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = crowCanvas.width / 2 + (Math.random() * 120 - 60);
+                this.y = crowCanvas.height / 2 + (Math.random() * 120 - 60);
+                this.size = Math.random() * 7 + 4;
+                this.speedX = (Math.random() * 6 - 3) * 2;
+                this.speedY = (Math.random() * -5 - 2);
+                this.wingPhase = Math.random() * Math.PI * 2;
+                this.wingSpeed = 0.2 + Math.random() * 0.15;
+                this.opacity = 0;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY; this.wingPhase += this.wingSpeed;
+                if (isCrowActive) { if (this.opacity < 1) this.opacity += 0.05; }
+                else { this.opacity -= 0.04; }
+                if (this.y < -50 || this.x < -50 || this.x > crowCanvas.width + 50) { if (isCrowActive) this.reset(); }
+            }
+            draw() {
+                if (this.opacity <= 0) return;
+                crowCtx.save(); crowCtx.translate(this.x, this.y);
+                crowCtx.fillStyle = `rgba(5, 5, 5, ${this.opacity})`;
+                let wingSpan = Math.sin(this.wingPhase) * this.size;
+                crowCtx.beginPath(); crowCtx.moveTo(0, -this.size / 2);
+                crowCtx.quadraticCurveTo(wingSpan, -this.size * 1.5, wingSpan * 1.8, -wingSpan * 0.3);
+                crowCtx.quadraticCurveTo(wingSpan * 0.5, 0, 0, this.size / 2);
+                crowCtx.quadraticCurveTo(-wingSpan * 0.5, 0, -wingSpan * 1.8, -wingSpan * 0.3);
+                crowCtx.quadraticCurveTo(-wingSpan, -this.size * 1.5, 0, -this.size / 2);
+                crowCtx.fill(); crowCtx.closePath(); crowCtx.restore();
+            }
+        }
+        for (let i = 0; i < 50; i++) crows.push(new Crow());
+
+        class Lightning {
+            constructor() {
+                this.segments = [];
+                this.life = 8 + Math.random() * 8;
+                this.maxLife = this.life;
+                this.opacity = 1;
+                this.generate();
+            }
+            generate() {
+                let currentX = Math.random() * fxCanvas.width;
+                let currentY = 0;
+                let targetX = fxCanvas.width / 2 + (Math.random() * 200 - 100);
+                let targetY = fxCanvas.height / 2 + (Math.random() * 200 - 100);
+                this.segments.push({x: currentX, y: currentY});
+                let steps = 5 + Math.floor(Math.random() * 4);
+                for(let i = 1; i <= steps; i++) {
+                    let t = i / steps;
+                    let posX = currentX + (targetX - currentX) * t + (Math.random() * 40 - 20);
+                    let posY = currentY + (targetY - currentY) * t + (Math.random() * 25 - 12);
+                    this.segments.push({x: posX, y: posY});
+                }
+            }
+            update() { this.life--; this.opacity = this.life / this.maxLife; }
+            draw(ctx) {
+                if(this.segments.length < 2) return;
+                ctx.save(); ctx.beginPath();
+                ctx.moveTo(this.segments[0].x, this.segments[0].y);
+                for(let i = 1; i < this.segments.length; i++) ctx.lineTo(this.segments[i].x, this.segments[i].y);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity * 0.9})`;
+                ctx.lineWidth = 4; ctx.stroke(); ctx.closePath(); ctx.restore();
+            }
+        }
+
+class RealFireParticle {
+    constructor(speed, angle) {
+        let eyeRadius = 160;
+        this.x = (window.innerWidth / 2) + Math.cos(angle * Math.PI / 180) * eyeRadius;
+        this.y = (window.innerHeight / 2) + Math.sin(angle * Math.PI / 180) * eyeRadius;
+       
+        let thrust = Math.abs(speed) * 0.8;
+        this.speedX = Math.cos(angle * Math.PI / 180) * thrust;
+        this.speedY = Math.sin(angle * Math.PI / 180) * thrust;
+       
+        this.baseRadius = 5 + (Math.abs(speed) * 0.3);
+        this.radius = this.baseRadius;
+        this.maxLife = 20 + Math.random() * 10;
+        this.life = this.maxLife;
+       
+        // Selalu merah
+        this.color = '#ff0000';
+    }
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+        this.radius *= 0.95;
+    }
+    draw(ctx) {
+        if (this.life <= 0 || this.radius < 0.5) return;
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 10; // Sedikit efek glow merah
+        ctx.shadowColor = '#ff0000';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0; // Reset
+    }
+}
+        // ============================================================================
+        // LOGIKA TRANSISI DAN EVOLUSI MATA + SCROLL CONTROL
+        // ============================================================================
+        let currentFase = 1; let rotationAngle = 0;
+        let currentSpeed = 0; let targetSpeed = 0; let speedTimeout;
+        const eyeElement = document.getElementById('sharinganEye');
+        const flashLayer = document.getElementById('flashLayer');
+        const textGuidance = document.getElementById('textGuidance');
+
+        // FITUR KONTROL KECEPATAN LEWAT SCROLL MOUSE
+        window.addEventListener('wheel', (e) => {
+            if (currentFase === 1) return; // Kunci putaran di fase 1 agar gambar siluet tetap tegak lurus
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                targetSpeed += 1.5;
+                if (targetSpeed > 100) targetSpeed = 100;
+            } else {
+                targetSpeed -= 1.5;
+                if (targetSpeed < 0) targetSpeed = 0;
+            }
+        }, { passive: false });
+
+        function evolveEye() {
+            flashLayer.className = "flash-effect";
+            void flashLayer.offsetWidth;
+
+            document.body.style.animation = 'none';
+            void document.body.offsetWidth;
+            eyeElement.classList.remove('fase-1', 'fase-2', 'fase-3', 'fase-4', 'fase-5', 'fase-6');
+           
+            clearTimeout(speedTimeout);
+            clearTimeout(fireTimeout);
+
+            currentFase = (currentFase % 6) + 1;
+            eyeElement.classList.add(`fase-${currentFase}`);
+
+            switch(currentFase) {
+                case 1:
+                    isCrowActive = false;
+                    isFireActive = false;
+                    lightnings = [];
+                    targetSpeed = 0;
+                    currentSpeed = 0;
+                    rotationAngle = 0; // Kembalikan sudut ke 0 agar siluet tidak miring
+                    textGuidance.innerText = "Klik Untuk Kebangkitkan Sharingan (1 Tomoe)";
+                    break;
+                case 2: targetSpeed = 2.0; textGuidance.innerText = "Sharingan Aktif (1 Tomoe) | Klik Lagi Untuk Level 2 (2 Tomoe) | Scroll Aktif"; break;
+                case 3: targetSpeed = 3.5; textGuidance.innerText = "Klik Lagi Untuk Menyempurnakan Sharingan (3 Tomoe) | Scroll Aktif"; break;
+                case 4: targetSpeed = 5.0; textGuidance.innerText = "Klik Untuk Mengalami Tragedi & Bangkitkan Mangekyou! | Scroll Aktif"; break;
+                case 5:
+                    isCrowActive = true;
+                    isFireActive = true;
+                    flashLayer.classList.add('flash-mangekyou');
+                    document.body.style.animation = 'mangekyouShake 0.15s infinite';
+                    setTimeout(() => { if(currentFase === 5) document.body.style.animation = 'none'; }, 600);
+                    targetSpeed = 45.0;
+                    speedTimeout = setTimeout(() => { if (currentFase === 5) targetSpeed = 1.2; }, 800);
+                    textGuidance.innerText = "Mangekyou Sharingan! Klik Untuk Meluncurkan Mugen Tsukuyomi! | Scroll Aktif";
+                    break;
+                case 6:
+                    isCrowActive = true;
+                    isFireActive = true;
+                   
+                    fireTimeout = setTimeout(() => { isFireActive = false; }, 2500);
+
+                    flashLayer.classList.add('flash-tsukuyomi');
+                    document.body.style.animation = 'globalDestructionShake 0.1s infinite';
+                    setTimeout(() => { if(currentFase === 6) document.body.style.animation = 'none'; }, 1000);
+
+                    lightnings = [];
+                    for(let k = 0; k < 4; k++) { lightnings.push(new Lightning()); }
+
+                    targetSpeed = 55.0;
+                    speedTimeout = setTimeout(() => { if (currentFase === 6) targetSpeed = 0.5; }, 850);
+                    textGuidance.innerText = "Tsukuyomi Tak Terbatas Terbuka. Dunia Milikmu. Klik untuk Reset. | Scroll Aktif";
+                    break;
+            }
+        }
+
+function animateRotation() {
+    // 1. LOGIKA ROTASI MATA (PENTING AGAR MUTAR LAGI)
+    if (currentFase !== 1) {
+        // Efek smooth (damping)
+        currentSpeed += (targetSpeed - currentSpeed) * 0.05;
+        rotationAngle += currentSpeed;
+       
+        // Terapkan rotasi ke elemen mata
+        eyeElement.style.transform = `rotate(${rotationAngle}deg)`;
+    } else {
+        // Reset jika bukan fase kebangkitan
+        eyeElement.style.transform = `rotate(0deg)`;
+        currentSpeed = 0;
+    }
+   
+    // 2. LOGIKA GAGAK (Jika kamu masih memakainya)
+    crowCtx.clearRect(0, 0, crowCanvas.width, crowCanvas.height);
+    crows.forEach(crow => { crow.update(); crow.draw(); });
+
+    // 3. LOGIKA API GASING (Yang baru kita buat)
+    fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+   
+    if (currentFase >= 5) {
+        isFireActive = true;
+    }
+
+    if (isFireActive && (currentFase === 5 || currentFase === 6)) {
+        let speed = Math.abs(currentSpeed);
+        // Api hanya keluar jika ada pergerakan (speed > 0.5)
+        if (speed > 0.5) {
+            let intensity = Math.min(Math.floor(speed / 3), 15);
+            let sideIntensity = Math.floor(intensity / 2);
+
+            for (let i = 0; i < intensity; i++) {
+                let variation = (Math.random() * 40 - 20);
+
+                // Tembakkan api berdasarkan sudut rotasi saat ini
+                flames.push(new RealFireParticle(currentSpeed, rotationAngle + variation));
+
+                flames.push(new RealFireParticle(currentSpeed, rotationAngle + 120 + variation));
+
+                flames.push(new RealFireParticle(currentSpeed, rotationAngle + 240 + variation));
+            }
+        }
+    }
+
+    // 4. LOOP UPDATE API
+    for (let i = flames.length - 1; i >= 0; i--) {
+        flames[i].update();
+        flames[i].draw(fxCtx);
+        if (flames[i].life <= 0 || flames[i].radius < 0.5) { flames.splice(i, 1); }
+    }
+
+    // 5. LOOP UNTUK EFEK LAIN (Petir, dll jika ada)
+    // lightnings.forEach(...) ...
+
+    // Panggil ulang animasi (Loop)
+    requestAnimationFrame(animateRotation);
+}
+
+        animateRotation();
+    </script>
+</body>
+</html>

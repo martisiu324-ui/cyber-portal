@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Instruction - Premium Martis Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&family=Orbitron:wght=700;900&display=swap">    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --bg-page: #090d16;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --bg-table: rgba(15, 23, 42, 0.65);
+            --neon-purple: #a855f7;
+            --neon-cyan: #06b6d4;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success-neon: #10b981;
+            --pending-neon: #f59e0b;
+            --danger-neon: #ff4646;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #090d16 70%);
+            color: var(--text-main);
+            padding: 50px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1150px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Top Action Controls Bar - Gaya Glassmorphism & Cyber Glow */
+        .top-controls {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 18px 28px;
+            border-radius: 16px;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .control-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+            margin-right: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Tombol Gaya Gaming/Cyberpunk Premium */
+        .btn-action {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 11px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-action:hover { 
+            transform: translateY(-2px); 
+            border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.05);
+        }
+
+        .btn-secondary { 
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(6, 182, 212, 0.03) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.4); 
+            color: #e0f7fa;
+        }
+        .btn-secondary:hover { 
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(6, 182, 212, 0.05) 100%);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+        }
+        
+        .btn-danger { 
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.03) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.4); 
+            color: #fee2e2;
+        }
+        .btn-danger:hover { 
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.05) 100%);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-success { 
+            background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            border: none;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+        }
+        .btn-success:hover { 
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+            opacity: 0.95;
+        }
+
+        /* Dashboard Container Utama */
+        .dashboard-container {
+            background: #0d1321; /* Menggunakan solid background agar html2canvas merender dengan sempurna */
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dashboard-header {
+            margin-bottom: 30px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* PERBAIKAN UTAMA: Menggunakan warna solid putih dengan efek text-shadow neon agar terbaca sempurna saat diunduh */
+        .system-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Pembungkus Tabel Kekinian */
+        .table-wrapper {
+            background-color: var(--bg-table);
+            padding: 6px;
+            border-radius: 16px;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; padding: 0 8px; }
+        
+        th { 
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700; 
+            text-transform: uppercase; 
+            color: var(--text-muted); 
+            letter-spacing: 1.5px; 
+            padding: 16px 20px;
+            font-size: 16px;
+        }
+        
+        td { 
+            padding: 18px 22px; 
+            text-align: center; 
+            font-size: 15px; 
+            background: rgba(30, 41, 59, 0.4);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            white-space: nowrap; 
+            transition: all 0.2s; 
+        }
+
+        /* Membuat sudut melengkung per baris */
+        td:first-child { border-left: 1px solid rgba(255, 255, 255, 0.03); border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+        td:last-child { border-right: 1px solid rgba(255, 255, 255, 0.03); border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+        
+        tr:hover td {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        /* Gaya Input Fokus Aktif */
+        td[contenteditable="true"] { cursor: text; }
+        td[contenteditable="true"]:focus { 
+            outline: none; 
+            background: rgba(168, 85, 247, 0.15) !important;
+            box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.2);
+            color: #fff;
+        }
+        
+        .readonly-balance { color: var(--neon-cyan); font-weight: 700; }
+        .font-bold-data { font-weight: 600; color: #ffffff; }
+        .cell-vertical-flex { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+
+        /* Badge Info Berkilau */
+        .badge-random-product {
+            display: inline-block; 
+            background: rgba(239, 68, 68, 0.1); 
+            color: #fca5a5; 
+            border: 1px solid rgba(239, 68, 68, 0.3);  
+            font-size: 9px; 
+            font-weight: 700; 
+            padding: 3px 8px; 
+            border-radius: 6px; 
+            margin-top: 4px; 
+            user-select: none;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.1);
+        }
+
+        /* Status Badge Minimalis Modern */
+        .status-badge {
+            display: inline-block; 
+            padding: 6px 14px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: 700;
+            text-align: center; 
+            cursor: pointer; 
+            user-select: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.5px;
+        }
+        .status-badge:hover { transform: scale(1.05); }
+        
+        .status-pending { 
+            background-color: rgba(245, 158, 11, 0.1); 
+            color: var(--pending-neon); 
+            border: 1px solid rgba(245, 158, 11, 0.3); 
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.15);
+        }
+        .status-completed { 
+            background-color: rgba(16, 185, 129, 0.1); 
+            color: var(--success-neon); 
+            border: 1px solid rgba(16, 185, 129, 0.3); 
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+        }
+
+        @media print {
+            .top-controls { display: none !important; }
+            body { padding: 0; background: #090d16; }
+            .dashboard-container { border: none; box-shadow: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    
+    <div class="top-controls">
+        <div class="control-title">
+            <span class="material-icons" style="font-size: 16px;">vanguard</span>
+            CONTROL INTERFACE
+        </div>
+        <button class="btn-action btn-secondary" onclick="tambahBaris()">➕ Tambah Baris</button>
+        <button class="btn-action btn-danger" onclick="kurangiBaris()">➖ Kurangi Baris</button>
+        <button class="btn-action" onclick="window.print()">🖨️ Cetak / Jadi PDF</button>
+        <button class="btn-action btn-success" onclick="unduhSebagaiGambar()">🖼️ Unduh Gambar (.PNG)</button>
+    </div>
+
+    <div class="dashboard-container" id="area-cetak-gambar">
+        <div class="dashboard-header">
+            <div class="system-title" contenteditable="true">
+                <span class="material-icons" style="font-size: 24px; color: var(--neon-purple);">terminal</span>
+                SYSTEM INSTRUCTION
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table id="tabelData">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID Account</th>
+                        <th>Balance</th>
+                        <th>Product Price</th>
+                        <th>System Status</th>
+                    </tr>
+                </thead>
+                <tbody id="isiTabel">
+                    <tr data-row="spesial">
+                        <td class="font-bold-data" contenteditable="true">MARTIS</td>
+                        <td class="font-bold-data" contenteditable="true">777666</td>
+                        <td class="font-bold-data readonly-balance" data-type="balance">RM0.00</td>
+                        <td class="cell-vertical-flex" data-type="price-container" style="font-weight: 700;">
+                            <span id="angka-spesial" contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtotmatis()">RM6,750.00</span>
+                            <div class="badge-random-product">RANDOM PRODUCT</div>
+                        </td>
+                        <td><span class="status-badge status-pending" onclick="gantiStatus(this)">PENDING PAYMENT</span></td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold-data" contenteditable="true">MARTIS</td>
+                        <td class="font-bold-data" contenteditable="true">777666</td>
+                        <td class="font-bold-data readonly-balance" data-type="balance">RM0.00</td>
+                        <td contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtotmatis()" style="font-weight: 700;">-RM225.00</td>
+                        <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold-data" contenteditable="true">MARTIS</td>
+                        <td class="font-bold-data" contenteditable="true">777666</td>
+                        <td class="font-bold-data readonly-balance" data-type="balance">RM0.00</td>
+                        <td contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtotmatis()" style="font-weight: 700;">-RM300.00</td>
+                        <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold-data" contenteditable="true">MARTIS</td>
+                        <td class="font-bold-data" contenteditable="true">777666</td>
+                        <td class="font-bold-data readonly-balance" data-type="balance">RM0.00</td>
+                        <td contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtotmatis()" style="font-weight: 700;">-RM495.00</td>
+                        <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold-data" contenteditable="true">MARTIS</td>
+                        <td class="font-bold-data" contenteditable="true">777666</td>
+                        <td class="font-bold-data readonly-balance" data-type="balance">RM1,500.00</td>
+                        <td contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtotmatis()" style="font-weight: 700;">-RM375.00</td>
+                        <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const WARNA_BARIS_SATU = "#ffffff"; 
+    const WARNA_BARIS_LAIN = "#ff4646"; 
+
+    // Mencegah enter pada mode edit teks langsung
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' && event.target.hasAttribute('contenteditable')) {
+            event.preventDefault(); 
+            event.target.blur();    
+        }
+    });
+
+    function parseDuit(teks) {
+        let bersih = teks.replace(/RM|\s+|-|\s|,/gi, '');
+        let angka = parseFloat(cleanString(bersih));
+        function cleanString(str) { return str.replace(/[^\d.-]/g, ''); }
+        return isNaN(angka) ? 0 : angka;
+    }
+
+    function formatRM(angka) { return "RM" + angka.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    function formatRMNegatif(angka) { return "-RM" + angka.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+    function formatUlangBalance() {
+        let baris = document.querySelectorAll("#isiTabel tr");
+        let totalBaris = baris.length;
+        if (totalBaris > 0) {
+            let cellBalanceBawah = baris[totalBaris - 1].querySelector('[data-type="balance"]');
+            if (cellBalanceBawah) {
+                let angka = parseDuit(cellBalanceBawah.innerText);
+                cellBalanceBawah.innerText = formatRM(angka);
+            }
+        }
+    }
+
+    function formatUlangPrice() {
+        let baris = document.querySelectorAll("#isiTabel tr");
+        baris.forEach(row => {
+            let cellPrice = row.querySelector('[data-type="price"]');
+            if(cellPrice) {
+                let angka = parseDuit(cellPrice.innerText);
+                if(row.getAttribute("data-row") === "spesial") {
+                    cellPrice.innerText = formatRM(angka); 
+                    cellPrice.style.color = WARNA_BARIS_SATU;
+                } else {
+                    cellPrice.innerText = formatRMNegatif(angka); 
+                    cellPrice.style.color = WARNA_BARIS_LAIN;
+                }
+            }
+        });
+    }
+
+    function hitungOtomatis() {
+        let baris = document.querySelectorAll("#isiTabel tr");
+        let totalBaris = baris.length;
+        if (totalBaris === 0) return;
+
+        for (let i = 0; i < totalBaris; i++) {
+            let cellBal = baris[i].querySelector('[data-type="balance"]');
+            let cellPrice = baris[i].querySelector('[data-type="price"]');
+            if(cellPrice) {
+                if(baris[i].getAttribute("data-row") === "spesial") { cellPrice.style.color = WARNA_BARIS_SATU; } 
+                else { cellPrice.style.color = WARNA_BARIS_LAIN; }
+            }
+            if (i === totalBaris - 1) {
+                cellBal.setAttribute("contenteditable", "true");
+                cellBal.classList.remove("readonly-balance");
+                cellBal.setAttribute("onblur", "formatUlangBalance()");
+            } else {
+                cellBal.removeAttribute("contenteditable");
+                cellBal.classList.add("readonly-balance");
+                cellBal.removeAttribute("onblur");
+            }
+        }
+
+        let barisPalingBawah = baris[totalBaris - 1];
+        let cellBalanceBawah = barisPalingBawah.querySelector('[data-type="balance"]');
+        let currentBalance = parseDuit(cellBalanceBawah.innerText);
+
+        for (let i = totalBaris - 2; i >= 0; i--) {
+            let barisDiBawahnya = baris[i + 1];
+            let hargaProdukDiBawahnya = parseDuit(barisDiBawahnya.querySelector('[data-type="price"]').innerText);
+            currentBalance = currentBalance - hargaProdukDiBawahnya;
+            baris[i].querySelector('[data-type="balance"]').innerText = formatRM(currentBalance);
+        }
+    }
+
+    function gantiStatus(elemen) {
+        if (elemen.classList.contains('status-pending')) {
+            elemen.classList.remove('status-pending'); elemen.classList.add('status-completed');
+            elemen.innerText = 'TRANSACTION COMPLETED';
+        } else {
+            elemen.classList.remove('status-completed'); elemen.classList.add('status-pending');
+            elemen.innerText = 'PENDING PAYMENT';
+        }
+    }
+
+    function tambahBaris() {
+        var table = document.getElementById("isiTabel");
+        var row = table.insertRow(-1);
+        row.innerHTML = `
+            <td class="font-bold-data" contenteditable="true">MARTIS</td>
+            <td class="font-bold-data" contenteditable="true">777666</td>
+            <td class="font-bold-data readonly-balance" data-type="balance">RM0.00</td>
+            <td contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtomatis()" style="font-weight: 700; color: ${WARNA_BARIS_LAIN};">-RM0.00</td>
+            <td><span class="status-badge status-pending" onclick="gantiStatus(this)">PENDING PAYMENT</span></td>
+        `;
+        hitungOtomatis();
+    }
+
+    function kurangiBaris() {
+        var table = document.getElementById("isiTabel");
+        if (table.rows.length > 1) { table.deleteRow(-1); hitungOtomatis(); } 
+        else { alert("Sistem Keamanan: Minimal harus menyisakan 1 data!"); }
+    }
+
+    function unduhSebagaiGambar() {
+        const targetElement = document.getElementById("area-cetak-gambar");
+        // Dioptimalkan penuh agar warna dasar hitam dasbor ikut terekspor dengan tajam tanpa menghilangkan judul
+        html2canvas(targetElement, { 
+            scale: 2, 
+            useCORS: true, 
+            backgroundColor: "#0d1321" 
+        }).then(canvas => {
+            const linkDesc = document.createElement("a");
+            linkDesc.download = "Cyber-System-Verification.png";
+            linkDesc.href = canvas.toDataURL("image/png");
+            linkDesc.click();
+        });
+    }
+
+    window.onload = function() {
+        hitungOtomatis();
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Shinobi Interface - Mini Compact Edition</title>
+    <style>
+        :root {
+            --sharingan: #b20000;
+            --void: #060711;
+            --shadow-glow: rgba(178, 0, 0, 0.25);
+            --text-gray: #a0a0a0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--void);
+            background-image: radial-gradient(circle at center, #190303 0%, #030408 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            user-select: none;
+        }
+
+        /* CARD UTAMA: PADDING DIPANGKAS BIAR PADAT PAS WINDOWS DIKECILIN */
+        .dashboard-container {
+            background: rgba(10, 3, 3, 0.9);
+            border: 1px solid rgba(178, 0, 0, 0.15);
+            padding: 25px 40px; /* Diperkecil dari 45px 60px */
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9),
+                        0 0 20px var(--shadow-glow);
+            position: relative;
+            width: 720px;
+            max-width: 95%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px; /* Jarak antar komponen dipangkas setengahnya agar super rapat */
+        }
+
+        /* AKSEN LINE GLOW ATAS */
+        .dashboard-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 15%;
+            width: 70%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--sharingan), transparent);
+            box-shadow: 0 0 8px var(--sharingan);
+        }
+
+        /* TAG LOKASI ATAS: DIRAPATKAN MENEMPEL KE JAM */
+        .location-tag {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            color: #5c1e1e;
+            margin-bottom: -18px; /* Menarik teks menempel ke border angka jam */
+            font-weight: 600;
+        }
+
+        /* SEKTOR JAM DIGITAL (COMPACT LAYOUT) */
+        .time-box {
+            font-size: 85px; /* Sedikit disesuaikan agar pas di mode mini */
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(178, 0, 0, 0.3),
+                         0 0 20px var(--sharingan);
+            letter-spacing: 2px;
+            margin: 0;
+            line-height: 0.95;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dots {
+            color: var(--sharingan);
+            text-shadow: 0 0 15px var(--sharingan);
+            padding: 0 2px;
+            animation: pulseBlink 1s infinite;
+        }
+
+        @keyframes pulseBlink {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+
+        .ampm-box {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--sharingan);
+            text-shadow: 0 0 15px var(--sharingan);
+            margin-left: 10px;
+            align-self: flex-end;
+            padding-bottom: 6px;
+        }
+
+        /* TANGGAL: MAKIN MEPEt KE BAWAH JAM */
+        .date-box {
+            font-size: 15px;
+            margin-top: -12px; /* Ditarik ke atas */
+            color: var(--text-gray);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* SEKAT TIPIS YANG LEBIH RINGKAS */
+        .divider-line {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(178, 0, 0, 0.3), transparent);
+            margin: 2px 0;
+        }
+
+        /* SEKTOR RUNNING TEXT TIGHT MATCH */
+        .ticker-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .ticker-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #5c1e1e;
+            font-weight: 600;
+            text-align: left;
+            padding-left: 2px;
+        }
+
+        .ticker-container {
+            width: 100%;
+            background: #020307;
+            border: 1px solid rgba(178, 0, 0, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+            padding: 10px 0; /* Ketebalan box dikurangi agar hemat space */
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+            display: flex;
+        }
+
+        .ticker-text {
+            white-space: nowrap;
+            padding-left: 100%;
+            display: inline-block;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 17px; /* Sedikit dikecilkan agar teks panjangnya ga gampang kepotong border */
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(178, 0, 0, 0.4), 0 0 12px var(--sharingan);
+            
+            animation-name: loopMulusMurni;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            will-change: transform;
+        }
+
+        @keyframes loopMulusMurni {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <div class="location-tag">MALAYSIA &bull; KUALA LUMPUR MYT</div>
+        
+        <div class="time-box">
+            <span id="txt-jam">10</span><span class="dots">:</span><span id="txt-menit">00</span><span class="dots">:</span><span id="txt-detik">00</span>
+            <span id="txt-ampm" class="ampm-box">AM</span>
+        </div>
+        
+        <div class="date-box" id="txt-tanggal">MINGGU, 17 MEI 2026</div>
+
+        <div class="divider-line"></div>
+
+        <div class="ticker-wrapper">
+            <div class="ticker-title">KATA KATA HARI INI</div>
+            <div class="ticker-container">
+                <div class="ticker-text">
+                    12 JAM DUDUK DISITU NGAPAIN AJA?... &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    ADA YANG BISA BANTU JELASKAN? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    YANG GA ADA SECOND DAILY, NOMINAL, DAN CLOSING, SEMUANYA LEMBUR 2 JAM
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // ENGINE JAM 12 JAM MALAYSIA
+    function refreshJamMalaysia() {
+        const opsiWaktu = { timeZone: 'Asia/Kuala_Lumpur', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        const opsiTanggal = { timeZone: 'Asia/Kuala_Lumpur', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+
+        const kini = new Date();
+        
+        let stringWaktu = kini.toLocaleTimeString('id-ID', opsiWaktu);
+        let stringTanggal = kini.toLocaleDateString('id-ID', opsiTanggal);
+
+        let bagian = stringWaktu.split(' ');
+        let angkaWaktu = bagian[0];
+        let ampm = bagian[1] ? bagian[1] : '';
+
+        let pecahan = angkaWaktu.split(/[\.:]/);
+
+        if (pecahan.length === 3) {
+            document.getElementById('txt-jam').innerText = pecahan[0];
+            document.getElementById('txt-menit').innerText = pecahan[1];
+            document.getElementById('txt-detik').innerText = pecahan[2];
+        }
+
+        document.getElementById('txt-ampm').innerText = ampm.toUpperCase();
+        document.getElementById('txt-tanggal').innerText = stringTanggal;
+    }
+
+    // ENGINE AUTO RUNNING TEXT
+    function rapihkanKecepatanTeks() {
+        const teks = document.querySelector('.ticker-text');
+        if (teks) {
+            const lebarTeksAsli = teks.offsetWidth;
+            const setelanKecepatan = 80; // Disesuaikan agar pas dengan resolusi kecil
+            const durasiFinal = lebarTeksAsli / setelanKecepatan;
+            teks.style.animationDuration = `${durasiFinal}s`;
+        }
+    }
+
+    setInterval(refreshJamMalaysia, 1000);
+    refreshJamMalaysia();
+
+    window.addEventListener('load', rapihkanKecepatanTeks);
+    window.addEventListener('resize', rapihkanKecepatanTeks);
+</script>
+</body>
+</html>

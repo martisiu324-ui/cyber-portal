@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Martis Typing - Sticky Timer Fix</title>
+    <style>
+        :root {
+            --chakra: #00d2ff;
+            --sharingan: #ff4757;
+            --void: #0a0a0c;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--void);
+            background-image: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0c 100%);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(15, 15, 20, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 850px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 1), 0 0 20px rgba(0, 210, 255, 0.1);
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .shake-hit { animation: shakeAnim 0.15s ease-in-out; }
+        @keyframes shakeAnim {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(6px); border-color: var(--sharingan); }
+            50% { transform: translateX(-6px); }
+            100% { transform: translateX(0); }
+        }
+
+        h2 { 
+            color: var(--chakra); 
+            letter-spacing: 6px; 
+            text-transform: uppercase; 
+            text-shadow: 0 0 15px var(--chakra);
+            margin: 0;
+        }
+        
+        .sub-title { color: #444; font-size: 12px; margin-top: 5px; margin-bottom: 15px; }
+
+        .time-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .time-btn {
+            background: #111;
+            border: 1px solid #333;
+            color: #666;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .time-btn:hover { color: var(--chakra); border-color: var(--chakra); }
+        
+        .time-btn.active {
+            background: rgba(0, 210, 255, 0.1);
+            border-color: var(--chakra);
+            color: var(--chakra);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+        }
+
+        #teks-asli {
+            font-size: 32px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px 25px;
+            border-radius: 10px;
+            line-height: 1.8em;
+            text-align: left;
+            margin-bottom: 25px;
+            color: #444;
+            height: 3.9em; 
+            overflow: hidden; 
+            position: relative;
+            border-left: 4px solid var(--chakra);
+            scroll-behavior: smooth;
+        }
+
+        .kata-wrapper { 
+            display: inline-block; 
+            white-space: nowrap; 
+            margin-right: 15px;
+            padding: 2px 5px;
+            border-radius: 5px;
+            transition: 0.2s;
+        }
+
+        .kata-aktif { 
+            background: rgba(0, 210, 255, 0.15);
+            box-shadow: 0 4px 0 var(--chakra);
+            color: #888;
+        }
+
+        .char-benar { color: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.5); }
+        .char-salah { color: var(--sharingan); background: rgba(255, 71, 87, 0.3); text-shadow: 0 0 8px var(--sharingan); }
+
+        .input-area {
+            width: 80%;
+            padding: 18px;
+            font-size: 24px;
+            background: #111;
+            border: 2px solid #333;
+            color: var(--chakra);
+            border-radius: 10px;
+            outline: none;
+            text-align: center;
+        }
+
+        .stats-panel {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            background: rgba(0,0,0,0.5);
+            padding: 20px;
+            border-radius: 10px;
+            border-bottom: 2px solid var(--chakra);
+        }
+
+        .stat-val { display: block; font-size: 32px; font-weight: bold; color: var(--chakra); }
+        .stat-label { font-size: 11px; color: #666; text-transform: uppercase; }
+        #timer-val { color: var(--sharingan); }
+
+        .btn-reset {
+            margin-top: 25px;
+            background: none;
+            color: #444;
+            border: 1px solid #333;
+            padding: 8px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn-reset:hover { color: var(--chakra); border-color: var(--chakra); }
+    </style>
+</head>
+<body>
+
+<div class="container" id="main-box">
+    <h2>MARTIS TYPING</h2>
+    <p class="sub-title">Berapa WPM kamu?</p>
+    
+    <div class="time-selector" id="timer-options">
+        <button class="time-btn" data-time="10" onclick="ubahDurasi(10)">10s</button>
+        <button class="time-btn" data-time="30" onclick="ubahDurasi(30)">30s</button>
+        <button class="time-btn" data-time="60" onclick="ubahDurasi(60)">60s</button>
+    </div>
+
+    <div id="teks-asli"></div>
+    
+    <input type="text" id="input-ketik" class="input-area" placeholder="Ketik kata yang aktif..." autofocus autocomplete="off">
+    
+    <div class="stats-panel">
+        <div class="stat-box">
+            <span class="stat-val" id="wpm">0</span>
+            <span class="stat-label">WPM</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-val" id="accuracy">100%</span>
+            <span class="stat-label">Akurasi</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-val" id="timer-val">30</span>
+            <span class="stat-label">Detik</span>
+        </div>
+    </div>
+
+    <button class="btn-reset" onclick="muatUlangSaja()">Ganti Kata</button>
+</div>
+
+<script>
+    const kamus = ["aku", "kamu", "dia", "mereka", "kita", "bisa", "mau", "tahu", "punya", "bukan",
+    "ada", "dari", "lagi", "baru", "saja", "sama", "kamu", "jalan", "makan", "tidur",
+    "kerja", "santai", "ngopi", " nongkrong", "keren", "mantap", "siap", "oke", "iya", "tidak",
+    "kenapa", "gimana", "udah", "belum", "jangan", "nanti", "sekarang", "besok", "kemarin", "hari",
+    "malam", "pagi", "siang", "sore", "waktu", "tempat", "rumah", "teman", "sahabat", "keluarga",
+    "bikin", "lihat", "dengar", "bicara", "mikir", "paham", "ngerti", "gokil", "seru", "asik",
+    "lucu", "sedih", "senang", "capek", "lelah", "semangat", "sukses", "gagal", "mencoba", "belajar",
+    "coding", "laptop", "hape", "internet", "kuota", "online", "chat", "balas", "kirim", "terima",
+    "uang", "dompet", "gaji", "belanja", "murah", "mahal", "diskon", "gratis", " canangkan", "Gas",
+    "siapa", "apa", "mana", "ke", "ini", "itu", "begitu", "gini", "gitu", "coba",
+    "pasti", "mungkin", "harus", "boleh", "biasa", "luar", "dalam", "atas", "bawah", "depan",
+    "belakang", "tengah", "samping", " deket", "jauh", "cepat", "lambat", "pelan", "buru", "santuy"];
+
+    const displayTeks = document.getElementById('teks-asli');
+    const inputKetik = document.getElementById('input-ketik');
+    const wpmDisp = document.getElementById('wpm');
+    const accDisp = document.getElementById('accuracy');
+    const timerDisp = document.getElementById('timer-val');
+    const mainBox = document.getElementById('main-box');
+
+    let durasiMaksimal = 30; 
+    let sisaWaktu = 30;
+    let timerAktif = false;
+    let interval = null;
+    
+    let indexKataSekarang = 0;
+    let totalHurufBenar = 0;
+    let totalSalahKetik = 0;
+
+    // AMBIL PILIHAN WAKTU TERAKHIR DARI MEMORI BROWSER SAAT DI-REFRESH
+    function inisialisasiWaktu() {
+        const waktuTersimpan = localStorage.getItem('martis_typing_duration');
+        if (waktuTersimpan) {
+            durasiMaksimal = parseInt(waktuTersimpan);
+        } else {
+            durasiMaksimal = 30; // Default jika memori kosong
+        }
+        sisaWaktu = durasiMaksimal;
+        timerDisp.innerText = durasiMaksimal;
+
+        // Set tombol mana yang menyala biru aktif
+        const tombols = document.getElementById('timer-options').querySelectorAll('.time-btn');
+        tombols.forEach(btn => {
+            if (parseInt(btn.getAttribute('data-time')) === durasiMaksimal) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    function ubahDurasi(detik) {
+        if (timerAktif) return; 
+        
+        durasiMaksimal = detik;
+        sisaWaktu = detik;
+        timerDisp.innerText = detik;
+
+        // SIMPAN KE MEMORI BROWSER PERMANEN
+        localStorage.setItem('martis_typing_duration', detik);
+
+        const tombols = document.getElementById('timer-options').querySelectorAll('.time-btn');
+        tombols.forEach(btn => {
+            if (parseInt(btn.getAttribute('data-time')) === detik) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    function muatUlangSaja() {
+        // Refresh halaman, memori pilihan waktu aman terjaga di atas
+        location.reload();
+    }
+
+    function buatTeksBaru(jumlah) {
+        for (let i = 0; i < jumlah; i++) {
+            const kataAcak = kamus[Math.floor(Math.random() * kamus.length)];
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('kata-wrapper');
+            wrapper.id = 'kata-' + (displayTeks.children.length);
+
+            kataAcak.split('').forEach(huruf => {
+                const span = document.createElement('span');
+                span.innerText = huruf;
+                wrapper.appendChild(span);
+            });
+
+            displayTeks.appendChild(wrapper);
+        }
+        highlightKata();
+    }
+
+    function highlightKata() {
+        const semuaKata = displayTeks.querySelectorAll('.kata-wrapper');
+        semuaKata.forEach(k => k.classList.remove('kata-aktif'));
+        
+        const kataAktif = document.getElementById('kata-' + indexKataSekarang);
+        if (kataAktif) {
+            kataAktif.classList.add('kata-aktif');
+            
+            const posisiTopKata = kataAktif.offsetTop;
+            if (posisiTopKata > 20) {
+                displayTeks.scrollTop = posisiTopKata - 15;
+            } else {
+                displayTeks.scrollTop = 0;
+            }
+        }
+    }
+
+    inputKetik.addEventListener('input', (e) => {
+        if (!timerAktif && sisaWaktu > 0) {
+            timerAktif = true;
+            document.querySelectorAll('.time-btn').forEach(btn => btn.style.cursor = 'not-allowed');
+            mulaiTimer();
+        }
+
+        const inputVal = inputKetik.value;
+        const kataAktifWrapper = document.getElementById('kata-' + indexKataSekarang);
+        if (!kataAktifWrapper) return;
+
+        const spans = kataAktifWrapper.querySelectorAll('span');
+        const targetKata = Array.from(spans).map(s => s.innerText).join('');
+
+        if (inputVal.endsWith(' ')) {
+            const hasilKetik = inputVal.trim();
+            inputKetik.value = '';
+            
+            if (hasilKetik === targetKata) {
+                Array.from(spans).forEach(s => s.className = 'char-benar');
+            }
+
+            indexKataSekarang++;
+            if (indexKataSekarang > displayTeks.children.length - 15) buatTeksBaru(20);
+            highlightKata();
+            return;
+        }
+
+        const inputChars = inputVal.split('');
+        let adaSalahLokal = false;
+
+        spans.forEach((span, i) => {
+            const charInput = inputChars[i];
+            if (charInput == null) {
+                span.className = '';
+            } else if (charInput === span.innerText) {
+                span.className = 'char-benar';
+            } else {
+                span.className = 'char-salah';
+                adaSalahLokal = true;
+            }
+        });
+
+        if (adaSalahLokal && inputChars.length > 0) {
+            const lastIdx = inputChars.length - 1;
+            if (inputChars[lastIdx] !== spans[lastIdx].innerText) {
+                mainBox.classList.remove('shake-hit');
+                void mainBox.offsetWidth;
+                mainBox.classList.add('shake-hit');
+                totalSalahKetik++;
+            }
+        }
+
+        updateStats();
+    });
+
+    function updateStats() {
+        let benarSesiIni = 0;
+        displayTeks.querySelectorAll('span').forEach(s => {
+            if (s.classList.contains('char-benar')) benarSesiIni++;
+        });
+        
+        totalHurufBenar = benarSesiIni;
+        const totalInput = totalHurufBenar + totalSalahKetik;
+        if (totalInput > 0) {
+            accDisp.innerText = Math.floor((totalHurufBenar / totalInput) * 100) + "%";
+        }
+    }
+
+    function mulaiTimer() {
+        interval = setInterval(() => {
+            sisaWaktu--;
+            timerDisp.innerText = sisaWaktu;
+            
+            let waktuLewat = durasiMaksimal - sisaWaktu;
+            if (waktuLewat > 0) {
+                wpmDisp.innerText = Math.round((totalHurufBenar / 5) / (waktuLewat / 60));
+            }
+            if (sisaWaktu <= 0) selesai();
+        }, 1000);
+    }
+
+    function selesai() {
+        clearInterval(interval);
+        timerAktif = false;
+        inputKetik.disabled = true;
+        alert(`SELESAI!\nKecepatan: ${wpmDisp.innerText} WPM\nAkurasi: ${accDisp.innerText}`);
+    }
+
+    // Eksekusi awal saat file dibuka
+    inisialisasiWaktu();
+    buatTeksBaru(80);
+</script>
+</body>
+</html>
