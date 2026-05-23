@@ -275,6 +275,8 @@ function kembaliKeHome() {
     window.parent.resetPortal();
 }
 </script>
+    
+    <div class="instruction" id="textGuidance">Klik Untuk Membangkitkan Sharingan (1 Tomoe)</div>
 
     <div class="flash-effect" id="flashLayer"></div>
     <canvas id="crowCanvas"></canvas>
@@ -332,25 +334,40 @@ function kembaliKeHome() {
     eyeElement.classList.add(`fase-${currentFase}`);
 
     // Update state berdasarkan fase
-    switch(currentFase) {
-        case 1:
-            isCrowActive = false;
-            isFireActive = false;
-            targetSpeed = 0;
-            currentSpeed = 0;
-            rotationAngle = 0;
-            textGuidance.innerText = "Sharingan kembali ke titik awal.";
-            break;
-        case 2: targetSpeed = 2.0; textGuidance.innerText = "Mundur ke 1 Tomoe."; break;
-        case 3: targetSpeed = 3.5; textGuidance.innerText = "Mundur ke 2 Tomoe."; break;
-        case 4: targetSpeed = 5.0; textGuidance.innerText = "Mundur ke 3 Tomoe."; break;
-        case 5:
-            isCrowActive = true;
-            isFireActive = true;
-            targetSpeed = 45.0;
-            textGuidance.innerText = "Kembali ke Mangekyou Sharingan.";
-            break;
-        case 6:
+            switch(currentFase) {
+                case 1:
+                    isCrowActive = false;
+                    isFireActive = false;
+                    lightnings = [];
+                    targetSpeed = 0;
+                    currentSpeed = 0;
+                    rotationAngle = 0; 
+                    textGuidance.innerText = "Klik Untuk Membangkitkan Sharingan (1 Tomoe)";
+                    break;
+                case 2: 
+                    targetSpeed = 2.0; 
+                    textGuidance.innerText = "Fase 2: Sharingan 1 Tomoe Aktif! (Meningkatkan Akurasi Penglihatan) | Scroll Aktif"; 
+                    break;
+                case 3: 
+                    targetSpeed = 3.5; 
+                    textGuidance.innerText = "Fase 3: Berkembang ke 2 Tomoe! (Mampu Meniru Jutsu & Gerakan Musuh) | Scroll Aktif"; 
+                    break;
+                case 4: 
+                    targetSpeed = 5.0; 
+                    textGuidance.innerText = "Fase 4: Sharingan 3 Tomoe Sempurna! (Prediksi Serangan & Genjutsu Mutlak) | Klik Untuk Tragedi Mangekyou!"; 
+                    break;
+                case 5:
+                    isCrowActive = true;
+                    isFireActive = true;
+                    flashLayer.classList.add('flash-mangekyou');
+                    document.body.style.animation = 'mangekyouShake 0.15s infinite';
+                    setTimeout(() => { if(currentFase === 5) document.body.style.animation = 'none'; }, 600);
+                    targetSpeed = 45.0;
+                    speedTimeout = setTimeout(() => { if (currentFase === 5) targetSpeed = 1.2; }, 800);
+                    textGuidance.innerText = "Fase 5: Mangekyou Sharingan Terbangun! (Tsukuyomi & Amaterasu Siap Ditembakkan) | Scroll Kecepatan Putar";
+                    break;
+                case 6:
+
             isCrowActive = true;
             isFireActive = true;
             targetSpeed = 55.0;
