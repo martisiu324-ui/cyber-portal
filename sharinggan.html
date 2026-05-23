@@ -259,6 +259,23 @@
 </head>
 <body>
 
+<button onclick="kembaliKeHome()" style="position: fixed; top: 25px; left: 25px; z-index: 10000; padding: 12px 22px; background: rgba(6, 7, 17, 0.6); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(0, 210, 255, 0.4); color: #00d2ff; border-radius: 30px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1px; cursor: pointer; box-shadow: 0 0 15px rgba(0, 210, 255, 0.15), inset 0 0 10px rgba(0, 210, 255, 0.1); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;" onmouseover="this.style.background='rgba(0, 210, 255, 0.2)'; this.style.boxShadow='0 0 25px rgba(0, 210, 255, 0.4)'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='rgba(6, 7, 17, 0.6)'; this.style.boxShadow='0 0 15px rgba(0, 210, 255, 0.15)'; this.style.transform='scale(1)'">
+    <span style="font-size: 16px;">⟵</span> CORE SYSTEM
+</button>
+
+<script>
+function kembaliKeHome() {
+    window.parent.resetPortal();
+}
+</script>
+
+<script>
+function kembaliKeHome() {
+    // Fungsi ajaib untuk menyuruh layar utama (parent) me-refresh diri dan kembali ke home
+    window.parent.resetPortal();
+}
+</script>
+
     <div class="flash-effect" id="flashLayer"></div>
     <canvas id="crowCanvas"></canvas>
    
