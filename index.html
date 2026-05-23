@@ -347,7 +347,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         const logsMasuk = [
             "Weaving Tsukuyomi signs...",
             "Expanding Genjutsu field...",
@@ -432,22 +432,31 @@
             let teksWaktu = waktuSekarang.toLocaleTimeString('id-ID', opsiWaktu).toUpperCase();
             let teksTanggal = waktuSekarang.toLocaleDateString('id-ID', opsiTanggal).toUpperCase();
 
-            // Atur pemisah titik dua jadi format standar browser jika ada keanehan sistem lokal
             teksWaktu = teksWaktu.replace(/\./g, ':');
 
             document.getElementById('live-time').innerText = teksWaktu;
             document.getElementById('live-date').innerText = teksTanggal;
         }
 
-        // LOGIKA UTAMA WINDOW ONLOAD
+        // LOGIKA UTAMA WINDOW ONLOAD (FIXED: LOADING TETAP ADA DI SETIAP FITUR, NO DOUBLE LOADING)
         window.onload = function() {
             // Jalankan dan setel interval jam real-time
             setInterval(jalankanJamRealTime, 1000);
             jalankanJamRealTime();
 
             const halamanTerakhir = sessionStorage.getItem('halamanTerakhir');
+            const sudahLoginAwal = sessionStorage.getItem('sudahLoginAwal'); // Cek status login pertama kali
             
+            // Log khusus untuk loading masuk pertama kali selama 3 detik
+            const logsLogin = [
+                "Connecting to Cyber Shinobi Network...",
+                "Authenticating chakra signature...",
+                "Bypassing security barriers...",
+                "ACCESS GRANTED. INITIALIZING PORTAL!"
+            ];
+
             if (halamanTerakhir) {
+                // Jika user refresh saat di dalam jendela/iframe proyek, biarkan tetap di sana
                 const iframe = document.getElementById('portalFrame');
                 document.getElementById('mainMenuLayout').style.display = 'none';
                 iframe.style.display = 'block';
@@ -456,10 +465,27 @@
                 iframe.src = halamanTerakhir;
             } 
             else {
-                document.getElementById('mainMenuLayout').style.display = 'block';
-                const iframe = document.getElementById('portalFrame');
-                iframe.style.display = 'none';
-                iframe.src = "";
+                // Skenario 1: Jika benar-benar baru pertama kali klik link utama
+                if (!sudahLoginAwal) {
+                    document.getElementById('mainMenuLayout').style.display = 'none';
+                    const iframe = document.getElementById('portalFrame');
+                    iframe.style.display = 'none';
+                    iframe.src = "";
+
+                    // Jalankan loading login bawaan (sekitar 3 detik)
+                    jalankanLoadingAnimation(logsLogin, () => {
+                        document.getElementById('mainMenuLayout').style.display = 'block';
+                        sessionStorage.setItem('sudahLoginAwal', 'true'); // Kunci status agar tidak double saat ditekan tombol keluar
+                    });
+                } 
+                // Skenario 2: Jika kembali dari jendela proyek (efek reload dari fungsi resetPortal)
+                else {
+                    // Langsung tampilkan menu utama secara instan karena user BARU SAJA melihat 'logsKeluar' sebelum reload
+                    document.getElementById('mainMenuLayout').style.display = 'block';
+                    const iframe = document.getElementById('portalFrame');
+                    iframe.style.display = 'none';
+                    iframe.src = "";
+                }
             }
         };
     </script>
