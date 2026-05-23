@@ -318,7 +318,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         const logsMasuk = [
             "Weaving Tsukuyomi signs...",
             "Expanding Genjutsu field...",
@@ -333,6 +333,7 @@
             "WELCOME BACK TO THE RED WORLD!"
         ];
 
+        // 1. FUNGSI UNTUK MEMBUKA SUB-MENU
         function bukaProyek(namaFile, namaMenu) {
             jalankanLoadingAnimation(logsMasuk, () => {
                 const iframe = document.getElementById('portalFrame');
@@ -343,12 +344,16 @@
                     iframe.style.opacity = '1'; 
                     iframe.style.transform = 'scale(1)'; 
                 }, 50);
-                localStorage.setItem('halamanTerakhir', namaFile);
+                
+                // MENGGUNAKAN SESSION STORAGE (Agar aman saat di-refresh)
+                sessionStorage.setItem('halamanTerakhir', namaFile);
             });
         }
 
+        // 2. FUNGSI UNTUK TOMBOL KEMBALI KE HOME
         function resetPortal() {
-            localStorage.removeItem('halamanTerakhir');
+            // Hapus memori halaman terakhir agar kembali bersih ke menu utama
+            sessionStorage.removeItem('halamanTerakhir');
             const iframe = document.getElementById('portalFrame');
             iframe.style.opacity = '0';
             iframe.style.transform = 'scale(0.97)';
@@ -361,6 +366,7 @@
             }, 300);
         }
 
+        // 3. MESIN LOADING ANIMATION PROGRESS BAR
         function jalankanLoadingAnimation(databaseLog, callbackSelesai) {
             const loadingScreen = document.getElementById('loadingScreen');
             const loadBar = document.getElementById('loadBar');
@@ -392,17 +398,28 @@
             }, 25);
         }
 
-        // PERBAIKAN LOGIKA UTAMA DI SINI
+        // 4. LOGIKA UTAMA: MENANGANI REFRESH VS LINK UTAMA BARU
         window.onload = function() {
-            // Begitu link dibuka, paksa bersihkan memori halaman terakhir agar selalu kembali ke menu utama
-            localStorage.removeItem('halamanTerakhir');
+            // Cek apakah ada memori sub-menu yang aktif
+            const halamanTerakhir = sessionStorage.getItem('halamanTerakhir');
             
-            // Pastikan layout menu utama tampil kokoh di tengah
-            document.getElementById('mainMenuLayout').style.display = 'block';
-            const iframe = document.getElementById('portalFrame');
-            iframe.style.display = 'none';
-            iframe.src = "";
+            // KONDISI A: Jika user sedang di dalam sub-menu lalu di-REFRESH, tetap di halaman tersebut
+            if (halamanTerakhir) {
+                const iframe = document.getElementById('portalFrame');
+                document.getElementById('mainMenuLayout').style.display = 'none';
+                iframe.style.display = 'block';
+                iframe.style.opacity = '1';
+                iframe.style.transform = 'scale(1)';
+                iframe.src = halamanTerakhir;
+            } 
+            // KONDISI B: Jika baru buka link utama di tab baru, paksa kunci di Menu Utama
+            else {
+                document.getElementById('mainMenuLayout').style.display = 'block';
+                const iframe = document.getElementById('portalFrame');
+                iframe.style.display = 'none';
+                iframe.src = "";
+            }
         };
     </script>
-</body>
+    </body>
 </html>
