@@ -2,58 +2,135 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Martis Typing - Sticky Timer Fix</title>
+    <title>Martis Typing - Tsukuyomi Red Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght=700;900&family=Plus+Jakarta+Sans:wght=400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --chakra: #00d2ff;
-            --sharingan: #ff4757;
-            --void: #0a0a0c;
+            --sharingan: #ff1e27;       /* Merah Akatsuki Utama */
+            --sharingan-dark: #9e0006;  /* Merah Darah Gelap */
+            --void: #020204;            /* Hitam Pekat Tsukuyomi */
+            --panel-glass: rgba(15, 5, 8, 0.65); /* Kaca Gelap Tint Merah Tua */
+            --shadow-glow: rgba(255, 30, 39, 0.25);
+            --text-gray: #a38588;       /* Abu-abu kemerahan pudar */
         }
 
-        * { box-sizing: border-box; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             background-color: var(--void);
-            background-image: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0c 100%);
+            /* Background Dunia Genjutsu Merah-Hitam sesuai Menu Utama */
+            background-image: 
+                radial-gradient(circle at center, rgba(255, 30, 39, 0.1) 0%, transparent 70%),
+                radial-gradient(circle at center, #0d0406 0%, #020204 100__);
             color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            user-select: none;
         }
 
+        /* TOMBOL KEMBALI CORE SYSTEM - SENADA DENGAN DASHBOARD MERAH */
+        .btn-back {
+            position: fixed; 
+            top: 25px; 
+            left: 25px; 
+            z-index: 10000; 
+            padding: 12px 24px; 
+            background: rgba(15, 5, 8, 0.6); 
+            -webkit-backdrop-filter: blur(12px); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 30, 39, 0.3); 
+            color: #ffffff; 
+            border-radius: 30px; 
+            font-family: 'Orbitron', sans-serif; 
+            font-size: 13px; 
+            font-weight: 700; 
+            letter-spacing: 2px; 
+            cursor: pointer; 
+            box-shadow: 0 0 15px rgba(255, 30, 39, 0.1), inset 0 0 10px rgba(255, 30, 39, 0.1); 
+            transition: all 0.3s cubic-bezier(0.15, 0.85, 0.33, 1); 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            text-shadow: 0 0 8px var(--sharingan);
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 30, 39, 0.15); 
+            border-color: var(--sharingan);
+            box-shadow: 0 0 25px rgba(255, 30, 39, 0.4); 
+            transform: translateY(-2px) scale(1.03);
+            color: #ffffff;
+        }
+
+        /* CONTAINER BOX UTAMA (INTEGRASI AKATSUKI GLASSMORPHISM) */
         .container {
-            background: rgba(15, 15, 20, 0.95);
+            background: var(--panel-glass);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
             padding: 40px;
             border-radius: 20px;
             width: 90%;
             max-width: 850px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 1), 0 0 20px rgba(0, 210, 255, 0.1);
-            border: 1px solid #333;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85),
+                        0 0 30px rgba(255, 30, 39, 0.15),
+                        inset 0 1px 2px rgba(255, 30, 39, 0.15);
+            border: 1px solid rgba(255, 30, 39, 0.12);
             text-align: center;
+            position: relative;
         }
 
+        /* AKSEN LINE GLOW ATAS NEON MERAH */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 15%;
+            width: 70%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--sharingan), transparent);
+            box-shadow: 0 0 12px var(--sharingan);
+        }
+
+        /* EFEK EROR GETAR SAAT SALAH KETIK */
         .shake-hit { animation: shakeAnim 0.15s ease-in-out; }
         @keyframes shakeAnim {
             0% { transform: translateX(0); }
-            25% { transform: translateX(6px); border-color: var(--sharingan); }
+            25% { transform: translateX(6px); border-color: var(--sharingan); box-shadow: 0 0 40px rgba(255, 30, 39, 0.4); }
             50% { transform: translateX(-6px); }
             100% { transform: translateX(0); }
         }
 
         h2 { 
-            color: var(--chakra); 
+            font-family: 'Orbitron', sans-serif;
+            color: #ffffff; 
             letter-spacing: 6px; 
             text-transform: uppercase; 
-            text-shadow: 0 0 15px var(--chakra);
+            text-shadow: 0 0 15px var(--sharingan), 0 0 30px var(--sharingan-dark);
             margin: 0;
+            font-weight: 900;
         }
         
-        .sub-title { color: #444; font-size: 12px; margin-top: 5px; margin-bottom: 15px; }
+        .sub-title { 
+            font-family: 'Orbitron', sans-serif;
+            color: #7a5257; 
+            font-size: 11px; 
+            margin-top: 5px; 
+            margin-bottom: 25px; 
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
 
+        /* SELEKTOR WAKTU TOMBOL MERAH */
         .time-selector {
             display: flex;
             justify-content: center;
@@ -62,38 +139,49 @@
         }
 
         .time-btn {
-            background: #111;
-            border: 1px solid #333;
-            color: #666;
-            padding: 8px 16px;
-            font-size: 14px;
+            background: #050203;
+            border: 1px solid rgba(255, 30, 39, 0.25);
+            color: #6e5457;
+            padding: 8px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.3s cubic-bezier(0.15, 0.85, 0.33, 1);
         }
-        .time-btn:hover { color: var(--chakra); border-color: var(--chakra); }
+        .time-btn:hover { 
+            color: #ffffff; 
+            border-color: var(--sharingan);
+            box-shadow: 0 0 10px rgba(255, 30, 39, 0.3);
+        }
         
         .time-btn.active {
-            background: rgba(0, 210, 255, 0.1);
-            border-color: var(--chakra);
-            color: var(--chakra);
-            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+            background: rgba(255, 30, 39, 0.15);
+            border-color: var(--sharingan);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 30, 39, 0.4);
+            text-shadow: 0 0 5px #fff;
         }
 
+        /* BOX AREA UTAMA TEKS */
         #teks-asli {
             font-size: 32px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(5, 2, 3, 0.6);
             padding: 15px 25px;
             border-radius: 10px;
             line-height: 1.8em;
             text-align: left;
             margin-bottom: 25px;
-            color: #444;
+            color: #443133; /* Warna kata pasif dibuat pudar kemerahan */
             height: 3.9em; 
             overflow: hidden; 
             position: relative;
-            border-left: 4px solid var(--chakra);
+            border-left: 4px solid var(--sharingan);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+            border-top: 1px solid rgba(255, 30, 39, 0.05);
+            border-bottom: 1px solid rgba(255, 30, 39, 0.05);
+            border-right: 1px solid rgba(255, 30, 39, 0.05);
             scroll-behavior: smooth;
         }
 
@@ -103,78 +191,102 @@
             margin-right: 15px;
             padding: 2px 5px;
             border-radius: 5px;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
 
+        /* HIGHLIGHT KATA YANG SEDANG DIKETIK */
         .kata-aktif { 
-            background: rgba(0, 210, 255, 0.15);
-            box-shadow: 0 4px 0 var(--chakra);
-            color: #888;
+            background: rgba(255, 30, 39, 0.12);
+            box-shadow: 0 4px 0 var(--sharingan);
+            color: #a38588;
         }
 
-        .char-benar { color: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.5); }
-        .char-salah { color: var(--sharingan); background: rgba(255, 71, 87, 0.3); text-shadow: 0 0 8px var(--sharingan); }
+        /* WARNA HURUF JIKA BENAR / SALAH */
+        .char-benar { color: #ffffff; text-shadow: 0 0 8px rgba(255,255,255,0.6); }
+        .char-salah { color: var(--sharingan); background: rgba(255, 30, 39, 0.25); text-shadow: 0 0 10px var(--sharingan); border-radius: 2px; }
 
+        /* INPUT AREA GAUL */
         .input-area {
             width: 80%;
             padding: 18px;
             font-size: 24px;
-            background: #111;
-            border: 2px solid #333;
-            color: var(--chakra);
-            border-radius: 10px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #050203;
+            border: 2px solid rgba(255, 30, 39, 0.2);
+            color: #ffffff;
+            border-radius: 12px;
             outline: none;
             text-align: center;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.7);
+            transition: all 0.3s ease;
+        }
+        .input-area:focus {
+            border-color: var(--sharingan);
+            box-shadow: 0 0 20px rgba(255, 30, 39, 0.25), inset 0 0 10px rgba(0,0,0,0.7);
         }
 
+        /* STATS PANEL BAWAH */
         .stats-panel {
             display: flex;
             justify-content: space-around;
             margin-top: 30px;
-            background: rgba(0,0,0,0.5);
+            background: rgba(5, 2, 3, 0.5);
             padding: 20px;
-            border-radius: 10px;
-            border-bottom: 2px solid var(--chakra);
+            border-radius: 12px;
+            border-bottom: 2px solid var(--sharingan);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         }
 
-        .stat-val { display: block; font-size: 32px; font-weight: bold; color: var(--chakra); }
-        .stat-label { font-size: 11px; color: #666; text-transform: uppercase; }
-        #timer-val { color: var(--sharingan); }
+        .stat-val { 
+            display: block; 
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px; 
+            font-weight: 900; 
+            color: #ffffff; 
+            text-shadow: 0 0 10px var(--sharingan);
+        }
+        .stat-label { 
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px; 
+            color: #7a5257; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+        #timer-val { color: var(--sharingan); text-shadow: 0 0 10px var(--sharingan); }
 
+        /* BUTTON RESET */
         .btn-reset {
             margin-top: 25px;
             background: none;
-            color: #444;
-            border: 1px solid #333;
-            padding: 8px 20px;
+            color: #54363a;
+            border: 1px solid rgba(255, 30, 39, 0.15);
+            padding: 10px 24px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 6px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            letter-spacing: 1px;
+            font-weight: 700;
+            transition: all 0.3s ease;
         }
-        .btn-reset:hover { color: var(--chakra); border-color: var(--chakra); }
+        .btn-reset:hover { 
+            color: #ffffff; 
+            border-color: var(--sharingan);
+            text-shadow: 0 0 8px var(--sharingan);
+            background: rgba(255, 30, 39, 0.05);
+        }
     </style>
 </head>
 <body>
 
-<button onclick="kembaliKeHome()" style="position: fixed; top: 25px; left: 25px; z-index: 10000; padding: 12px 22px; background: rgba(6, 7, 17, 0.6); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(0, 210, 255, 0.4); color: #00d2ff; border-radius: 30px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1px; cursor: pointer; box-shadow: 0 0 15px rgba(0, 210, 255, 0.15), inset 0 0 10px rgba(0, 210, 255, 0.1); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;" onmouseover="this.style.background='rgba(0, 210, 255, 0.2)'; this.style.boxShadow='0 0 25px rgba(0, 210, 255, 0.4)'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='rgba(6, 7, 17, 0.6)'; this.style.boxShadow='0 0 15px rgba(0, 210, 255, 0.15)'; this.style.transform='scale(1)'">
-    <span style="font-size: 16px;">⟵</span> CORE SYSTEM
+<button onclick="kembaliKeHome()" class="btn-back">
+    <span>⟵</span> CORE SYSTEM
 </button>
-
-<script>
-function kembaliKeHome() {
-    window.parent.resetPortal();
-}
-</script>
-
-<script>
-function kembaliKeHome() {
-    // Fungsi ajaib untuk menyuruh layar utama (parent) me-refresh diri dan kembali ke home
-    window.parent.resetPortal();
-}
-</script>
 
 <div class="container" id="main-box">
     <h2>MARTIS TYPING</h2>
-    <p class="sub-title">Berapa WPM kamu?</p>
+    <p class="sub-title">BERAPA WPM SPEED GENJUTSU KAMU?</p>
     
     <div class="time-selector" id="timer-options">
         <button class="time-btn" data-time="10" onclick="ubahDurasi(10)">10s</button>
@@ -184,7 +296,7 @@ function kembaliKeHome() {
 
     <div id="teks-asli"></div>
     
-    <input type="text" id="input-ketik" class="input-area" placeholder="Ketik kata yang aktif..." autofocus autocomplete="off">
+    <input type="text" id="input-ketik" class="input-area" placeholder="Ketik kata yang aktif di sini..." autofocus autocomplete="off">
     
     <div class="stats-panel">
         <div class="stat-box">
@@ -201,22 +313,22 @@ function kembaliKeHome() {
         </div>
     </div>
 
-    <button class="btn-reset" onclick="muatUlangSaja()">Ganti Kata</button>
+    <button class="btn-reset" onclick="muatUlangSaja()">GANTI KATA</button>
 </div>
 
 <script>
     const kamus = ["aku", "kamu", "dia", "mereka", "kita", "bisa", "mau", "tahu", "punya", "bukan",
     "ada", "dari", "lagi", "baru", "saja", "sama", "kamu", "jalan", "makan", "tidur",
-    "kerja", "santai", "ngopi", " nongkrong", "keren", "mantap", "siap", "oke", "iya", "tidak",
+    "kerja", "santai", "ngopi", "nongkrong", "keren", "mantap", "siap", "oke", "iya", "tidak",
     "kenapa", "gimana", "udah", "belum", "jangan", "nanti", "sekarang", "besok", "kemarin", "hari",
     "malam", "pagi", "siang", "sore", "waktu", "tempat", "rumah", "teman", "sahabat", "keluarga",
     "bikin", "lihat", "dengar", "bicara", "mikir", "paham", "ngerti", "gokil", "seru", "asik",
     "lucu", "sedih", "senang", "capek", "lelah", "semangat", "sukses", "gagal", "mencoba", "belajar",
     "coding", "laptop", "hape", "internet", "kuota", "online", "chat", "balas", "kirim", "terima",
-    "uang", "dompet", "gaji", "belanja", "murah", "mahal", "diskon", "gratis", " canangkan", "Gas",
+    "uang", "dompet", "gaji", "belanja", "murah", "mahal", "diskon", "gratis", "canangkan", "gas",
     "siapa", "apa", "mana", "ke", "ini", "itu", "begitu", "gini", "gitu", "coba",
     "pasti", "mungkin", "harus", "boleh", "biasa", "luar", "dalam", "atas", "bawah", "depan",
-    "belakang", "tengah", "samping", " deket", "jauh", "cepat", "lambat", "pelan", "buru", "santuy"];
+    "belakang", "tengah", "samping", "deket", "jauh", "cepat", "lambat", "pelan", "buru", "santuy"];
 
     const displayTeks = document.getElementById('teks-asli');
     const inputKetik = document.getElementById('input-ketik');
@@ -234,18 +346,20 @@ function kembaliKeHome() {
     let totalHurufBenar = 0;
     let totalSalahKetik = 0;
 
-    // AMBIL PILIHAN WAKTU TERAKHIR DARI MEMORI BROWSER SAAT DI-REFRESH
+    function kembaliKeHome() {
+        window.parent.resetPortal();
+    }
+
     function inisialisasiWaktu() {
         const waktuTersimpan = localStorage.getItem('martis_typing_duration');
         if (waktuTersimpan) {
             durasiMaksimal = parseInt(waktuTersimpan);
         } else {
-            durasiMaksimal = 30; // Default jika memori kosong
+            durasiMaksimal = 30;
         }
         sisaWaktu = durasiMaksimal;
         timerDisp.innerText = durasiMaksimal;
 
-        // Set tombol mana yang menyala biru aktif
         const tombols = document.getElementById('timer-options').querySelectorAll('.time-btn');
         tombols.forEach(btn => {
             if (parseInt(btn.getAttribute('data-time')) === durasiMaksimal) {
@@ -263,7 +377,6 @@ function kembaliKeHome() {
         sisaWaktu = detik;
         timerDisp.innerText = detik;
 
-        // SIMPAN KE MEMORI BROWSER PERMANEN
         localStorage.setItem('martis_typing_duration', detik);
 
         const tombols = document.getElementById('timer-options').querySelectorAll('.time-btn');
@@ -277,7 +390,6 @@ function kembaliKeHome() {
     }
 
     function muatUlangSaja() {
-        // Refresh halaman, memori pilihan waktu aman terjaga di atas
         location.reload();
     }
 
@@ -405,7 +517,6 @@ function kembaliKeHome() {
         alert(`SELESAI!\nKecepatan: ${wpmDisp.innerText} WPM\nAkurasi: ${accDisp.innerText}`);
     }
 
-    // Eksekusi awal saat file dibuka
     inisialisasiWaktu();
     buatTeksBaru(80);
 </script>
