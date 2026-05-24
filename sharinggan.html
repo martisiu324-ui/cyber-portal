@@ -389,11 +389,11 @@ function kembaliKeHome() {
                     break;
                 case 2: 
                     targetSpeed = 2.0; 
-                    textGuidance.innerText = "Fase 2: Sharingan 1 Tomoe Aktif! (Meningkatkan Akurasi Penglihatan) | Scroll Aktif"; 
+                    textGuidance.innerText = "Fase 2: Sharingan 1 Tomoe Aktif! (Meningkatkan Akurasi Penglihatan) | Scroll/Swipe HP Aktif"; 
                     break;
                 case 3: 
                     targetSpeed = 3.5; 
-                    textGuidance.innerText = "Fase 3: Berkembang ke 2 Tomoe! (Mampu Meniru Jutsu & Gerakan Musuh) | Scroll Aktif"; 
+                    textGuidance.innerText = "Fase 3: Berkembang ke 2 Tomoe! (Mampu Meniru Jutsu & Gerakan Musuh) | Scroll/Swipe HP Aktif"; 
                     break;
                 case 4: 
                     targetSpeed = 5.0; 
@@ -407,7 +407,7 @@ function kembaliKeHome() {
                     setTimeout(() => { if(currentFase === 5) document.body.style.animation = 'none'; }, 600);
                     targetSpeed = 45.0;
                     speedTimeout = setTimeout(() => { if (currentFase === 5) targetSpeed = 1.2; }, 800);
-                    textGuidance.innerText = "Fase 5: Mangekyou Sharingan Terbangun! (Tsukuyomi & Amaterasu Siap Ditembakkan) | Scroll Kecepatan Putar";
+                    textGuidance.innerText = "Fase 5: Mangekyou Sharingan Terbangun! (Tsukuyomi & Amaterasu Siap Ditembakkan) | Scroll/Swipe Kecepatan Putar";
                     break;
                 case 6:
 
@@ -681,6 +681,34 @@ class RealFireParticle {
             }
         }, { passive: false });
 
+        // Tambahan Pendeteksi Gerakan Jari (Swipe/Scroll) khusus di HP
+        let touchStartY = 0;
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                touchStartY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (currentFase === 1) return; // Kunci putaran di fase 1 agar gambar siluet tetap tegak lurus
+            if (e.touches.length === 1) {
+                let currentTouchY = e.touches[0].clientY;
+                let diffY = touchStartY - currentTouchY; // Positif jika scroll ke bawah, negatif ke atas
+                
+                // Mencegah halaman utama bergulir naik turun secara tidak sengaja saat memainkan efek mata
+                if (e.cancelable) e.preventDefault(); 
+
+                // Sensivitas disesuaikan agar terasa pas (perubahan kecepatan dikalikan konstanta)
+                targetSpeed += diffY * 0.08;
+                
+                if (targetSpeed > 100) targetSpeed = 100;
+                if (targetSpeed < 0) targetSpeed = 0;
+
+                // Update posisi start agar perubahan kecepatannya kontinu dan dinamis saat digeser berkelanjutan
+                touchStartY = currentTouchY; 
+            }
+        }, { passive: false });
+
         function evolveEye() {
             flashLayer.className = "flash-effect";
             void flashLayer.offsetWidth;
@@ -705,9 +733,9 @@ class RealFireParticle {
                     rotationAngle = 0; // Kembalikan sudut ke 0 agar siluet tidak miring
                     textGuidance.innerText = "Klik Untuk Kebangkitkan Sharingan (1 Tomoe)";
                     break;
-                case 2: targetSpeed = 2.0; textGuidance.innerText = "Sharingan Aktif (1 Tomoe) | Klik Lagi Untuk Level 2 (2 Tomoe) | Scroll Aktif"; break;
-                case 3: targetSpeed = 3.5; textGuidance.innerText = "Klik Lagi Untuk Menyempurnakan Sharingan (3 Tomoe) | Scroll Aktif"; break;
-                case 4: targetSpeed = 5.0; textGuidance.innerText = "Klik Untuk Mengalami Tragedi & Bangkitkan Mangekyou! | Scroll Aktif"; break;
+                case 2: targetSpeed = 2.0; textGuidance.innerText = "Sharingan Aktif (1 Tomoe) | Klik Lagi Untuk Level 2 (2 Tomoe) | Scroll/Swipe HP Aktif"; break;
+                case 3: targetSpeed = 3.5; textGuidance.innerText = "Klik Lagi Untuk Menyempurnakan Sharingan (3 Tomoe) | Scroll/Swipe HP Aktif"; break;
+                case 4: targetSpeed = 5.0; textGuidance.innerText = "Klik Untuk Mengalami Tragedi & Bangkitkan Mangekyou! | Scroll/Swipe HP Aktif"; break;
                 case 5:
                     isCrowActive = true;
                     isFireActive = true;
@@ -716,7 +744,7 @@ class RealFireParticle {
                     setTimeout(() => { if(currentFase === 5) document.body.style.animation = 'none'; }, 600);
                     targetSpeed = 45.0;
                     speedTimeout = setTimeout(() => { if (currentFase === 5) targetSpeed = 1.2; }, 800);
-                    textGuidance.innerText = "Mangekyou Sharingan! Klik Untuk Meluncurkan Mugen Tsukuyomi! | Scroll Aktif";
+                    textGuidance.innerText = "Mangekyou Sharingan! Klik Untuk Meluncurkan Mugen Tsukuyomi! | Scroll/Swipe HP Aktif";
                     break;
                 case 6:
                     isCrowActive = true;
@@ -733,7 +761,7 @@ class RealFireParticle {
 
                     targetSpeed = 55.0;
                     speedTimeout = setTimeout(() => { if (currentFase === 6) targetSpeed = 0.5; }, 850);
-                    textGuidance.innerText = "Tsukuyomi Tak Terbatas Terbuka. Dunia Milikmu. Klik untuk Reset. | Scroll Aktif";
+                    textGuidance.innerText = "Tsukuyomi Tak Terbatas Terbuka. Dunia Milikmu. Klik untuk Reset. | Scroll/Swipe HP Aktif";
                     break;
             }
         }
