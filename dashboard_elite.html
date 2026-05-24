@@ -14,7 +14,49 @@
         * {
             box-sizing: border-box;
         }
+.btn-kembali-portal {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 99999;
+    background: rgba(15, 5, 8, 0.85);
+    border: 1.5px solid #ff1e27; /* Merah Akatsuki */
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Orbitron', 'Segoe UI', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 12px rgba(255, 30, 39, 0.3), inset 0 1px 1px rgba(255, 30, 39, 0.2);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    text-transform: uppercase;
+}
 
+.btn-kembali-portal:hover {
+    transform: translateX(3px);
+    background: rgba(255, 30, 39, 0.15);
+    box-shadow: 0 0 20px #ff1e27;
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+/* Penyesuaian responsif agar tidak menutupi konten utama pada layar kecil */
+@media (max-width: 768px) {
+    .btn-kembali-portal {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        padding: 8px 14px;
+        font-size: 10px;
+    }
+}
         body {
             background-color: var(--void);
             background-image: radial-gradient(circle at center, #190303 0%, #030408 100%);
@@ -175,8 +217,9 @@
     </style>
 </head>
 <body>
-<button onclick="kembaliKeHome()" style="position: fixed; top: 25px; left: 25px; z-index: 10000; padding: 12px 22px; background: rgba(6, 7, 17, 0.6); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(0, 210, 255, 0.4); color: #00d2ff; border-radius: 30px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1px; cursor: pointer; box-shadow: 0 0 15px rgba(0, 210, 255, 0.15), inset 0 0 10px rgba(0, 210, 255, 0.1); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;" onmouseover="this.style.background='rgba(0, 210, 255, 0.2)'; this.style.boxShadow='0 0 25px rgba(0, 210, 255, 0.4)'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='rgba(6, 7, 17, 0.6)'; this.style.boxShadow='0 0 15px rgba(0, 210, 255, 0.15)'; this.style.transform='scale(1)'">
-    <span style="font-size: 16px;">⟵</span> CORE SYSTEM
+<button class="btn-kembali-portal" onclick="kembaliKePortal()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    CORE SYSTEM
 </button>
 
 <script>
@@ -253,6 +296,15 @@ function kembaliKeHome() {
             teks.style.animationDuration = `${durasiFinal}s`;
         }
     }
+    function kembaliKePortal() {
+    // Mengecek apakah file dibuka di dalam iframe (parent index.html tersedia)
+    if (window.parent && typeof window.parent.resetPortal === 'function') {
+        window.parent.resetPortal();
+    } else {
+        // Jika file dibuka langsung tanpa melalui portal utama, gunakan fallback back browser
+        window.history.back();
+    }
+}
 
     setInterval(refreshJamMalaysia, 1000);
     refreshJamMalaysia();
