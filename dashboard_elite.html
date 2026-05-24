@@ -2,64 +2,74 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shinobi Interface - Mini Compact Edition</title>
     <style>
+        /* BASE THEME VARIABLES */
         :root {
             --sharingan: #b20000;
             --void: #060711;
+            --bg-gradient: radial-gradient(circle at center, #190303 0%, #030408 100%) ;
             --shadow-glow: rgba(178, 0, 0, 0.25);
             --text-gray: #a0a0a0;
+            --border-glow: rgba(178, 0, 0, 0.15);
+            --label-color: #5c1e1e;
+            --select-border: rgba(178, 0, 0, 0.4);
+            --overlay-display: none; 
         }
 
         * {
             box-sizing: border-box;
         }
-.btn-kembali-portal {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 99999;
-    background: rgba(15, 5, 8, 0.85);
-    border: 1.5px solid #ff1e27; /* Merah Akatsuki */
-    color: #ffffff;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'Orbitron', 'Segoe UI', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 0 12px rgba(255, 30, 39, 0.3), inset 0 1px 1px rgba(255, 30, 39, 0.2);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    text-transform: uppercase;
-}
 
-.btn-kembali-portal:hover {
-    transform: translateX(3px);
-    background: rgba(255, 30, 39, 0.15);
-    box-shadow: 0 0 20px #ff1e27;
-    border-color: #ffffff;
-    color: #ffffff;
-}
+        /* TOMBOL KEMBALI PORTAL (KIRI ATAS) */
+        .btn-kembali-portal {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 99999;
+            background: rgba(15, 5, 8, 0.85);
+            border: 1.5px solid var(--sharingan); 
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Orbitron', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 12px var(--shadow-glow), inset 0 1px 1px rgba(255, 30, 39, 0.2);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+        }
 
-/* Penyesuaian responsif agar tidak menutupi konten utama pada layar kecil */
-@media (max-width: 768px) {
-    .btn-kembali-portal {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        padding: 8px 14px;
-        font-size: 10px;
-    }
-}
+        .btn-kembali-portal:hover {
+            transform: translateX(3px);
+            background: rgba(255, 30, 39, 0.15);
+            box-shadow: 0 0 20px var(--sharingan);
+            border-color: #ffffff;
+        }
+
+        /* TOMBOL SELEKTOR TEMA (KANAN ATAS) */
+        .theme-outer-wrapper {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
         body {
             background-color: var(--void);
-            background-image: radial-gradient(circle at center, #190303 0%, #030408 100%);
+            background-image: var(--bg-gradient);
             margin: 0;
             padding: 0;
             display: flex;
@@ -69,26 +79,63 @@
             overflow: hidden;
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
             user-select: none;
+            transition: background 0.5s ease;
+            position: relative;
         }
 
-        /* CARD UTAMA: PADDING DIPANGKAS BIAR PADAT PAS WINDOWS DIKECILIN */
+        /* EFEK OVERLAY KELOPAK SAKURA BETERBANGAN */
+        .effect-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            display: var(--overlay-display);
+        }
+
+        .petal {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--petal-color);
+            border-radius: 15% 85% 15% 85%;
+            opacity: 0.8;
+            animation: fall infinite linear;
+            will-change: transform, opacity;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translate(var(--start-x), -10vh) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--end-x), 110vh) rotate(var(--rotation));
+                opacity: 0;
+            }
+        }
+
+        /* CARD UTAMA DASHBOARD */
         .dashboard-container {
             background: rgba(10, 3, 3, 0.9);
-            border: 1px solid rgba(178, 0, 0, 0.15);
-            padding: 25px 40px; /* Diperkecil dari 45px 60px */
+            border: 1px solid var(--border-glow);
+            padding: 25px 30px; 
             border-radius: 16px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9),
                         0 0 20px var(--shadow-glow);
             position: relative;
             width: 720px;
-            max-width: 95%;
+            max-width: 90%; 
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 18px; /* Jarak antar komponen dipangkas setengahnya agar super rapat */
+            gap: 18px; 
+            transition: border 0.5s ease, box-shadow 0.5s ease;
+            z-index: 10;
         }
 
-        /* AKSEN LINE GLOW ATAS */
         .dashboard-container::before {
             content: '';
             position: absolute;
@@ -100,22 +147,62 @@
             box-shadow: 0 0 8px var(--sharingan);
         }
 
-        /* TAG LOKASI ATAS: DIRAPATKAN MENEMPEL KE JAM */
-        .location-tag {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 6px;
-            color: #5c1e1e;
-            margin-bottom: -18px; /* Menarik teks menempel ke border angka jam */
-            font-weight: 600;
+        .controls-row {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: -5px;
+            z-index: 10;
         }
 
-        /* SEKTOR JAM DIGITAL (COMPACT LAYOUT) */
+        .control-group {
+            width: 280px;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .zone-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--label-color);
+            font-weight: 700;
+            text-align: center;
+            transition: color 0.5s ease;
+        }
+
+        .custom-select {
+            background: rgba(20, 5, 5, 0.85);
+            border: 1px solid var(--select-border);
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-align: center;
+            outline: none;
+            width: 100%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .custom-select:focus, .custom-select:hover {
+            border-color: var(--sharingan);
+            box-shadow: 0 0 15px var(--shadow-glow);
+        }
+
+        /* SEKTOR JAM DIGITAL */
         .time-box {
-            font-size: 85px; /* Sedikit disesuaikan agar pas di mode mini */
+            font-size: min(85px, 15vw); 
             font-weight: 700;
             color: #ffffff;
-            text-shadow: 0 0 8px rgba(178, 0, 0, 0.3),
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.1),
                          0 0 20px var(--sharingan);
             letter-spacing: 2px;
             margin: 0;
@@ -123,6 +210,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: text-shadow 0.5s ease;
         }
 
         .dots {
@@ -130,6 +218,7 @@
             text-shadow: 0 0 15px var(--sharingan);
             padding: 0 2px;
             animation: pulseBlink 1s infinite;
+            transition: color 0.5s ease, text-shadow 0.5s ease;
         }
 
         @keyframes pulseBlink {
@@ -138,34 +227,35 @@
         }
 
         .ampm-box {
-            font-size: 30px;
+            font-size: min(30px, 5vw);
             font-weight: 800;
             color: var(--sharingan);
             text-shadow: 0 0 15px var(--sharingan);
-            margin-left: 10px;
+            margin-left: 8px;
             align-self: flex-end;
-            padding-bottom: 6px;
+            padding-bottom: min(6px, 1.2vw);
+            transition: color 0.5s ease, text-shadow 0.5s ease;
         }
 
-        /* TANGGAL: MAKIN MEPEt KE BAWAH JAM */
         .date-box {
-            font-size: 15px;
-            margin-top: -12px; /* Ditarik ke atas */
+            font-size: min(15px, 3.5vw);
+            margin-top: -8px; 
             color: var(--text-gray);
             letter-spacing: 3px;
             text-transform: uppercase;
             font-weight: 500;
+            text-align: center;
         }
 
-        /* SEKAT TIPIS YANG LEBIH RINGKAS */
         .divider-line {
             width: 100%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(178, 0, 0, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, var(--select-border), transparent);
             margin: 2px 0;
+            transition: background 0.5s ease;
         }
 
-        /* SEKTOR RUNNING TEXT TIGHT MATCH */
+        /* SEKTOR RUNNING TEXT */
         .ticker-wrapper {
             width: 100%;
             display: flex;
@@ -177,21 +267,23 @@
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 4px;
-            color: #5c1e1e;
+            color: var(--label-color);
             font-weight: 600;
             text-align: left;
             padding-left: 2px;
+            transition: color 0.5s ease;
         }
 
         .ticker-container {
             width: 100%;
             background: #020307;
-            border: 1px solid rgba(178, 0, 0, 0.3);
+            border: 1px solid var(--select-border);
             border-radius: 5px;
             overflow: hidden;
-            padding: 10px 0; /* Ketebalan box dikurangi agar hemat space */
+            padding: 10px 0; 
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
             display: flex;
+            transition: border 0.5s ease;
         }
 
         .ticker-text {
@@ -199,51 +291,86 @@
             padding-left: 100%;
             display: inline-block;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 17px; /* Sedikit dikecilkan agar teks panjangnya ga gampang kepotong border */
+            font-size: min(17px, 4vw); 
             font-weight: bold;
             color: #ffffff;
-            text-shadow: 0 0 8px rgba(178, 0, 0, 0.4), 0 0 12px var(--sharingan);
-            
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2), 0 0 12px var(--sharingan);
             animation-name: loopMulusMurni;
             animation-timing-function: linear;
             animation-iteration-count: infinite;
             will-change: transform;
+            transition: text-shadow 0.5s ease;
         }
 
         @keyframes loopMulusMurni {
             0% { transform: translate3d(0, 0, 0); }
             100% { transform: translate3d(-100%, 0, 0); }
         }
+
+        @media (max-width: 768px) {
+            .btn-kembali-portal {
+                position: absolute;
+                top: 15px;
+                left: 15px;
+                padding: 8px 14px;
+                font-size: 10px;
+            }
+            .theme-outer-wrapper {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+            }
+            .theme-outer-wrapper .custom-select {
+                padding: 6px 8px;
+                font-size: 10px;
+                width: auto;
+            }
+        }
     </style>
 </head>
 <body>
-<button class="btn-kembali-portal" onclick="kembaliKePortal()">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-    CORE SYSTEM
-</button>
 
-<script>
-function kembaliKeHome() {
-    window.parent.resetPortal();
-}
-</script>
+    <button class="btn-kembali-portal" onclick="kembaliKePortal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        CORE SYSTEM
+    </button>
 
-<script>
-function kembaliKeHome() {
-    // Fungsi ajaib untuk menyuruh layar utama (parent) me-refresh diri dan kembali ke home
-    window.parent.resetPortal();
-}
-</script>
+    <div class="theme-outer-wrapper">
+        <div class="zone-label">TEMA ANTARMUKA</div>
+        <select class="custom-select" id="themeChooser" onchange="gantiTemaTampilan()">
+            <option value="void-red">VOID SHARINGAN (RED)</option>
+            <option value="akatsuki-purple">AKATSUKI RINNEGAN (PURPLE)</option>
+            <option value="curse-blue">CURSE MARK CHIDORI (BLUE)</option>
+            <option value="susanoo-orange">SUSANOO AMATERASU (ORANGE)</option>
+            <option value="sakura-pink">SAKURA HARUNO (PINK)</option>
+        </select>
+    </div>
+
+    <div class="effect-overlay" id="particleOverlay"></div>
 
     <div class="dashboard-container">
-        <div class="location-tag">MALAYSIA &bull; KUALA LUMPUR MYT</div>
+        <div class="controls-row">
+            <div class="control-group">
+                <div class="zone-label">ZONA WAKTU SHINOBI</div>
+                <select class="custom-select" id="zoneChooser" onchange="gantiZonaWaktu()">
+                    <option value="Asia/Kuala_Lumpur">MALAYSIA (KUALA LUMPUR)</option>
+                    <option value="Asia/Jakarta">INDONESIA (WIB - JAKARTA)</option>
+                    <option value="Asia/Makassar">INDONESIA (WITA - MAKASSAR)</option>
+                    <option value="Asia/Jayapura">INDONESIA (WIT - JAYAPURA)</option>
+                    <option value="Asia/Tokyo">JAPAN (TOKYO)</option>
+                    <option value="America/New_York">USA (NEW YORK)</option>
+                    <option value="Europe/London">UK (LONDON)</option>
+                    <option value="Asia/Riyadh">SAUDI ARABIA (RIYADH)</option>
+                </select>
+            </div>
+        </div>
         
         <div class="time-box">
             <span id="txt-jam">10</span><span class="dots">:</span><span id="txt-menit">00</span><span class="dots">:</span><span id="txt-detik">00</span>
             <span id="txt-ampm" class="ampm-box">AM</span>
         </div>
         
-        <div class="date-box" id="txt-tanggal">MINGGU, 17 MEI 2026</div>
+        <div class="date-box" id="txt-tanggal">MINGGU, 24 MEI 2026</div>
 
         <div class="divider-line"></div>
 
@@ -251,19 +378,107 @@ function kembaliKeHome() {
             <div class="ticker-title">KATA KATA HARI INI</div>
             <div class="ticker-container">
                 <div class="ticker-text">
-                    12 JAM DUDUK DISITU NGAPAIN AJA?... &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                    ADA YANG BISA BANTU JELASKAN? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                    YANG GA ADA SECOND DAILY, NOMINAL, DAN CLOSING, SEMUANYA LEMBUR 2 JAM
+                    "SANTAI BUKAN BERARTI MALAS, INI CUMA STRATEGI BIAR PAS MELANGKAH HASILNYA LANGSUNG BERKELAS. NIKMATI PROSESNYA!" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    "MAJU PELAN-PELAN GAK MASALAH, YANG PENTING JANGAN JALAN DI TEMPAT. HASIL HEBAT GAK PERNAH DATANG DARI CARA YANG INSTAN." &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    "FOKUS SAMA JALAN SENDIRI AJA. GAK USAH BURU-BURU, SETIAP ORANG PUNYA WAKTU 'WONG PUSAT' MASING-MASING UNTUK BERSINAR."
                 </div>
             </div>
         </div>
     </div>
 
 <script>
-    // ENGINE JAM 12 JAM MALAYSIA
-    function refreshJamMalaysia() {
-        const opsiWaktu = { timeZone: 'Asia/Kuala_Lumpur', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        const opsiTanggal = { timeZone: 'Asia/Kuala_Lumpur', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    let zonaAktif = 'Asia/Kuala_Lumpur';
+
+    function gantiTemaTampilan() {
+        const pilihanTema = document.getElementById('themeChooser').value;
+        const rootStyles = document.documentElement.style;
+        const particleContainer = document.getElementById('particleOverlay');
+
+        rootStyles.setProperty('--overlay-display', 'none');
+        particleContainer.innerHTML = ''; 
+
+        if (pilihanTema === 'void-red') {
+            rootStyles.setProperty('--sharingan', '#b20000');
+            rootStyles.setProperty('--void', '#060711');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #190303 0%, #030408 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(178, 0, 0, 0.25)');
+            rootStyles.setProperty('--border-glow', 'rgba(178, 0, 0, 0.15)');
+            rootStyles.setProperty('--label-color', '#5c1e1e');
+            rootStyles.setProperty('--select-border', 'rgba(178, 0, 0, 0.4)');
+        } 
+        else if (pilihanTema === 'akatsuki-purple') {
+            rootStyles.setProperty('--sharingan', '#6a0dad');
+            rootStyles.setProperty('--void', '#04020a');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #140522 0%, #020106 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(106, 13, 173, 0.4)');
+            rootStyles.setProperty('--border-glow', 'rgba(106, 13, 173, 0.25)');
+            rootStyles.setProperty('--label-color', '#3a0764');
+            rootStyles.setProperty('--select-border', 'rgba(106, 13, 173, 0.5)');
+        } 
+        else if (pilihanTema === 'curse-blue') {
+            rootStyles.setProperty('--sharingan', '#00bfff');
+            rootStyles.setProperty('--void', '#010914');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #021a35 0%, #00030a 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(0, 191, 255, 0.35)');
+            rootStyles.setProperty('--border-glow', 'rgba(0, 191, 255, 0.2)');
+            rootStyles.setProperty('--label-color', '#005f80');
+            rootStyles.setProperty('--select-border', 'rgba(0, 191, 255, 0.4)');
+        } 
+        else if (pilihanTema === 'susanoo-orange') {
+            rootStyles.setProperty('--sharingan', '#ff4500');
+            rootStyles.setProperty('--void', '#0a0300');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #240b00 0%, #040100 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(255, 69, 0, 0.4)');
+            rootStyles.setProperty('--border-glow', 'rgba(255, 69, 0, 0.25)');
+            rootStyles.setProperty('--label-color', '#8a2500');
+            rootStyles.setProperty('--select-border', 'rgba(255, 69, 0, 0.5)');
+        }
+        else if (pilihanTema === 'sakura-pink') {
+            rootStyles.setProperty('--sharingan', '#ff1493'); // Pink neon menyala terang
+            rootStyles.setProperty('--void', '#0d0205');     
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #2a0515 0%, #030001 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(255, 20, 147, 0.6)'); 
+            rootStyles.setProperty('--border-glow', 'rgba(255, 20, 147, 0.4)');
+            rootStyles.setProperty('--label-color', '#ff69b4'); 
+            rootStyles.setProperty('--select-border', 'rgba(255, 20, 147, 0.6)');
+            rootStyles.setProperty('--petal-color', '#ff1493'); 
+
+            rootStyles.setProperty('--overlay-display', 'block');
+            buatDaunSakuraBeterbangan();
+        }
+    }
+
+    function buatDaunSakuraBeterbangan() {
+        const container = document.getElementById('particleOverlay');
+        const jumlahKelopak = 45; 
+
+        for (let i = 0; i < jumlahKelopak; i++) {
+            const daun = document.createElement('div');
+            daun.classList.add('petal');
+            
+            daun.style.setProperty('--start-x', `${Math.random() * 110 - 10}vw`); 
+            daun.style.setProperty('--end-x', `${Math.random() * 100 + 10}vw`); 
+            daun.style.setProperty('--rotation', `${(Math.random() * 500) + 200}deg`); 
+            
+            const ukuranAcak = Math.random() * 7 + 6; 
+            daun.style.width = `${ukuranAcak}px`;
+            daun.style.height = `${ukuranAcak + (Math.random() * 3)}px`; 
+            daun.style.animationDuration = `${Math.random() * 6 + 6}s`;
+            daun.style.animationDelay = `${Math.random() * 6}s`;
+            
+            container.appendChild(daun);
+        }
+    }
+
+    function gantiZonaWaktu() {
+        const selektor = document.getElementById('zoneChooser');
+        zonaAktif = selektor.value;
+        refreshJamDunia(); 
+    }
+
+    function refreshJamDunia() {
+        const opsiWaktu = { timeZone: zonaAktif, hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        const opsiTanggal = { timeZone: zonaAktif, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
 
         const kini = new Date();
         
@@ -286,28 +501,26 @@ function kembaliKeHome() {
         document.getElementById('txt-tanggal').innerText = stringTanggal;
     }
 
-    // ENGINE AUTO RUNNING TEXT
     function rapihkanKecepatanTeks() {
         const teks = document.querySelector('.ticker-text');
         if (teks) {
             const lebarTeksAsli = teks.offsetWidth;
-            const setelanKecepatan = 80; // Disesuaikan agar pas dengan resolusi kecil
+            const setelanKecepatan = 80; 
             const durasiFinal = lebarTeksAsli / setelanKecepatan;
             teks.style.animationDuration = `${durasiFinal}s`;
         }
     }
-    function kembaliKePortal() {
-    // Mengecek apakah file dibuka di dalam iframe (parent index.html tersedia)
-    if (window.parent && typeof window.parent.resetPortal === 'function') {
-        window.parent.resetPortal();
-    } else {
-        // Jika file dibuka langsung tanpa melalui portal utama, gunakan fallback back browser
-        window.history.back();
-    }
-}
 
-    setInterval(refreshJamMalaysia, 1000);
-    refreshJamMalaysia();
+    function kembaliKePortal() {
+        if (window.parent && typeof window.parent.resetPortal === 'function') {
+            window.parent.resetPortal();
+        } else {
+            window.history.back();
+        }
+    }
+
+    setInterval(refreshJamDunia, 1000);
+    refreshJamDunia();
 
     window.addEventListener('load', rapihkanKecepatanTeks);
     window.addEventListener('resize', rapihkanKecepatanTeks);
