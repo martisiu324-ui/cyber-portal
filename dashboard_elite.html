@@ -156,7 +156,7 @@
         }
 
         .control-group {
-            width: 280px;
+            width: 320px;
             max-width: 100%;
             display: flex;
             flex-direction: column;
@@ -190,6 +190,20 @@
             width: 100%;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             transition: all 0.3s ease;
+        }
+
+        .custom-select optgroup {
+            background: #0d0404;
+            color: #ff4500;
+            font-style: normal;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .custom-select option {
+            background: #140505;
+            color: #ffffff;
+            text-align: left;
         }
 
         .custom-select:focus, .custom-select:hover {
@@ -307,6 +321,71 @@
             100% { transform: translate3d(-100%, 0, 0); }
         }
 
+        /* PANEL INPUT RAHASIA (KATA KATA CUSTOM) */
+        .secret-input-panel {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            max-width: 90%;
+            background: rgba(10, 3, 3, 0.95);
+            border: 1.5px solid var(--sharingan);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            padding: 15px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px var(--shadow-glow);
+            z-index: 100000;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .secret-input-panel.active {
+            top: 0;
+        }
+
+        .secret-input-panel input {
+            flex: 1;
+            background: #020307;
+            border: 1px solid var(--select-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .secret-input-panel input:focus {
+            border-color: var(--sharingan);
+            box-shadow: 0 0 10px var(--shadow-glow);
+        }
+
+        .secret-input-panel button {
+            background: var(--sharingan);
+            border: none;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .secret-input-panel button:hover {
+            box-shadow: 0 0 12px var(--sharingan);
+            opacity: 0.9;
+        }
+
         @media (max-width: 768px) {
             .btn-kembali-portal {
                 position: absolute;
@@ -351,21 +430,86 @@
         </select>
     </div>
 
+    <div class="secret-input-panel" id="customTickerPanel">
+        <input type="text" id="customTickerInput" placeholder="Ketik kata-kata baru shinobi di sini..." autocomplete="off">
+        <button onclick="terapkanKataKataBaru()">Terapkan</button>
+    </div>
+
     <div class="effect-overlay" id="particleOverlay"></div>
 
     <div class="dashboard-container">
         <div class="controls-row">
             <div class="control-group">
-                <div class="zone-label">ZONA WAKTU SHINOBI</div>
+                <div class="zone-label">ZONA WAKTU GLOBAL SHINOBI</div>
                 <select class="custom-select" id="zoneChooser" onchange="gantiZonaWaktu()">
-                    <option value="Asia/Kuala_Lumpur">MALAYSIA (KUALA LUMPUR)</option>
-                    <option value="Asia/Jakarta">INDONESIA (WIB - JAKARTA)</option>
-                    <option value="Asia/Makassar">INDONESIA (WITA - MAKASSAR)</option>
-                    <option value="Asia/Jayapura">INDONESIA (WIT - JAYAPURA)</option>
-                    <option value="Asia/Tokyo">JAPAN (TOKYO)</option>
-                    <option value="America/New_York">USA (NEW YORK)</option>
-                    <option value="Europe/London">UK (LONDON)</option>
-                    <option value="Asia/Riyadh">SAUDI ARABIA (RIYADH)</option>
+                    <optgroup label="ASIA & TENGGARA">
+                        <option value="Asia/Kuala_Lumpur" selected>MALAYSIA (KUALA LUMPUR)</option>
+                        <option value="Asia/Jakarta">INDONESIA (WIB - JAKARTA)</option>
+                        <option value="Asia/Makassar">INDONESIA (WITA - MAKASSAR)</option>
+                        <option value="Asia/Jayapura">INDONESIA (WIT - JAYAPURA)</option>
+                        <option value="Asia/Singapore">SINGAPURA</option>
+                        <option value="Asia/Bangkok">THAILAND / VIETNAM (BANGKOK)</option>
+                        <option value="Asia/Manila">FILIPINA (MANILA)</option>
+                        <option value="Asia/Tokyo">JEPANG (TOKYO)</option>
+                        <option value="Asia/Seoul">KOREA SELATAN (SEOUL)</option>
+                        <option value="Asia/Shanghai">CINA (SHANGHAI / BEIJING)</option>
+                        <option value="Asia/Taipei">TAIWAN (TAIPEI)</option>
+                        <option value="Asia/Hong_Kong">HONG KONG</option>
+                        <option value="Asia/Kolkata">INDIA (NEW DELHI)</option>
+                        <option value="Asia/Dhaka">BANGLADESH (DHAKA)</option>
+                        <option value="Asia/Karachi">PAKISTAN (KARACHI)</option>
+                    </optgroup>
+
+                    <optgroup label="TIMUR TENGAH">
+                        <option value="Asia/Riyadh">ARAB SAUDI (RIYADH)</option>
+                        <option value="Asia/Dubai">UNI EMIRAT ARAB (DUBAI)</option>
+                        <option value="Asia/Tehran">IRAN (TEHRAN)</option>
+                        <option value="Asia/Jerusalem">PALESTINA / ISRAEL (JERUSALEM)</option>
+                    </optgroup>
+
+                    <optgroup label="EROPA">
+                        <option value="Europe/London">INGGRIS (LONDON)</option>
+                        <option value="Europe/Paris">PRANCIS / JERMAN / ITALIA (PARIS)</option>
+                        <option value="Europe/Athens">YUNAN (ATHENS)</option>
+                        <option value="Europe/Moscow">RUSIA (MOSCOW)</option>
+                        <option value="Europe/Istanbul">TURKI (ISTANBUL)</option>
+                    </optgroup>
+
+                    <optgroup label="AMERIKA UTARA & SELATAN">
+                        <option value="America/New_York">USA EST (NEW YORK)</option>
+                        <option value="America/Chicago">USA CST (CHICAGO)</option>
+                        <option value="America/Denver">USA MST (DENVER)</option>
+                        <option value="America/Los_Angeles">USA PST (LOS ANGELES)</option>
+                        <option value="America/Anchorage">USA (ALASKA)</option>
+                        <option value="America/Mexico_City">MEKSIKO (MEXICO CITY)</option>
+                        <option value="America/Sao_Paulo">BRASIL (SAO PAULO)</option>
+                        <option value="America/Argentina/Buenos_Aires">ARGENTINA (BUENOS AIRES)</option>
+                        <option value="America/Bogota">KOLOMBIA (BOGOTA)</option>
+                    </optgroup>
+
+                    <optgroup label="AFRIKA">
+                        <option value="Africa/Cairo">MESIR (CAIRO)</option>
+                        <option value="Africa/Johannesburg">AFRIKA SELATAN (JOHANNESBURG)</option>
+                        <option value="Africa/Lagos">NIGERIA (LAGOS)</option>
+                        <option value="Africa/Nairobi">KENYA (NAIROBI)</option>
+                    </optgroup>
+
+                    <optgroup label="AUSTRALIA & OSEANIA">
+                        <option value="Australia/Sydney">AUSTRALIA (SYDNEY)</option>
+                        <option value="Australia/Perth">AUSTRALIA Barat (PERTH)</option>
+                        <option value="Pacific/Auckland">SELANDIA BARU (AUCKLAND)</option>
+                        <option value="Pacific/Fiji">FIJI</option>
+                        <option value="Pacific/Honolulu">USA Hawaii (HONOLULU)</option>
+                    </optgroup>
+
+                    <optgroup label="WILAYAH TERLUAR & SAMUDRA">
+                        <option value="Pacific/Kiritimati">KIRIBATI (LINE ISLANDS - UTC+14)</option>
+                        <option value="Pacific/Chatham">CHATHAM ISLANDS (UTC+13:45)</option>
+                        <option value="Atlantic/Azores">AZORES (UTC-01)</option>
+                        <option value="Atlantic/Cape_Verde">CAPE VERDE (UTC-01)</option>
+                        <option value="Pacific/Pago_Pago">SAMOA AMERIKA (PAGO PAGO - UTC-11)</option>
+                        <option value="Etc/GMT+12">IDLW (BAKERS ISLAND - UTC-12)</option>
+                    </optgroup>
                 </select>
             </div>
         </div>
@@ -382,7 +526,7 @@
         <div class="ticker-wrapper">
             <div class="ticker-title">KATA KATA HARI INI</div>
             <div class="ticker-container">
-                <div class="ticker-text">
+                <div class="ticker-text" id="running-text-content">
                     "SANTAI BUKAN BERARTI MALAS, INI CUMA STRATEGI BIAR PAS MELANGKAH HASILNYA LANGSUNG BERKELAS. NIKMATI PROSESNYA!" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                     "MAJU PELAN-PELAN GAK MASALAH, YANG PENTING JANGAN JALAN DI TEMPAT. HASIL HEBAT GAK PERNAH DATANG DARI CARA YANG INSTAN." &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                     "FOKUS SAMA JALAN SENDIRI AJA. GAK USAH BURU-BURU, SETIAP ORANG PUNYA WAKTU 'WONG PUSAT' MASING-MASING UNTUK BERSINAR."
@@ -393,6 +537,49 @@
 
 <script>
     let zonaAktif = 'Asia/Kuala_Lumpur';
+
+    // DETEKSI SHORTCUT CTRL + B
+    window.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key.toLowerCase() === 'b') {
+            e.preventDefault(); // Mencegah fungsi bawaan browser (seperti bookmark)
+            const panel = document.getElementById('customTickerPanel');
+            const input = document.getElementById('customTickerInput');
+            
+            panel.classList.toggle('active');
+            
+            if (panel.classList.contains('active')) {
+                input.focus();
+            }
+        }
+    });
+
+    // DETEKSI TOMBOL ENTER DI INPUT KATA KATA
+    document.getElementById('customTickerInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            terapkanKataKataBaru();
+        }
+    });
+
+    function terapkanKataKataBaru() {
+        const input = document.getElementById('customTickerInput');
+        const ticker = document.getElementById('running-text-content');
+        const panel = document.getElementById('customTickerPanel');
+        
+        if (input.value.trim() !== "") {
+            // Berikan spasi pemisah otomatis di akhir teks agar animasi looping mulus
+            ticker.innerHTML = input.value.toUpperCase() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            
+            // Atur ulang kecepatan gerak teks berdasarkan panjang teks baru
+            rapihkanKecepatanTeks();
+            
+            // Bersihkan kolom input dan sembunyikan panel
+            input.value = "";
+            panel.classList.remove('active');
+        } else {
+            // Jika kosong, langsung tutup panel saja
+            panel.classList.remove('active');
+        }
+    }
 
     function gantiTemaTampilan() {
         const pilihanTema = document.getElementById('themeChooser').value;
@@ -442,11 +629,11 @@
             rootStyles.setProperty('--label-color', '#8a2500');
             rootStyles.setProperty('--select-border', 'rgba(255, 69, 0, 0.5)');
         }
-        // 5. SAKURA HARUNO (PINK) - Terang Menyala
+        // 5. SAKURA HARUNO (PINK)
         else if (pilihanTema === 'sakura-pink') {
             rootStyles.setProperty('--sharingan', '#ff1493'); 
             rootStyles.setProperty('--void', '#0d0205');     
-            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #2a0515 0%, #030001 100%)');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #240515 0%, #030001 100%)');
             rootStyles.setProperty('--shadow-glow', 'rgba(255, 20, 147, 0.6)'); 
             rootStyles.setProperty('--border-glow', 'rgba(255, 20, 147, 0.4)');
             rootStyles.setProperty('--label-color', '#ff69b4'); 
@@ -456,7 +643,7 @@
             rootStyles.setProperty('--overlay-display', 'block');
             buatDaunSakuraBeterbangan();
         }
-        // 6. CYBERPUNK NEON (YELLOW) - *BARU*
+        // 6. CYBERPUNK NEON (YELLOW)
         else if (pilihanTema === 'cyberpunk-yellow') {
             rootStyles.setProperty('--sharingan', '#ffea00');
             rootStyles.setProperty('--void', '#0a0a01');
@@ -466,7 +653,7 @@
             rootStyles.setProperty('--label-color', '#8a7f00');
             rootStyles.setProperty('--select-border', 'rgba(255, 234, 0, 0.5)');
         }
-        // 7. KAMIUI RAIRI (EMERALD GREEN) - *BARU*
+        // 7. KAMIUI RAIRI (EMERALD GREEN)
         else if (pilihanTema === 'kamiui-green') {
             rootStyles.setProperty('--sharingan', '#00ff66');
             rootStyles.setProperty('--void', '#000803');
@@ -476,7 +663,7 @@
             rootStyles.setProperty('--label-color', '#00993d');
             rootStyles.setProperty('--select-border', 'rgba(0, 255, 102, 0.5)');
         }
-        // 8. AMATERASU WHITE-HOLE (WHITE) - *BARU*
+        // 8. AMATERASU WHITE-HOLE (WHITE)
         else if (pilihanTema === 'amaterasu-white') {
             rootStyles.setProperty('--sharingan', '#ffffff');
             rootStyles.setProperty('--void', '#0a0a0a');
@@ -486,7 +673,7 @@
             rootStyles.setProperty('--label-color', '#888888');
             rootStyles.setProperty('--select-border', 'rgba(255, 255, 255, 0.4)');
         }
-        // 9. CHAKRA SHION (MAGENTA) - *BARU*
+        // 9. CHAKRA SHION (MAGENTA)
         else if (pilihanTema === 'chakra-magenta') {
             rootStyles.setProperty('--sharingan', '#ff007f');
             rootStyles.setProperty('--void', '#0a0005');
@@ -496,7 +683,7 @@
             rootStyles.setProperty('--label-color', '#aa0055');
             rootStyles.setProperty('--select-border', 'rgba(255, 0, 127, 0.5)');
         }
-        // 10. BYAKUGAN APEX (ICE BLUE) - *BARU*
+        // 10. BYAKUGAN APEX (ICE BLUE)
         else if (pilihanTema === 'byakugan-ice') {
             rootStyles.setProperty('--sharingan', '#a4f4f9');
             rootStyles.setProperty('--void', '#02070a');
