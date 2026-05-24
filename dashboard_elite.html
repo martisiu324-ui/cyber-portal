@@ -9,7 +9,7 @@
         :root {
             --sharingan: #b20000;
             --void: #060711;
-            --bg-gradient: radial-gradient(circle at center, #190303 0%, #030408 100%) ;
+            --bg-gradient: radial-gradient(circle at center, #190303 0%, #030408 100%);
             --shadow-glow: rgba(178, 0, 0, 0.25);
             --text-gray: #a0a0a0;
             --border-glow: rgba(178, 0, 0, 0.15);
@@ -343,6 +343,11 @@
             <option value="curse-blue">CURSE MARK CHIDORI (BLUE)</option>
             <option value="susanoo-orange">SUSANOO AMATERASU (ORANGE)</option>
             <option value="sakura-pink">SAKURA HARUNO (PINK)</option>
+            <option value="cyberpunk-yellow">CYBERPUNK NEON (YELLOW)</option>
+            <option value="kamiui-green">KAMIUI RAIRI (EMERALD GREEN)</option>
+            <option value="amaterasu-white">AMATERASU WHITE-HOLE (WHITE)</option>
+            <option value="chakra-magenta">CHAKRA SHION (MAGENTA)</option>
+            <option value="byakugan-ice">BYAKUGAN APEX (ICE BLUE)</option>
         </select>
     </div>
 
@@ -397,6 +402,7 @@
         rootStyles.setProperty('--overlay-display', 'none');
         particleContainer.innerHTML = ''; 
 
+        // 1. VOID SHARINGAN (RED)
         if (pilihanTema === 'void-red') {
             rootStyles.setProperty('--sharingan', '#b20000');
             rootStyles.setProperty('--void', '#060711');
@@ -406,6 +412,7 @@
             rootStyles.setProperty('--label-color', '#5c1e1e');
             rootStyles.setProperty('--select-border', 'rgba(178, 0, 0, 0.4)');
         } 
+        // 2. AKATSUKI RINNEGAN (PURPLE)
         else if (pilihanTema === 'akatsuki-purple') {
             rootStyles.setProperty('--sharingan', '#6a0dad');
             rootStyles.setProperty('--void', '#04020a');
@@ -415,6 +422,7 @@
             rootStyles.setProperty('--label-color', '#3a0764');
             rootStyles.setProperty('--select-border', 'rgba(106, 13, 173, 0.5)');
         } 
+        // 3. CURSE MARK CHIDORI (BLUE)
         else if (pilihanTema === 'curse-blue') {
             rootStyles.setProperty('--sharingan', '#00bfff');
             rootStyles.setProperty('--void', '#010914');
@@ -424,6 +432,7 @@
             rootStyles.setProperty('--label-color', '#005f80');
             rootStyles.setProperty('--select-border', 'rgba(0, 191, 255, 0.4)');
         } 
+        // 4. SUSANOO AMATERASU (ORANGE)
         else if (pilihanTema === 'susanoo-orange') {
             rootStyles.setProperty('--sharingan', '#ff4500');
             rootStyles.setProperty('--void', '#0a0300');
@@ -433,8 +442,9 @@
             rootStyles.setProperty('--label-color', '#8a2500');
             rootStyles.setProperty('--select-border', 'rgba(255, 69, 0, 0.5)');
         }
+        // 5. SAKURA HARUNO (PINK) - Terang Menyala
         else if (pilihanTema === 'sakura-pink') {
-            rootStyles.setProperty('--sharingan', '#ff1493'); // Pink neon menyala terang
+            rootStyles.setProperty('--sharingan', '#ff1493'); 
             rootStyles.setProperty('--void', '#0d0205');     
             rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #2a0515 0%, #030001 100%)');
             rootStyles.setProperty('--shadow-glow', 'rgba(255, 20, 147, 0.6)'); 
@@ -445,6 +455,56 @@
 
             rootStyles.setProperty('--overlay-display', 'block');
             buatDaunSakuraBeterbangan();
+        }
+        // 6. CYBERPUNK NEON (YELLOW) - *BARU*
+        else if (pilihanTema === 'cyberpunk-yellow') {
+            rootStyles.setProperty('--sharingan', '#ffea00');
+            rootStyles.setProperty('--void', '#0a0a01');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #242100 0%, #000000 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(255, 234, 0, 0.45)');
+            rootStyles.setProperty('--border-glow', 'rgba(255, 234, 0, 0.2)');
+            rootStyles.setProperty('--label-color', '#8a7f00');
+            rootStyles.setProperty('--select-border', 'rgba(255, 234, 0, 0.5)');
+        }
+        // 7. KAMIUI RAIRI (EMERALD GREEN) - *BARU*
+        else if (pilihanTema === 'kamiui-green') {
+            rootStyles.setProperty('--sharingan', '#00ff66');
+            rootStyles.setProperty('--void', '#000803');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #013013 0%, #000100 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(0, 255, 102, 0.4)');
+            rootStyles.setProperty('--border-glow', 'rgba(0, 255, 102, 0.25)');
+            rootStyles.setProperty('--label-color', '#00993d');
+            rootStyles.setProperty('--select-border', 'rgba(0, 255, 102, 0.5)');
+        }
+        // 8. AMATERASU WHITE-HOLE (WHITE) - *BARU*
+        else if (pilihanTema === 'amaterasu-white') {
+            rootStyles.setProperty('--sharingan', '#ffffff');
+            rootStyles.setProperty('--void', '#0a0a0a');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #262626 0%, #020202 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(255, 255, 255, 0.35)');
+            rootStyles.setProperty('--border-glow', 'rgba(255, 255, 255, 0.2)');
+            rootStyles.setProperty('--label-color', '#888888');
+            rootStyles.setProperty('--select-border', 'rgba(255, 255, 255, 0.4)');
+        }
+        // 9. CHAKRA SHION (MAGENTA) - *BARU*
+        else if (pilihanTema === 'chakra-magenta') {
+            rootStyles.setProperty('--sharingan', '#ff007f');
+            rootStyles.setProperty('--void', '#0a0005');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #36001b 0%, #010001 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(255, 0, 127, 0.45)');
+            rootStyles.setProperty('--border-glow', 'rgba(255, 0, 127, 0.25)');
+            rootStyles.setProperty('--label-color', '#aa0055');
+            rootStyles.setProperty('--select-border', 'rgba(255, 0, 127, 0.5)');
+        }
+        // 10. BYAKUGAN APEX (ICE BLUE) - *BARU*
+        else if (pilihanTema === 'byakugan-ice') {
+            rootStyles.setProperty('--sharingan', '#a4f4f9');
+            rootStyles.setProperty('--void', '#02070a');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #0d2c3d 0%, #000204 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(164, 244, 249, 0.5)');
+            rootStyles.setProperty('--border-glow', 'rgba(164, 244, 249, 0.3)');
+            rootStyles.setProperty('--label-color', '#50aab2');
+            rootStyles.setProperty('--select-border', 'rgba(164, 244, 249, 0.5)');
         }
     }
 

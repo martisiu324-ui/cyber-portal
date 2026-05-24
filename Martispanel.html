@@ -11,6 +11,8 @@
     <style>
         :root {
             --bg-page: #090d16;
+            --bg-page-gradient: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #090d16 70%);
+            --bg-container: #0d1321;
             --bg-card: rgba(17, 24, 39, 0.7);
             --bg-table: rgba(15, 23, 42, 0.65);
             --neon-purple: #a855f7;
@@ -22,6 +24,28 @@
             --danger-neon: #ff4646;
         }
 
+        /* Variasi Tema */
+        [data-theme="cyan"] {
+            --bg-page-gradient: radial-gradient(circle at 50% 0%, #083344 0%, #020617 70%);
+            --bg-container: #030712;
+            --neon-purple: #06b6d4;
+            --neon-cyan: #22d3ee;
+        }
+
+        [data-theme="purple"] {
+            --bg-page-gradient: radial-gradient(circle at 50% 0%, #3b0764 0%, #090514 70%);
+            --bg-container: #0b0518;
+            --neon-purple: #d946ef;
+            --neon-cyan: #a855f7;
+        }
+
+        [data-theme="crimson"] {
+            --bg-page-gradient: radial-gradient(circle at 50% 0%, #450a0a 0%, #050202 70%);
+            --bg-container: #0a0303;
+            --neon-purple: #ef4444;
+            --neon-cyan: #f43f5e;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -30,13 +54,14 @@
         }
 
         body {
-            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #090d16 70%);
+            background: var(--bg-page-gradient);
             color: var(--text-main);
             padding: 50px 20px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            transition: background 0.5s ease;
         }
 
         .main-container {
@@ -60,6 +85,7 @@
             flex-wrap: wrap;
             gap: 14px;
             align-items: center;
+            transition: border 0.5s ease, box-shadow 0.5s ease;
         }
 
         .control-title {
@@ -74,6 +100,39 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: color 0.5s ease, text-shadow 0.5s ease;
+        }
+
+        /* Dropdown Tema Premium */
+        .theme-select-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            padding: 2px 12px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.1);
+        }
+        .theme-select-wrapper span {
+            font-size: 16px;
+            color: var(--neon-cyan);
+        }
+        .select-theme {
+            background: transparent;
+            color: #fff;
+            border: none;
+            padding: 9px 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+        .select-theme option {
+            background: #0d1321;
+            color: #fff;
         }
 
         /* Tombol Gaya Gaming/Cyberpunk Premium */
@@ -131,11 +190,12 @@
 
         /* Dashboard Container Utama */
         .dashboard-container {
-            background: #0d1321; /* Menggunakan solid background agar html2canvas merender dengan sempurna */
+            background: var(--bg-container); 
             border-radius: 24px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             padding: 40px;
             border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.5s ease;
         }
 
         .dashboard-header {
@@ -144,7 +204,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* PERBAIKAN UTAMA: Menggunakan warna solid putih dengan efek text-shadow neon agar terbaca sempurna saat diunduh */
         .system-title {
             font-family: 'Orbitron', sans-serif;
             font-size: 22px;
@@ -155,6 +214,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            transition: text-shadow 0.5s ease;
         }
 
         /* Pembungkus Tabel Kekinian */
@@ -189,7 +249,6 @@
             transition: all 0.2s; 
         }
 
-        /* Membuat sudut melengkung per baris */
         td:first-child { border-left: 1px solid rgba(255, 255, 255, 0.03); border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
         td:last-child { border-right: 1px solid rgba(255, 255, 255, 0.03); border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
         
@@ -198,7 +257,6 @@
             border-color: rgba(168, 85, 247, 0.3);
         }
 
-        /* Gaya Input Fokus Aktif */
         td[contenteditable="true"] { cursor: text; }
         td[contenteditable="true"]:focus { 
             outline: none; 
@@ -207,11 +265,10 @@
             color: #fff;
         }
         
-        .readonly-balance { color: var(--neon-cyan); font-weight: 700; }
+        .readonly-balance { color: var(--neon-cyan); font-weight: 700; transition: color 0.5s ease; }
         .font-bold-data { font-weight: 600; color: #ffffff; }
         .cell-vertical-flex { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
 
-        /* Badge Info Berkilau */
         .badge-random-product {
             display: inline-block; 
             background: rgba(239, 68, 68, 0.1); 
@@ -227,7 +284,6 @@
             box-shadow: 0 0 10px rgba(239, 68, 68, 0.1);
         }
 
-        /* Status Badge Minimalis Modern */
         .status-badge {
             display: inline-block; 
             padding: 6px 14px; 
@@ -274,13 +330,6 @@ function kembaliKeHome() {
 }
 </script>
 
-<script>
-function kembaliKeHome() {
-    // Fungsi ajaib untuk menyuruh layar utama (parent) me-refresh diri dan kembali ke home
-    window.parent.resetPortal();
-}
-</script>
-
 <div class="main-container">
     
     <div class="top-controls">
@@ -288,6 +337,17 @@ function kembaliKeHome() {
             <span class="material-icons" style="font-size: 16px;">vanguard</span>
             CONTROL INTERFACE
         </div>
+        
+        <div class="theme-select-wrapper">
+            <span class="material-icons">palette</span>
+            <select class="select-theme" onchange="gantiTema(this.value)">
+                <option value="default">MARTIS CLASSIC</option>
+                <option value="cyan">NEON CYAN</option>
+                <option value="purple">VOID PURPLE</option>
+                <option value="crimson">CRIMSON OVERLOAD</option>
+            </select>
+        </div>
+
         <button class="btn-action btn-secondary" onclick="tambahBaris()">➕ Tambah Baris</button>
         <button class="btn-action btn-danger" onclick="kurangiBaris()">➖ Kurangi Baris</button>
         <button class="btn-action" onclick="window.print()">🖨️ Cetak / Jadi PDF</button>
@@ -362,7 +422,15 @@ function kembaliKeHome() {
     const WARNA_BARIS_SATU = "#ffffff"; 
     const WARNA_BARIS_LAIN = "#ff4646"; 
 
-    // Mencegah enter pada mode edit teks langsung
+    // FUNGSI GANTI TEMA BARU
+    function gantiTema(tema) {
+        if (tema === "default") {
+            document.documentElement.removeAttribute("data-theme");
+        } else {
+            document.documentElement.setAttribute("data-theme", tema);
+        }
+    }
+
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Enter' && event.target.hasAttribute('contenteditable')) {
             event.preventDefault(); 
@@ -475,11 +543,12 @@ function kembaliKeHome() {
 
     function unduhSebagaiGambar() {
         const targetElement = document.getElementById("area-cetak-gambar");
-        // Dioptimalkan penuh agar warna dasar hitam dasbor ikut terekspor dengan tajam tanpa menghilangkan judul
+        // Mengambil background color dinamis dari CSS variable agar export gambar mendeteksi tema yang aktif
+        const currentBg = getComputedStyle(document.documentElement).getPropertyValue('--bg-container').trim();
         html2canvas(targetElement, { 
             scale: 2, 
             useCORS: true, 
-            backgroundColor: "#0d1321" 
+            backgroundColor: currentBg
         }).then(canvas => {
             const linkDesc = document.createElement("a");
             linkDesc.download = "Cyber-System-Verification.png";
