@@ -516,9 +516,9 @@
         </div>
     </div>
 
-    <script>
+<script>
         // ==========================================================================
-        // SCRIPT TAMBAHAN: ENGINE ANIMASI MODE GAGAK (CANVAS LOOP)
+        // ENGINE ANIMASI MODE GAGAK (CANVAS LOOP) - HIGH DENSITY
         // ==========================================================================
         const canvas = document.getElementById('crowCanvas');
         const ctx = canvas.getContext('2d');
@@ -531,23 +531,22 @@
         resizeCanvas();
 
         const crows = [];
-        const crowCount = 30; // Jumlah gagak aktif yang berterbangan di portal utama
+        const crowCount = 22; 
 
         class Crow {
             constructor() {
                 this.reset();
-                // Ketika pertama kali dimuat, posisinya diacak di sepanjang layar agar tidak muncul bersamaan dari kanan
-                this.x = Math.random() * canvas.width; 
+                this.x = Math.random() * (canvas.width + 400); 
             }
 
             reset() {
-                this.x = canvas.width + Math.random() * 300;       // Muncul kembali dari sisi kanan luar layar
-                this.y = Math.random() * (canvas.height * 0.75);   // Terbang bebas dari area atas hingga 75% tinggi layar
-                this.size = Math.random() * 12 + 8;                // Skala ukuran dinamis (efek kedalaman jauh/dekat)
-                this.speedX = Math.random() * 1.8 + 1.2;           // Kecepatan meluncur ke kiri
-                this.speedY = Math.sin(Math.random() * 2) * 0.4;   // Efek melayang naik turun sedikit demi sedikit
-                this.wingPhase = Math.random() * 15;               // Mengacak fase awal kepakan sayap
-                this.wingSpeed = Math.random() * 0.12 + 0.08;      // Kecepatan kepakan sayap
+                this.x = canvas.width + Math.random() * 400;       
+                this.y = Math.random() * (canvas.height * 0.85);   
+                this.size = Math.random() * 14 + 6;                
+                this.speedX = (this.size * 0.12) + (Math.random() * 0.8 + 0.6);
+                this.speedY = Math.sin(Math.random() * 3) * 0.3;   
+                this.wingPhase = Math.random() * 20;               
+                this.wingSpeed = (0.25 - (this.size * 0.008)) + (Math.random() * 0.04);      
             }
 
             update() {
@@ -555,8 +554,7 @@
                 this.y += this.speedY;
                 this.wingPhase += this.wingSpeed;
 
-                // Reset gagak ke kanan jika sudah melewati batas kiri layar
-                if (this.x + this.size * 2 < 0) {
+                if (this.x + this.size * 2.5 < 0) {
                     this.reset();
                 }
             }
@@ -564,26 +562,23 @@
             draw() {
                 ctx.save();
                 ctx.translate(this.x, this.y);
-                
-                // Warna siluet gagak Akatsuki (Hitam pekat dengan pendaran merah genjutsu samar)
                 ctx.fillStyle = '#050304';
-                ctx.shadowColor = '#ff1e27';
-                ctx.shadowBlur = this.size > 14 ? 5 : 0; 
+                
+                if (this.size > 11) {
+                    ctx.shadowColor = '#ff1e27';
+                    ctx.shadowBlur = this.size > 15 ? 6 : 3; 
+                }
 
                 ctx.beginPath();
-                // Menggunakan sin untuk mengontrol pergerakan kepakan ujung sayap gagak
-                let wingY = Math.sin(this.wingPhase) * (this.size * 0.85);
+                let wingY = Math.sin(this.wingPhase) * (this.size * 0.9);
 
-                // Menggambar siluet geometri burung gagak ninja terbang ke arah kiri
                 ctx.moveTo(0, 0); 
                 ctx.quadraticCurveTo(this.size * 0.4, -this.size * 0.3, this.size * 0.7, 0); 
                 ctx.lineTo(this.size * 1.2, -this.size * 0.1); 
                 ctx.lineTo(this.size * 0.8, this.size * 0.15); 
 
-                // Sayap Atas Utama
                 ctx.quadraticCurveTo(this.size * 0.4, wingY, 0, 0);
                 
-                // Sayap Belakang Perspektif
                 ctx.moveTo(this.size * 0.4, -this.size * 0.1);
                 ctx.quadraticCurveTo(this.size * 0.6, wingY - (this.size * 0.25), this.size * 0.6, 0);
 
@@ -592,12 +587,10 @@
             }
         }
 
-        // Inisialisasi kawanan gagak
         for (let i = 0; i < crowCount; i++) {
             crows.push(new Crow());
         }
 
-        // Loop animasi konstan
         function animateCrows() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             crows.forEach(crow => {
@@ -610,7 +603,7 @@
 
 
         // ==========================================================================
-        // LOGIK BAWAAN SYSTEM PORTAL KAMU
+        // LOGIK UTAMA NAVIGATION & ROUTER SYSTEM PORTAL
         // ==========================================================================
         const logsMasuk = [
             "Weaving Tsukuyomi signs...",
@@ -628,12 +621,10 @@
         
         let fileAntrean = "";
 
-        // ENGINE ROUTER MENU NAVIGASI
         function bukaProyek(namaFile, namaMenu) {
             if (namaFile === 'Martispanel.html') {
                 fileAntrean = namaFile; 
                 
-                // Kembalikan ke tampilan normal bawaan
                 const hintText = document.getElementById('modalHintText');
                 const modalIcon = document.getElementById('modalIcon');
                 const passwordInput = document.getElementById('cyberPasswordInput');
@@ -651,26 +642,31 @@
             eksekusiBukaProyek(namaFile);
         }
 
-        // EKSEKUSI ANIMASI TRANSISI MENU 
         function eksekusiBukaProyek(namaFile) {
             jalankanLoadingAnimation(logsMasuk, () => {
                 const iframe = document.getElementById('portalFrame');
                 document.getElementById('mainMenuLayout').style.display = 'none';
                 iframe.style.display = 'block';
                 iframe.src = namaFile;
+
                 setTimeout(() => { 
                     iframe.style.opacity = '1'; 
                     iframe.style.transform = 'scale(1)'; 
                 }, 50);
                 
                 sessionStorage.setItem('halamanTerakhir', namaFile);
+
+                // TAMBAHAN: Membuat titik riwayat baru di browser saat membuka proyek
+                // Supaya ketika tombol back HP ditekan, browser mendeteksi perubahan state ini
+                history.pushState({ proyekTerbuka: true }, "");
             });
         }
 
-        // LOGOUT & KEMBALI KE PORTAL UTAMA
+        // SISTEM KEMBALI KORPORAT: Menutup proyek dengan transisi rilis Genjutsu asli
         function resetPortal() {
             sessionStorage.removeItem('halamanTerakhir');
             const iframe = document.getElementById('portalFrame');
+
             iframe.style.opacity = '0';
             iframe.style.transform = 'scale(0.97)';
             
@@ -682,9 +678,18 @@
             }, 300);
         }
 
-        // VALIDASI CHAKRA KEY / PASSWORD DI DALAM MODAL
+        // TAMBAHAN: Mendengarkan aksi tombol back bawaan HP / Browser Google
+        window.addEventListener('popstate', function(event) {
+            const halamanTerakhir = sessionStorage.getItem('halamanTerakhir');
+            
+            // Jika user menekan tombol back HP DAN posisi saat ini sedang membuka halaman proyek
+            if (halamanTerakhir) {
+                resetPortal();
+            }
+        });
+
         function konfirmasiPassword() {
-            const passwordBenar = "martis420"; // SILAKAN GANTI PASSWORD KAMU DI SINI
+            const passwordBenar = "martis420"; 
             const passwordInput = document.getElementById('cyberPasswordInput');
             const hintText = document.getElementById('modalHintText');
             const modalIcon = document.getElementById('modalIcon');
@@ -693,17 +698,12 @@
                 document.getElementById('passwordModal').classList.remove('show');
                 eksekusiBukaProyek(fileAntrean);
             } else {
-                // EFEK ERROR REAL-TIME DI LAYAR MODAL (TANPA BROWSER ALERT)
                 modalIcon.classList.remove('error-state');
-                void modalIcon.offsetWidth; // Memicu ulang trigger animasi css shake
-                
+                void modalIcon.offsetWidth; 
                 modalIcon.classList.add('error-state');
                 passwordInput.classList.add('error-field');
-                
-                // Mengubah teks instruksi menjadi peringatan bergaya cyberpunk inggris
                 hintText.innerText = "ACCESS DENIED: Invalid Chakra Key!";
                 hintText.classList.add('error-text');
-                
                 passwordInput.value = "";
                 passwordInput.focus();
             }
@@ -714,7 +714,6 @@
             fileAntrean = "";
         }
 
-        // ANIMASI LOADING OVERLAY CONTROLLER
         function jalankanLoadingAnimation(databaseLog, callbackSelesai, isSlow = false) {
             const loadingScreen = document.getElementById('loadingScreen');
             const loadBar = document.getElementById('loadBar');
@@ -725,7 +724,6 @@
             loadingScreen.classList.add('show');
 
             let persen = 0;
-            
             let intervalLoading = setInterval(() => {
                 if (isSlow) {
                     persen += (Math.random() * 1.5) + 0.8; 
@@ -751,23 +749,19 @@
             }, 25); 
         }
 
-        // LIVE JAM KUALA LUMPUR INTERACTION
         function jalankanJamRealTime() {
             const opsiWaktu = { timeZone: 'Asia/Kuala_Lumpur', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
             const opsiTanggal = { timeZone: 'Asia/Kuala_Lumpur', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
 
             const waktuSekarang = new Date();
-            
             let teksWaktu = waktuSekarang.toLocaleTimeString('id-ID', opsiWaktu).toUpperCase();
             let teksTanggal = waktuSekarang.toLocaleDateString('id-ID', opsiTanggal).toUpperCase();
-
             teksWaktu = teksWaktu.replace(/\./g, ':');
 
             document.getElementById('live-time').innerText = teksWaktu;
             document.getElementById('live-date').innerText = teksTanggal;
         }
 
-        // BINDING UTAMA SELEPAS WINDOW SELESAI DIMUAT
         window.onload = function() {
             setInterval(jalankanJamRealTime, 1000);
             jalankanJamRealTime();
@@ -789,6 +783,11 @@
                 iframe.style.opacity = '1';
                 iframe.style.transform = 'scale(1)';
                 iframe.src = halamanTerakhir;
+
+                // TAMBAHAN: Jika di-refresh posisi di dalam proyek, daftarkan ulang state history back
+                if (history.state === null) {
+                    history.pushState({ proyekTerbuka: true }, "");
+                }
             } 
             else {
                 if (!sudahLoginAwal) {
@@ -815,5 +814,5 @@
             });
         };
     </script>
-</body>
+    </body>
 </html>
