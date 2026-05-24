@@ -3,68 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shinobi Interface - Mini Compact Edition</title>
+    <title>Shinobi Interface - Ultimate Particle Edition</title>
     <style>
-        /* BASE THEME VARIABLES */
+        /* BASE THEME VARIABLES (DEFAULT: VOID RED YANG PEKAT) */
         :root {
-            --sharingan: #b20000;
-            --void: #060711;
-            --bg-gradient: radial-gradient(circle at center, #190303 0%, #030408 100%);
-            --shadow-glow: rgba(178, 0, 0, 0.25);
-            --text-gray: #a0a0a0;
-            --border-glow: rgba(178, 0, 0, 0.15);
-            --label-color: #5c1e1e;
-            --select-border: rgba(178, 0, 0, 0.4);
-            --overlay-display: none; 
+            --sharingan: #ff0000; /* Merah menyala, tidak pucat */
+            --void: #030307;
+            --bg-gradient: radial-gradient(circle at center, #1c0000 0%, #020205 100%);
+            --shadow-glow: rgba(255, 0, 0, 0.4);
+            --text-gray: #b0b0b0;
+            --border-glow: rgba(255, 0, 0, 0.25);
+            --label-color: #ff3333;
+            --select-border: rgba(255, 0, 0, 0.5);
         }
 
         * {
             box-sizing: border-box;
-        }
-
-        /* TOMBOL KEMBALI PORTAL (KIRI ATAS) */
-        .btn-kembali-portal {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 99999;
-            background: rgba(15, 5, 8, 0.85);
-            border: 1.5px solid var(--sharingan); 
-            color: #ffffff;
-            padding: 10px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Orbitron', 'Segoe UI', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 0 12px var(--shadow-glow), inset 0 1px 1px rgba(255, 30, 39, 0.2);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            text-transform: uppercase;
-        }
-
-        .btn-kembali-portal:hover {
-            transform: translateX(3px);
-            background: rgba(255, 30, 39, 0.15);
-            box-shadow: 0 0 20px var(--sharingan);
-            border-color: #ffffff;
-        }
-
-        /* TOMBOL SELEKTOR TEMA (KANAN ATAS) */
-        .theme-outer-wrapper {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
         }
 
         body {
@@ -79,52 +33,176 @@
             overflow: hidden;
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
             user-select: none;
-            transition: background 0.5s ease;
+            transition: background 0.5s ease, background-image 0.5s ease;
             position: relative;
         }
 
-        /* EFEK OVERLAY KELOPAK SAKURA BETERBANGAN */
-        .effect-overlay {
+        /* BAR NAVIGASI ATAS */
+        .top-navbar {
             position: fixed;
-            top: 0;
+            top: clamp(12px, 2.5vw, 25px);
             left: 0;
             width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 5;
-            display: var(--overlay-display);
+            padding: 0 clamp(15px, 4vw, 40px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 99999;
         }
 
-        .petal {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: var(--petal-color);
-            border-radius: 15% 85% 15% 85%;
-            opacity: 0.8;
-            animation: fall infinite linear;
-            will-change: transform, opacity;
+        .btn-kembali-portal {
+            background: rgba(5, 5, 10, 0.85);
+            border: 1.5px solid var(--sharingan); 
+            color: #ffffff;
+            padding: clamp(6px, 1.2vw, 11px) clamp(12px, 2vw, 22px);
+            border-radius: clamp(5px, 1vw, 8px);
+            cursor: pointer;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: clamp(9px, 1.1vw, 12px);
+            font-weight: 700;
+            letter-spacing: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: clamp(5px, 0.8vw, 8px);
+            box-shadow: 0 0 12px var(--shadow-glow);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            white-space: nowrap;
         }
 
-        @keyframes fall {
-            0% {
-                transform: translate(var(--start-x), -10vh) rotate(0deg);
-                opacity: 0.8;
-            }
-            100% {
-                transform: translate(var(--end-x), 110vh) rotate(var(--rotation));
-                opacity: 0;
-            }
+        .btn-kembali-portal:hover {
+            transform: translateX(3px);
+            background: var(--sharingan);
+            box-shadow: 0 0 25px var(--sharingan);
+            color: #000000;
+            font-weight: 800;
+        }
+
+        .btn-kembali-portal svg {
+            width: clamp(12px, 1.4vw, 16px);
+            height: clamp(12px, 1.4vw, 16px);
+        }
+
+        /* 1 TOMBOL MENU UTAMA (KANAN) */
+        .btn-main-menu {
+            background: rgba(5, 5, 10, 0.85);
+            border: 1.5px solid var(--sharingan);
+            color: #ffffff;
+            width: clamp(34px, 4vw, 46px);
+            height: clamp(34px, 4vw, 46px);
+            border-radius: clamp(5px, 1vw, 8px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 12px var(--shadow-glow);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .btn-main-menu:hover, .btn-main-menu.active {
+            background: var(--sharingan);
+            box-shadow: 0 0 25px var(--sharingan);
+            color: #000000;
+        }
+
+        .btn-main-menu svg {
+            width: clamp(16px, 1.8vw, 22px);
+            height: clamp(16px, 1.8vw, 22px);
+            transition: transform 0.3s ease;
+        }
+
+        .btn-main-menu.active svg {
+            transform: rotate(90deg);
+        }
+
+        /* DROPDOWN MENU PANEL */
+        .system-menu-dropdown {
+            position: fixed;
+            top: -250px;
+            right: clamp(15px, 4vw, 40px);
+            background: rgba(5, 5, 8, 0.96);
+            border: 1.5px solid var(--sharingan);
+            border-radius: 10px;
+            padding: 16px;
+            width: clamp(220px, 25vw, 300px);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 25px var(--shadow-glow);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: top 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .system-menu-dropdown.show {
+            top: clamp(55px, 7vw, 85px);
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .menu-item-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 100%;
+        }
+
+        .menu-item-label {
+            font-size: clamp(8px, 0.8vw, 10px);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--label-color);
+            font-weight: 700;
+            transition: color 0.5s ease;
+        }
+
+        /* TOMBOL FITUR DI DALAM MENU */
+        .btn-action-menu {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--select-border);
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: clamp(10px, 1vw, 11px);
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: clamp(8px, 1vw, 11px);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action-menu:hover {
+            border-color: #ffffff;
+            background: var(--sharingan);
+            color: #000000;
+            box-shadow: 0 0 15px var(--sharingan);
+        }
+
+        .btn-action-menu svg {
+            width: 14px;
+            height: 14px;
         }
 
         /* CARD UTAMA DASHBOARD */
         .dashboard-container {
-            background: rgba(10, 3, 3, 0.9);
-            border: 1px solid var(--border-glow);
+            background: rgba(3, 3, 5, 0.88);
+            border: 1.5px solid var(--border-glow);
             padding: 25px 30px; 
             border-radius: 16px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9),
-                        0 0 20px var(--shadow-glow);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.9), 0 0 25px var(--shadow-glow);
             position: relative;
             width: 720px;
             max-width: 90%; 
@@ -132,8 +210,9 @@
             flex-direction: column;
             align-items: center;
             gap: 18px; 
-            transition: border 0.5s ease, box-shadow 0.5s ease;
+            transition: border 0.5s ease, box-shadow 0.5s ease, background 0.5s ease;
             z-index: 10;
+            backdrop-filter: blur(4px);
         }
 
         .dashboard-container::before {
@@ -144,7 +223,8 @@
             width: 70%;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--sharingan), transparent);
-            box-shadow: 0 0 8px var(--sharingan);
+            box-shadow: 0 0 10px var(--sharingan);
+            transition: background 0.5s ease, box-shadow 0.5s ease;
         }
 
         .controls-row {
@@ -156,7 +236,7 @@
         }
 
         .control-group {
-            width: 320px;
+            width: 280px;
             max-width: 100%;
             display: flex;
             flex-direction: column;
@@ -175,13 +255,13 @@
         }
 
         .custom-select {
-            background: rgba(20, 5, 5, 0.85);
+            background: rgba(0, 0, 0, 0.8);
             border: 1px solid var(--select-border);
             color: #ffffff;
             font-family: 'Segoe UI', sans-serif;
-            font-size: 11px;
+            font-size: clamp(9px, 1vw, 11px);
             font-weight: 600;
-            padding: 6px 12px;
+            padding: clamp(6px, 0.9vw, 9px) clamp(8px, 1.2vw, 14px);
             border-radius: 6px;
             cursor: pointer;
             letter-spacing: 1px;
@@ -192,18 +272,9 @@
             transition: all 0.3s ease;
         }
 
-        .custom-select optgroup {
-            background: #0d0404;
-            color: #ff4500;
-            font-style: normal;
-            font-weight: bold;
-            text-align: left;
-        }
-
         .custom-select option {
-            background: #140505;
+            background: #050508;
             color: #ffffff;
-            text-align: left;
         }
 
         .custom-select:focus, .custom-select:hover {
@@ -216,8 +287,7 @@
             font-size: min(85px, 15vw); 
             font-weight: 700;
             color: #ffffff;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.1),
-                         0 0 20px var(--sharingan);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 20px var(--sharingan);
             letter-spacing: 2px;
             margin: 0;
             line-height: 0.95;
@@ -237,7 +307,7 @@
 
         @keyframes pulseBlink {
             0%, 100% { opacity: 0.2; }
-            50% { opacity: 0.8; }
+            50% { opacity: 0.9; }
         }
 
         .ampm-box {
@@ -290,7 +360,7 @@
 
         .ticker-container {
             width: 100%;
-            background: #020307;
+            background: #010103;
             border: 1px solid var(--select-border);
             border-radius: 5px;
             overflow: hidden;
@@ -321,35 +391,34 @@
             100% { transform: translate3d(-100%, 0, 0); }
         }
 
-        /* PANEL INPUT MULTI-KOLOM (BARIS 1, 2, 3) */
+        /* PANEL INPUT TEXT MODAL (SLIDE DARI BAWAH) */
         .secret-input-panel {
             position: fixed;
-            top: -300px;
+            bottom: -350px;
             left: 50%;
             transform: translateX(-50%);
-            width: 650px;
+            width: 620px;
             max-width: 92%;
-            background: rgba(10, 3, 3, 0.96);
+            background: rgba(4, 4, 6, 0.98);
             border: 1.5px solid var(--sharingan);
-            border-top: none;
-            border-radius: 0 0 12px 12px;
-            padding: 18px 22px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.85), 0 0 20px var(--shadow-glow);
+            border-bottom: none;
+            border-radius: 12px 12px 0 0;
+            padding: 20px 24px;
+            box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.9), 0 0 25px var(--shadow-glow);
             z-index: 100000;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .secret-input-panel.active {
-            top: 0;
+            bottom: 0;
         }
 
         .secret-input-row {
-            width: 100%;
             display: flex;
             flex-direction: column;
             gap: 4px;
@@ -359,16 +428,16 @@
             font-size: 9px;
             color: var(--sharingan);
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
         }
 
         .secret-input-panel input {
             width: 100%;
-            background: #020307;
+            background: #010103;
             border: 1px solid var(--select-border);
             border-radius: 6px;
-            padding: 8px 12px;
+            padding: 9px 12px;
             color: #ffffff;
             font-family: 'Segoe UI', sans-serif;
             font-size: 12px;
@@ -402,109 +471,91 @@
             transition: all 0.3s ease;
         }
 
-        .btn-apply {
-            background: var(--sharingan);
-        }
+        .btn-apply { background: var(--sharingan); color: #000000 !important; }
+        .btn-apply:hover { box-shadow: 0 0 15px var(--sharingan); opacity: 0.9; }
+        .btn-reset { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1) !important; color: #bbb; }
+        .btn-reset:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
 
-        .btn-apply:hover {
-            box-shadow: 0 0 12px var(--sharingan);
-            opacity: 0.9;
-        }
-
-        .btn-reset {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: #ccc;
-        }
-
-        .btn-reset:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-        }
-
-        /* MENU TOMBOL KECIL DI POJOK KANAN BAWAH */
-        .btn-trigger-ticker {
+        /* WADAH EFEK PARTIKEL CORE */
+        .particle-overlay-system {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 99999;
-            background: rgba(10, 3, 3, 0.85);
-            border: 1px solid var(--select-border);
-            color: #ffffff;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
         }
 
-        .btn-trigger-ticker:hover {
-            transform: scale(1.1) rotate(90deg);
-            border-color: var(--sharingan);
-            box-shadow: 0 0 15px var(--sharingan);
-            color: var(--sharingan);
+        /* INDIVIDU ELEMEN PARTIKEL */
+        .sys-particle {
+            position: absolute;
+            pointer-events: none;
+            will-change: transform, opacity;
         }
 
-        .btn-trigger-ticker svg {
-            width: 20px;
-            height: 20px;
-            transition: stroke 0.3s ease;
-        }
-
-        @media (max-width: 768px) {
-            .btn-kembali-portal {
-                position: absolute;
-                top: 15px;
-                left: 15px;
-                padding: 8px 14px;
-                font-size: 10px;
+        /* RESPONSIVE LAYOUT HP */
+        @media (max-width: 600px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                padding-top: 90px;
+                padding-bottom: 25px;
+                box-sizing: border-box;
             }
-            .theme-outer-wrapper {
-                position: absolute;
-                top: 15px;
-                right: 15px;
-            }
-            .theme-outer-wrapper .custom-select {
-                padding: 6px 8px;
-                font-size: 10px;
-                width: auto;
-            }
-            .btn-trigger-ticker {
-                bottom: 15px;
-                right: 15px;
-                width: 38px;
-                height: 38px;
+            .top-navbar {
+                top: 12px;
+                padding: 0 15px;
             }
         }
     </style>
 </head>
 <body>
 
-    <button class="btn-kembali-portal" onclick="kembaliKePortal()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-        CORE SYSTEM
-    </button>
+    <div class="particle-overlay-system" id="globalParticleEngine"></div>
 
-    <div class="theme-outer-wrapper">
-        <div class="zone-label">TEMA ANTARMUKA</div>
-        <select class="custom-select" id="themeChooser" onchange="gantiTemaTampilan()">
-            <option value="void-red">VOID SHARINGAN (RED)</option>
-            <option value="akatsuki-purple">AKATSUKI RINNEGAN (PURPLE)</option>
-            <option value="curse-blue">CURSE MARK CHIDORI (BLUE)</option>
-            <option value="susanoo-orange">SUSANOO AMATERASU (ORANGE)</option>
-            <option value="sakura-pink">SAKURA HARUNO (PINK)</option>
-            <option value="cyberpunk-yellow">CYBERPUNK NEON (YELLOW)</option>
-            <option value="kamiui-green">KAMIUI RAIRI (EMERALD GREEN)</option>
-            <option value="amaterasu-white">AMATERASU WHITE-HOLE (WHITE)</option>
-            <option value="chakra-magenta">CHAKRA SHION (MAGENTA)</option>
-            <option value="byakugan-ice">BYAKUGAN APEX (ICE BLUE)</option>
-        </select>
+    <div class="top-navbar">
+        <button class="btn-kembali-portal" onclick="kembaliKePortal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            CORE SYSTEM
+        </button>
+
+        <button class="btn-main-menu" id="mainMenuBtn" onclick="toggleSystemMenu(event)" title="Buka Pengaturan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <div class="system-menu-dropdown" id="systemDropdown">
+        <div class="menu-item-group">
+            <div class="menu-item-label">TEMA ANTARMUKA</div>
+            <select class="custom-select" id="themeChooser" onchange="gantiTemaTampilan()">
+                <option value="void-red">VOID SHARINGAN (RED)</option>
+                <option value="akatsuki-purple">AKATSUKI RINNEGAN (PURPLE)</option>
+                <option value="curse-blue">CURSE MARK CHIDORI (BLUE)</option>
+                <option value="susanoo-orange">SUSANOO AMATERASU (ORANGE)</option>
+                <option value="sakura-pink">SAKURA HARUNO (PINK)</option>
+                <option value="cyberpunk-yellow">CYBERPUNK NEON (YELLOW)</option>
+                <option value="kamiui-green">KAMIUI RAIRI (EMERALD GREEN)</option>
+                <option value="amaterasu-white">AMATERASU WHITE-HOLE (WHITE)</option>
+                <option value="chakra-magenta">CHAKRA SHION (MAGENTA)</option>
+                <option value="byakugan-ice">BYAKUGAN APEX (ICE BLUE)</option>
+            </select>
+        </div>
+        <div class="menu-item-group" style="margin-top: 4px;">
+            <div class="menu-item-label">KONTROL TEKS</div>
+            <button class="btn-action-menu" onclick="bukaPanelEditorTeks(event)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
+                </svg>
+                Ubah Teks Hari Ini
+            </button>
+        </div>
     </div>
 
     <div class="secret-input-panel" id="customTickerPanel">
@@ -521,95 +572,24 @@
             <input type="text" id="customTickerInput3" placeholder="Masukkan tulisan untuk baris ke-3..." autocomplete="off">
         </div>
         <div class="secret-action-buttons">
-            <button class="btn-reset" onclick="resetKeKataBawaan()">Reset Default</button>
-            <button class="btn-apply" onclick="terapkanKataKataBaru()">Terapkan</button>
+            <button class="btn-reset" onclick="resetKeKataBawaan(event)">Reset Default</button>
+            <button class="btn-apply" onclick="terapkanKataKataBaru(event)">Terapkan</button>
         </div>
     </div>
-
-    <button class="btn-trigger-ticker" onclick="togglePanelTicker()" title="Ubah Running Text">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="4" y1="9" x2="20" y2="9"></line>
-            <line x1="4" y1="15" x2="20" y2="15"></line>
-            <line x1="10" y1="3" x2="8" y2="21"></line>
-            <line x1="16" y1="3" x2="14" y2="21"></line>
-        </svg>
-    </button>
-
-    <div class="effect-overlay" id="particleOverlay"></div>
 
     <div class="dashboard-container">
         <div class="controls-row">
             <div class="control-group">
-                <div class="zone-label">ZONA WAKTU GLOBAL SHINOBI</div>
+                <div class="zone-label">ZONA WAKTU SHINOBI</div>
                 <select class="custom-select" id="zoneChooser" onchange="gantiZonaWaktu()">
-                    <optgroup label="ASIA & TENGGARA">
-                        <option value="Asia/Kuala_Lumpur" selected>MALAYSIA (KUALA LUMPUR)</option>
-                        <option value="Asia/Jakarta">INDONESIA (WIB - JAKARTA)</option>
-                        <option value="Asia/Makassar">INDONESIA (WITA - MAKASSAR)</option>
-                        <option value="Asia/Jayapura">INDONESIA (WIT - JAYAPURA)</option>
-                        <option value="Asia/Singapore">SINGAPURA</option>
-                        <option value="Asia/Bangkok">THAILAND / VIETNAM (BANGKOK)</option>
-                        <option value="Asia/Manila">FILIPINA (MANILA)</option>
-                        <option value="Asia/Tokyo">JEPANG (TOKYO)</option>
-                        <option value="Asia/Seoul">KOREA SELATAN (SEOUL)</option>
-                        <option value="Asia/Shanghai">CINA (SHANGHAI / BEIJING)</option>
-                        <option value="Asia/Taipei">TAIWAN (TAIPEI)</option>
-                        <option value="Asia/Hong_Kong">HONG KONG</option>
-                        <option value="Asia/Kolkata">INDIA (NEW DELHI)</option>
-                        <option value="Asia/Dhaka">BANGLADESH (DHAKA)</option>
-                        <option value="Asia/Karachi">PAKISTAN (KARACHI)</option>
-                    </optgroup>
-
-                    <optgroup label="TIMUR TENGAH">
-                        <option value="Asia/Riyadh">ARAB SAUDI (RIYADH)</option>
-                        <option value="Asia/Dubai">UNI EMIRAT ARAB (DUBAI)</option>
-                        <option value="Asia/Tehran">IRAN (TEHRAN)</option>
-                        <option value="Asia/Jerusalem">PALESTINA / ISRAEL (JERUSALEM)</option>
-                    </optgroup>
-
-                    <optgroup label="EROPA">
-                        <option value="Europe/London">INGGRIS (LONDON)</option>
-                        <option value="Europe/Paris">PRANCIS / JERMAN / ITALIA (PARIS)</option>
-                        <option value="Europe/Athens">YUNAN (ATHENS)</option>
-                        <option value="Europe/Moscow">RUSIA (MOSCOW)</option>
-                        <option value="Europe/Istanbul">TURKI (ISTANBUL)</option>
-                    </optgroup>
-
-                    <optgroup label="AMERIKA UTARA & SELATAN">
-                        <option value="America/New_York">USA EST (NEW YORK)</option>
-                        <option value="America/Chicago">USA CST (CHICAGO)</option>
-                        <option value="America/Denver">USA MST (DENVER)</option>
-                        <option value="America/Los_Angeles">USA PST (LOS ANGELES)</option>
-                        <option value="America/Anchorage">USA (ALASKA)</option>
-                        <option value="America/Mexico_City">MEKSIKO (MEXICO CITY)</option>
-                        <option value="America/Sao_Paulo">BRASIL (SAO PAULO)</option>
-                        <option value="America/Argentina/Buenos_Aires">ARGENTINA (BUENOS AIRES)</option>
-                        <option value="America/Bogota">KOLOMBIA (BOGOTA)</option>
-                    </optgroup>
-
-                    <optgroup label="AFRIKA">
-                        <option value="Africa/Cairo">MESIR (CAIRO)</option>
-                        <option value="Africa/Johannesburg">AFRIKA SELATAN (JOHANNESBURG)</option>
-                        <option value="Africa/Lagos">NIGERIA (LAGOS)</option>
-                        <option value="Africa/Nairobi">KENYA (NAIROBI)</option>
-                    </optgroup>
-
-                    <optgroup label="AUSTRALIA & OSEANIA">
-                        <option value="Australia/Sydney">AUSTRALIA (SYDNEY)</option>
-                        <option value="Australia/Perth">AUSTRALIA Barat (PERTH)</option>
-                        <option value="Pacific/Auckland">SELANDIA BARU (AUCKLAND)</option>
-                        <option value="Pacific/Fiji">FIJI</option>
-                        <option value="Pacific/Honolulu">USA Hawaii (HONOLULU)</option>
-                    </optgroup>
-
-                    <optgroup label="WILAYAH TERLUAR & SAMUDRA">
-                        <option value="Pacific/Kiritimati">KIRIBATI (LINE ISLANDS - UTC+14)</option>
-                        <option value="Pacific/Chatham">CHATHAM ISLANDS (UTC+13:45)</option>
-                        <option value="Atlantic/Azores">AZORES (UTC-01)</option>
-                        <option value="Atlantic/Cape_Verde">CAPE VERDE (UTC-01)</option>
-                        <option value="Pacific/Pago_Pago">SAMOA AMERIKA (PAGO PAGO - UTC-11)</option>
-                        <option value="Etc/GMT+12">IDLW (BAKERS ISLAND - UTC-12)</option>
-                    </optgroup>
+                    <option value="Asia/Kuala_Lumpur">MALAYSIA (KUALA LUMPUR)</option>
+                    <option value="Asia/Jakarta">INDONESIA (WIB - JAKARTA)</option>
+                    <option value="Asia/Makassar">INDONESIA (WITA - MAKASSAR)</option>
+                    <option value="Asia/Jayapura">INDONESIA (WIT - JAYAPURA)</option>
+                    <option value="Asia/Tokyo">JAPAN (TOKYO)</option>
+                    <option value="America/New_York">USA (NEW YORK)</option>
+                    <option value="Europe/London">UK (LONDON)</option>
+                    <option value="Asia/Riyadh">SAUDI ARABIA (RIYADH)</option>
                 </select>
             </div>
         </div>
@@ -626,7 +606,7 @@
         <div class="ticker-wrapper">
             <div class="ticker-title">KATA KATA HARI INI</div>
             <div class="ticker-container">
-                <div class="ticker-text" id="running-text-content">
+                <div class="ticker-text">
                     "SANTAI BUKAN BERARTI MALAS, INI CUMA STRATEGI BIAR PAS MELANGKAH HASILNYA LANGSUNG BERKELAS. NIKMATI PROSESNYA!" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                     "MAJU PELAN-PELAN GAK MASALAH, YANG PENTING JANGAN JALAN DI TEMPAT. HASIL HEBAT GAK PERNAH DATANG DARI CARA YANG INSTAN." &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                     "FOKUS SAMA JALAN SENDIRI AJA. GAK USAH BURU-BURU, SETIAP ORANG PUNYA WAKTU 'WONG PUSAT' MASING-MASING UNTUK BERSINAR."
@@ -637,207 +617,358 @@
 
 <script>
     let zonaAktif = 'Asia/Kuala_Lumpur';
+    let loopPartikelInterval = null;
 
-    // Kata-kata default bawaan sistem asli
     const teksDefaultBawaan = [
         `"SANTAI BUKAN BERARTI MALAS, INI CUMA STRATEGI BIAR PAS MELANGKAH HASILNYA LANGSUNG BERKELAS. NIKMATI PROSESNYA!"`,
         `"MAJU PELAN-PELAN GAK MASALAH, YANG PENTING JANGAN JALAN DI TEMPAT. HASIL HEBAT GAK PERNAH DATANG DARI CARA YANG INSTAN."`,
         `"FOKUS SAMA JALAN SENDIRI AJA. GAK USAH BURU-BURU, SETIAP ORANG PUNYA WAKTU 'WONG PUSAT' MASING-MASING UNTUK BERSINAR."`
     ];
 
-    // TRIGGER SHOW/HIDE PANEL INPUT
-    function togglePanelTicker() {
-        const panel = document.getElementById('customTickerPanel');
-        const input1 = document.getElementById('customTickerInput1');
-        
-        panel.classList.toggle('active');
-        if (panel.classList.contains('active')) {
-            input1.focus();
+    function toggleSystemMenu(event) {
+        if(event) event.stopPropagation();
+        const dropdown = document.getElementById('systemDropdown');
+        const btn = document.getElementById('mainMenuBtn');
+        dropdown.classList.toggle('show');
+        btn.classList.toggle('active');
+        if (!dropdown.classList.contains('show')) {
+            document.getElementById('customTickerPanel').classList.remove('active');
         }
     }
 
-    // SHORTCUT KEYBOARD CTRL + B
-    window.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && e.key.toLowerCase() === 'b') {
-            e.preventDefault();
-            togglePanelTicker();
+    function bukaPanelEditorTeks(event) {
+        if(event) event.stopPropagation();
+        const panel = document.getElementById('customTickerPanel');
+        panel.classList.add('active');
+        document.getElementById('customTickerInput1').focus();
+        const dropdown = document.getElementById('systemDropdown');
+        const btn = document.getElementById('mainMenuBtn');
+        dropdown.classList.remove('show');
+        btn.classList.remove('active');
+    }
+
+    window.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('systemDropdown');
+        const btn = document.getElementById('mainMenuBtn');
+        const panel = document.getElementById('customTickerPanel');
+        if (!dropdown.contains(e.target) && !btn.contains(e.target) && !panel.contains(e.target)) {
+            dropdown.classList.remove('show');
+            btn.classList.remove('active');
+            panel.classList.remove('active');
         }
     });
 
-    // DAFTARKAN ENTER DI SETIAP KOLOM AGAR BISA LANGSUNG SUBMIT
+    document.getElementById('customTickerPanel').addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+
     for (let i = 1; i <= 3; i++) {
         document.getElementById(`customTickerInput${i}`).addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                terapkanKataKataBaru();
-            }
+            if (e.key === 'Enter') { terapkanKataKataBaru(); }
         });
     }
 
-    // FUNGSI PENGGABUNGAN 3 KOLOM INPUT
-    function terapkanKataKataBaru() {
+    function terapkanKataKataBaru(event) {
+        if(event) event.stopPropagation();
         const in1 = document.getElementById('customTickerInput1').value.trim();
         const in2 = document.getElementById('customTickerInput2').value.trim();
         const in3 = document.getElementById('customTickerInput3').value.trim();
-        
-        const ticker = document.getElementById('running-text-content');
+        const ticker = document.querySelector('.ticker-text');
         const panel = document.getElementById('customTickerPanel');
-        
         let hasilKoleksiTeks = [];
 
-        // Ambil input yang diisi, jika kosong lewati saja
         if (in1 !== "") hasilKoleksiTeks.push(in1.toUpperCase());
         if (in2 !== "") hasilKoleksiTeks.push(in2.toUpperCase());
         if (in3 !== "") hasilKoleksiTeks.push(in3.toUpperCase());
 
         if (hasilKoleksiTeks.length > 0) {
-            // Gabungkan teks dengan pemisah spasi lebar (8 buah kode &nbsp;) seperti aslinya
-            let textGabungan = hasilKoleksiTeks.join("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            ticker.innerHTML = textGabungan;
-            
+            ticker.innerHTML = hasilKoleksiTeks.join("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
             rapihkanKecepatanTeks();
-            panel.classList.remove('active');
-        } else {
-            // Jika ketiga kolom dikosongkan, langsung tutup panel saja tanpa merubah teks
-            panel.classList.remove('active');
         }
+        panel.classList.remove('active');
     }
 
-    // FUNGSI UNTUK RESET KEMBALI KE DEFAULT ASLI
-    function resetKeKataBawaan() {
-        const ticker = document.getElementById('running-text-content');
+    function resetKeKataBawaan(event) {
+        if(event) event.stopPropagation();
+        const ticker = document.querySelector('.ticker-text');
         const panel = document.getElementById('customTickerPanel');
-        
-        // Bersihkan seluruh form input
         document.getElementById('customTickerInput1').value = "";
         document.getElementById('customTickerInput2').value = "";
         document.getElementById('customTickerInput3').value = "";
-
-        // Kembalikan ke text asli semula
         ticker.innerHTML = teksDefaultBawaan.join("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        
         rapihkanKecepatanTeks();
         panel.classList.remove('active');
     }
 
+    // ENGINE UTAMA PENGATUR TEMA DAN PARTIKEL HIDUP
     function gantiTemaTampilan() {
         const pilihanTema = document.getElementById('themeChooser').value;
         const rootStyles = document.documentElement.style;
-        const particleContainer = document.getElementById('particleOverlay');
+        const engine = document.getElementById('globalParticleEngine');
 
-        rootStyles.setProperty('--overlay-display', 'none');
-        particleContainer.innerHTML = ''; 
+        // Bersihkan interval & sisa partikel lama
+        if(loopPartikelInterval) clearInterval(loopPartikelInterval);
+        engine.innerHTML = ''; 
+
+        let tipePartikel = 'none';
+        let warnaPartikel = '#ff0000';
 
         if (pilihanTema === 'void-red') {
-            rootStyles.setProperty('--sharingan', '#b20000');
-            rootStyles.setProperty('--void', '#060711');
-            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #190303 0%, #030408 100%)');
-            rootStyles.setProperty('--shadow-glow', 'rgba(178, 0, 0, 0.25)');
-            rootStyles.setProperty('--border-glow', 'rgba(178, 0, 0, 0.15)');
-            rootStyles.setProperty('--label-color', '#5c1e1e');
-            rootStyles.setProperty('--select-border', 'rgba(178, 0, 0, 0.4)');
+            rootStyles.setProperty('--sharingan', '#ff0000'); // Merah Pure Neon
+            rootStyles.setProperty('--void', '#040000');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #230000 0%, #020004 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(255, 0, 0, 0.45)');
+            rootStyles.setProperty('--border-glow', 'rgba(255, 0, 0, 0.3)');
+            rootStyles.setProperty('--label-color', '#ff3333');
+            rootStyles.setProperty('--select-border', 'rgba(255, 0, 0, 0.6)');
+            tipePartikel = 'aura-up'; warnaPartikel = '#ff0000';
         } 
         else if (pilihanTema === 'akatsuki-purple') {
-            rootStyles.setProperty('--sharingan', '#6a0dad');
-            rootStyles.setProperty('--void', '#04020a');
-            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #140522 0%, #020106 100%)');
-            rootStyles.setProperty('--shadow-glow', 'rgba(106, 13, 173, 0.4)');
-            rootStyles.setProperty('--border-glow', 'rgba(106, 13, 173, 0.25)');
-            rootStyles.setProperty('--label-color', '#3a0764');
-            rootStyles.setProperty('--select-border', 'rgba(106, 13, 173, 0.5)');
+            rootStyles.setProperty('--sharingan', '#a300ff'); // Ungu pekat murni Rinnegan
+            rootStyles.setProperty('--void', '#020005');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #1b0030 0%, #010008 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(163, 0, 255, 0.5)');
+            rootStyles.setProperty('--border-glow', 'rgba(163, 0, 255, 0.35)');
+            rootStyles.setProperty('--label-color', '#c466ff');
+            rootStyles.setProperty('--select-border', 'rgba(163, 0, 255, 0.6)');
+            tipePartikel = 'shockwave'; warnaPartikel = '#a300ff';
         } 
         else if (pilihanTema === 'curse-blue') {
-            rootStyles.setProperty('--sharingan', '#00bfff');
-            rootStyles.setProperty('--void', '#010914');
-            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #021a35 0%, #00030a 100%)');
-            rootStyles.setProperty('--shadow-glow', 'rgba(0, 191, 255, 0.35)');
-            rootStyles.setProperty('--border-glow', 'rgba(0, 191, 255, 0.2)');
-            rootStyles.setProperty('--label-color', '#005f80');
-            rootStyles.setProperty('--select-border', 'rgba(0, 191, 255, 0.4)');
+            rootStyles.setProperty('--sharingan', '#00ccff'); // Chidori Blue Listrik
+            rootStyles.setProperty('--void', '#000308');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #001f3f 0%, #000103 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(0, 204, 255, 0.5)');
+            rootStyles.setProperty('--border-glow', 'rgba(0, 204, 255, 0.3)');
+            rootStyles.setProperty('--label-color', '#5cd6ff');
+            rootStyles.setProperty('--select-border', 'rgba(0, 204, 255, 0.6)');
+            tipePartikel = 'lightning'; warnaPartikel = '#00ccff';
         } 
         else if (pilihanTema === 'susanoo-orange') {
-            rootStyles.setProperty('--sharingan', '#ff4500');
-            rootStyles.setProperty('--void', '#0a0300');
-            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #240b00 0%, #040100 100%)');
-            rootStyles.setProperty('--shadow-glow', 'rgba(255, 69, 0, 0.4)');
-            rootStyles.setProperty('--border-glow', 'rgba(255, 69, 0, 0.25)');
-            rootStyles.setProperty('--label-color', '#8a2500');
-            rootStyles.setProperty('--select-border', 'rgba(255, 69, 0, 0.5)');
+            rootStyles.setProperty('--sharingan', '#ff5500'); // Api Oranye Menyala
+            rootStyles.setProperty('--void', '#050100');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #3d1400 0%, #010000 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(255, 85, 0, 0.55)');
+            rootStyles.setProperty('--border-glow', 'rgba(255, 85, 0, 0.35)');
+            rootStyles.setProperty('--label-color', '#ff8844');
+            rootStyles.setProperty('--select-border', 'rgba(255, 85, 0, 0.6)');
+            tipePartikel = 'fire-spark'; warnaPartikel = '#ff5500';
         }
         else if (pilihanTema === 'sakura-pink') {
-            rootStyles.setProperty('--sharingan', '#ff1493'); 
-            rootStyles.setProperty('--void', '#0d0205');     
-            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #240515 0%, #030001 100%)');
+            rootStyles.setProperty('--sharingan', '#ff1493'); // Pink Pekat Haruno
+            rootStyles.setProperty('--void', '#050002');     
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #38001a 0%, #010001 100%)');
             rootStyles.setProperty('--shadow-glow', 'rgba(255, 20, 147, 0.6)'); 
             rootStyles.setProperty('--border-glow', 'rgba(255, 20, 147, 0.4)');
-            rootStyles.setProperty('--label-color', '#ff69b4'); 
+            rootStyles.setProperty('--label-color', '#ff66b2'); 
             rootStyles.setProperty('--select-border', 'rgba(255, 20, 147, 0.6)');
-            rootStyles.setProperty('--petal-color', '#ff1493'); 
-            rootStyles.setProperty('--overlay-display', 'block');
-            buatDaunSakuraBeterbangan();
+            tipePartikel = 'sakura-leaves'; warnaPartikel = '#ff1493';
         }
         else if (pilihanTema === 'cyberpunk-yellow') {
-            rootStyles.setProperty('--sharingan', '#ffea00');
-            rootStyles.setProperty('--void', '#0a0a01');
-            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #242100 0%, #000000 100%)');
-            rootStyles.setProperty('--shadow-glow', 'rgba(255, 234, 0, 0.45)');
-            rootStyles.setProperty('--border-glow', 'rgba(255, 234, 0, 0.2)');
-            rootStyles.setProperty('--label-color', '#8a7f00');
-            rootStyles.setProperty('--select-border', 'rgba(255, 234, 0, 0.5)');
+            rootStyles.setProperty('--sharingan', '#ffea00'); // Kuning Cyberpunk Terang
+            rootStyles.setProperty('--void', '#050500');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #363200 0%, #000000 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(255, 234, 0, 0.5)');
+            rootStyles.setProperty('--border-glow', 'rgba(255, 234, 0, 0.3)');
+            rootStyles.setProperty('--label-color', '#fff155');
+            rootStyles.setProperty('--select-border', 'rgba(255, 234, 0, 0.6)');
+            tipePartikel = 'cyber-rain'; warnaPartikel = '#ffea00';
         }
         else if (pilihanTema === 'kamiui-green') {
-            rootStyles.setProperty('--sharingan', '#00ff66');
-            rootStyles.setProperty('--void', '#000803');
-            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #013013 0%, #000100 100%)');
-            rootStyles.setProperty('--shadow-glow', 'rgba(0, 255, 102, 0.4)');
-            rootStyles.setProperty('--border-glow', 'rgba(0, 255, 102, 0.25)');
-            rootStyles.setProperty('--label-color', '#00993d');
-            rootStyles.setProperty('--select-border', 'rgba(0, 255, 102, 0.5)');
+            rootStyles.setProperty('--sharingan', '#00ff55'); // Hijau Emerald Hidup
+            rootStyles.setProperty('--void', '#000501');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #003b13 0%, #000000 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(0, 255, 85, 0.5)');
+            rootStyles.setProperty('--border-glow', 'rgba(0, 255, 85, 0.3)');
+            rootStyles.setProperty('--label-color', '#55ff99');
+            rootStyles.setProperty('--select-border', 'rgba(0, 255, 85, 0.6)');
+            tipePartikel = 'wind-vortex'; warnaPartikel = '#00ff55';
         }
         else if (pilihanTema === 'amaterasu-white') {
-            rootStyles.setProperty('--sharingan', '#ffffff');
-            rootStyles.setProperty('--void', '#0a0a0a');
-            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #262626 0%, #020202 100%)');
-            rootStyles.setProperty('--shadow-glow', 'rgba(255, 255, 255, 0.35)');
-            rootStyles.setProperty('--border-glow', 'rgba(255, 255, 255, 0.2)');
-            rootStyles.setProperty('--label-color', '#888888');
-            rootStyles.setProperty('--select-border', 'rgba(255, 255, 255, 0.4)');
+            rootStyles.setProperty('--sharingan', '#ffffff'); // Putih Berlian Bersinar
+            rootStyles.setProperty('--void', '#080808');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #2d2d2d 0%, #010101 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(255, 255, 255, 0.45)');
+            rootStyles.setProperty('--border-glow', 'rgba(255, 255, 255, 0.25)');
+            rootStyles.setProperty('--label-color', '#ffffff');
+            rootStyles.setProperty('--select-border', 'rgba(255, 255, 255, 0.5)');
+            tipePartikel = 'cosmic-dust'; warnaPartikel = '#ffffff';
         }
         else if (pilihanTema === 'chakra-magenta') {
-            rootStyles.setProperty('--sharingan', '#ff007f');
-            rootStyles.setProperty('--void', '#0a0005');
-            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #36001b 0%, #010001 100%)');
-            rootStyles.setProperty('--shadow-glow', 'rgba(255, 0, 127, 0.45)');
-            rootStyles.setProperty('--border-glow', 'rgba(255, 0, 127, 0.25)');
-            rootStyles.setProperty('--label-color', '#aa0055');
-            rootStyles.setProperty('--select-border', 'rgba(255, 0, 127, 0.5)');
+            rootStyles.setProperty('--sharingan', '#ff007f'); // Magenta Pekat Elektrik
+            rootStyles.setProperty('--void', '#050003');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #420021 0%, #010001 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(255, 0, 127, 0.55)');
+            rootStyles.setProperty('--border-glow', 'rgba(255, 0, 127, 0.35)');
+            rootStyles.setProperty('--label-color', '#ff55aa');
+            rootStyles.setProperty('--select-border', 'rgba(255, 0, 127, 0.6)');
+            tipePartikel = 'chakra-bubbles'; warnaPartikel = '#ff007f';
         }
         else if (pilihanTema === 'byakugan-ice') {
-            rootStyles.setProperty('--sharingan', '#a4f4f9');
-            rootStyles.setProperty('--void', '#02070a');
-            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #0d2c3d 0%, #000204 100%)');
-            rootStyles.setProperty('--shadow-glow', 'rgba(164, 244, 249, 0.5)');
-            rootStyles.setProperty('--border-glow', 'rgba(164, 244, 249, 0.3)');
-            rootStyles.setProperty('--label-color', '#50aab2');
-            rootStyles.setProperty('--select-border', 'rgba(164, 244, 249, 0.5)');
+            rootStyles.setProperty('--sharingan', '#77efff'); // Biru Es Kristal
+            rootStyles.setProperty('--void', '#000408');
+            rootStyles.setProperty('--bg-gradient', 'radial-gradient(circle at center, #0f2c42 0%, #000103 100%)');
+            rootStyles.setProperty('--shadow-glow', 'rgba(119, 239, 255, 0.6)');
+            rootStyles.setProperty('--border-glow', 'rgba(119, 239, 255, 0.35)');
+            rootStyles.setProperty('--label-color', '#b3f7ff');
+            rootStyles.setProperty('--select-border', 'rgba(119, 239, 255, 0.6)');
+            tipePartikel = 'ice-snow'; warnaPartikel = '#77efff';
+        }
+
+        // Jalankan generator efek partikel spesifik
+        if(tipePartikel !== 'none') {
+            jalankanGeneratorSistem(tipePartikel, warnaPartikel);
         }
     }
 
-    function buatDaunSakuraBeterbangan() {
-        const container = document.getElementById('particleOverlay');
-        const jumlahKelopak = 45; 
-        for (let i = 0; i < jumlahKelopak; i++) {
-            const daun = document.createElement('div');
-            daun.classList.add('petal');
-            daun.style.setProperty('--start-x', `${Math.random() * 110 - 10}vw`); 
-            daun.style.setProperty('--end-x', `${Math.random() * 100 + 10}vw`); 
-            daun.style.setProperty('--rotation', `${(Math.random() * 500) + 200}deg`); 
-            const ukuranAcak = Math.random() * 7 + 6; 
-            daun.style.width = `${ukuranAcak}px`;
-            daun.style.height = `${ukuranAcak + (Math.random() * 3)}px`; 
-            daun.style.animationDuration = `${Math.random() * 6 + 6}s`;
-            daun.style.animationDelay = `${Math.random() * 6}s`;
-            container.appendChild(daun);
-        }
+    // CONTROLLER ENGINE GENERATOR PARTIKEL JAVASCRIPT
+    function jalankanGeneratorSistem(tipe, warna) {
+        const engine = document.getElementById('globalParticleEngine');
+        let intervalWaktu = 150; // default interval
+
+        if (tipe === 'cyber-rain' || tipe === 'lightning') intervalWaktu = 70;
+        if (tipe === 'shockwave') intervalWaktu = 800; // Gelombang lambat rileks
+
+        loopPartikelInterval = setInterval(() => {
+            const p = document.createElement('div');
+            p.classList.add('sys-particle');
+            
+            let lbr = Math.random() * 6 + 4;
+            let tinggi = lbr;
+            let xAwal = Math.random() * 100;
+            let yAwal = Math.random() * 100;
+
+            // CONFIG RULES SEAP TITLES:
+            if (tipe === 'aura-up') {
+                p.style.width = `${lbr}px`; p.style.height = `${tinggi}px`;
+                p.style.background = warna; p.style.borderRadius = '50%';
+                p.style.left = `${xAwal}vw`; p.style.top = '105vh';
+                p.style.boxShadow = `0 0 10px ${warna}`;
+                p.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                let anim = p.animate([
+                    { transform: `translate3d(0, 0, 0) scale(1)`, opacity: 0.8 },
+                    { transform: `translate3d(${(Math.random() * 80) - 40}px, -115vh, 0) scale(0.2)`, opacity: 0 }
+                ], { duration: Math.random() * 3000 + 2000, easing: 'linear' });
+                anim.onfinish = () => p.remove();
+            }
+            else if (tipe === 'sakura-leaves') {
+                let rUkuran = Math.random() * 8 + 6;
+                p.style.width = `${rUkuran}px`; p.style.height = `${rUkuran + 3}px`;
+                p.style.background = warna; p.style.borderRadius = '15% 85% 15% 85%';
+                p.style.left = `${Math.random() * 110 - 10}vw`; p.style.top = '-5vh';
+                p.style.opacity = '0.85';
+                
+                let anim = p.animate([
+                    { transform: `translate3d(0,0,0) rotate(0deg)` },
+                    { transform: `translate3d(${Math.random() * 150 + 50}px, 110vh, 0) rotate(${Math.random() * 400 + 200}deg)` }
+                ], { duration: Math.random() * 4000 + 4000, easing: 'linear' });
+                anim.onfinish = () => p.remove();
+            }
+            else if (tipe === 'fire-spark') {
+                p.style.width = `${lbr - 2}px`; p.style.height = `${tinggi - 2}px`;
+                p.style.background = '#ffdd00'; p.style.borderRadius = '50%';
+                p.style.left = `${xAwal}vw`; p.style.top = `${Math.random() * 30 + 70}vh`;
+                p.style.boxShadow = `0 0 8px ${warna}, 0 0 15px #ff0000`;
+                
+                let anim = p.animate([
+                    { transform: `translate3d(0,0,0) scale(1.3)`, opacity: 1 },
+                    { transform: `translate3d(${(Math.random() * 160) - 80}px, -80vh, 0) scale(0.1)`, opacity: 0 }
+                ], { duration: Math.random() * 2000 + 1500, easing: 'ease-out' });
+                anim.onfinish = () => p.remove();
+            }
+            else if (tipe === 'cyber-rain') {
+                p.style.width = '2px'; p.style.height = `${Math.random() * 25 + 15}px`;
+                p.style.background = warna; p.style.left = `${xAwal}vw`; p.style.top = '-10vh';
+                p.style.boxShadow = `0 0 8px ${warna}`;
+                p.style.opacity = Math.random() * 0.6 + 0.4;
+
+                let anim = p.animate([
+                    { transform: `translate3d(0,0,0)` },
+                    { transform: `translate3d(0, 115vh, 0)` }
+                ], { duration: Math.random() * 600 + 400, easing: 'linear' });
+                anim.onfinish = () => p.remove();
+            }
+            else if (tipe === 'lightning') {
+                p.style.width = `${Math.random() * 3 + 1}px`; p.style.height = `${Math.random() * 120 + 40}px`;
+                p.style.background = '#ffffff'; p.style.left = `${xAwal}vw`; p.style.top = `${Math.random() * 90}vh`;
+                p.style.boxShadow = `0 0 12px ${warna}, 0 0 25px ${warna}`;
+                p.style.opacity = '0';
+                p.style.transform = `rotate(${(Math.random() * 40) - 20}deg)`;
+
+                let anim = p.animate([
+                    { opacity: 0 }, { opacity: 0.9 }, { opacity: 0 }, { opacity: 0.8 }, { opacity: 0 }
+                ], { duration: 300, easing: 'linear' });
+                anim.onfinish = () => p.remove();
+            }
+            else if (tipe === 'shockwave') {
+                p.style.width = '10px'; p.style.height = '10px';
+                p.style.border = `2px solid ${warna}`; p.style.borderRadius = '50%';
+                p.style.left = '50%'; p.style.top = '50%';
+                p.style.transform = 'translate(-50%, -50%)';
+                p.style.boxShadow = `0 0 20px ${warna}, inset 0 0 15px ${warna}`;
+                
+                let anim = p.animate([
+                    { width: '10px', height: '10px', opacity: 0.9 },
+                    { width: '130vw', height: '130vw', opacity: 0 }
+                ], { duration: 4000, easing: 'ease-out' });
+                anim.onfinish = () => p.remove();
+            }
+            else if (tipe === 'wind-vortex') {
+                p.style.width = `${Math.random() * 40 + 20}px`; p.style.height = '2px';
+                p.style.background = `linear-gradient(90deg, transparent, ${warna}, transparent)`;
+                p.style.left = '-10vw'; p.style.top = `${yAwal}vh`;
+                p.style.opacity = Math.random() * 0.5 + 0.2;
+
+                let anim = p.animate([
+                    { transform: `translate3d(0,0,0) skewX(-30deg)` },
+                    { transform: `translate3d(120vw, ${(Math.random() * 100) - 50}px, 0) skewX(-30deg)` }
+                ], { duration: Math.random() * 1500 + 1000, easing: 'linear' });
+                anim.onfinish = () => p.remove();
+            }
+            else if (tipe === 'cosmic-dust') {
+                let size = Math.random() * 4 + 2;
+                p.style.width = `${size}px`; p.style.height = `${size}px`;
+                p.style.background = '#ffffff'; p.style.borderRadius = '50%';
+                p.style.left = `${xAwal}vw`; p.style.top = `${yAwal}vh`;
+                p.style.boxShadow = `0 0 8px #ffffff, 0 0 15px ${warna}`;
+                
+                let anim = p.animate([
+                    { opacity: 0, transform: 'scale(0.2)' },
+                    { opacity: 0.9, transform: 'scale(1)' },
+                    { opacity: 0, transform: 'scale(0.2)' }
+                ], { duration: Math.random() * 3000 + 1500, easing: 'ease-in-out' });
+                anim.onfinish = () => p.remove();
+            }
+            else if (tipe === 'chakra-bubbles') {
+                let size = Math.random() * 15 + 8;
+                p.style.width = `${size}px`; p.style.height = `${size}px`;
+                p.style.border = `1px solid ${warna}`; p.style.borderRadius = '50%';
+                p.style.left = `${xAwal}vw`; p.style.top = '105vh';
+                p.style.boxShadow = `0 0 12px ${warna}`;
+                
+                let anim = p.animate([
+                    { transform: 'translateY(0) scale(1)', opacity: 0.7 },
+                    { transform: `translate(${(Math.random() * 60) - 30}px, -110vh) scale(1.3)`, opacity: 0 }
+                ], { duration: Math.random() * 4000 + 2500, easing: 'ease-in' });
+                anim.onfinish = () => p.remove();
+            }
+            else if (tipe === 'ice-snow') {
+                let size = Math.random() * 5 + 3;
+                p.style.width = `${size}px`; p.style.height = `${size}px`;
+                p.style.background = '#ffffff'; p.style.borderRadius = '50%';
+                p.style.left = `${xAwal}vw`; p.style.top = '-5vh';
+                p.style.boxShadow = `0 0 6px ${warna}`;
+                p.style.opacity = Math.random() * 0.5 + 0.4;
+                
+                let anim = p.animate([
+                    { transform: 'translate(0, 0)' },
+                    { transform: `translate(${(Math.random() * 50) - 25}px, 110vh)` }
+                ], { duration: Math.random() * 5000 + 4000, easing: 'linear' });
+                anim.onfinish = () => p.remove();
+            }
+
+            engine.appendChild(p);
+        }, intervalWaktu);
     }
 
     function gantiZonaWaktu() {
@@ -885,6 +1016,7 @@
 
     setInterval(refreshJamDunia, 1000);
     refreshJamDunia();
+    gantiTemaTampilan(); // Panggil tema bawaan saat pertama load agar partikel langsung jalan
     window.addEventListener('load', rapihkanKecepatanTeks);
     window.addEventListener('resize', rapihkanKecepatanTeks);
 </script>
