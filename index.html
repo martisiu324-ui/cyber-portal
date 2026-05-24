@@ -43,6 +43,19 @@
             padding: 20px;
         }
 
+        /* ==========================================================================
+           STYLE TAMBAHAN: CANVAS MODE GAGAK TERBANG
+           ========================================================================== */
+        #crowCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;          /* Berada tepat di atas background, di bawah menu */
+            pointer-events: none; /* Supaya klik mouse tembus dan tombol menu tetap bisa diklik */
+        }
+
         /* CONTAINER UTAMA */
         .central-container {
             width: 100%;
@@ -50,7 +63,7 @@
             margin: auto;
             padding: 20px;
             text-align: center;
-            z-index: 10;
+            z-index: 10; /* Berada di atas canvas gagak */
             animation: popInContainer 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -432,6 +445,8 @@
 </head>
 <body>
 
+    <canvas id="crowCanvas"></canvas>
+
     <div class="central-container" id="mainMenuLayout">
         
         <div class="mini-clock-box">
@@ -502,6 +517,101 @@
     </div>
 
     <script>
+        // ==========================================================================
+        // SCRIPT TAMBAHAN: ENGINE ANIMASI MODE GAGAK (CANVAS LOOP)
+        // ==========================================================================
+        const canvas = document.getElementById('crowCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const crows = [];
+        const crowCount = 30; // Jumlah gagak aktif yang berterbangan di portal utama
+
+        class Crow {
+            constructor() {
+                this.reset();
+                // Ketika pertama kali dimuat, posisinya diacak di sepanjang layar agar tidak muncul bersamaan dari kanan
+                this.x = Math.random() * canvas.width; 
+            }
+
+            reset() {
+                this.x = canvas.width + Math.random() * 300;       // Muncul kembali dari sisi kanan luar layar
+                this.y = Math.random() * (canvas.height * 0.75);   // Terbang bebas dari area atas hingga 75% tinggi layar
+                this.size = Math.random() * 12 + 8;                // Skala ukuran dinamis (efek kedalaman jauh/dekat)
+                this.speedX = Math.random() * 1.8 + 1.2;           // Kecepatan meluncur ke kiri
+                this.speedY = Math.sin(Math.random() * 2) * 0.4;   // Efek melayang naik turun sedikit demi sedikit
+                this.wingPhase = Math.random() * 15;               // Mengacak fase awal kepakan sayap
+                this.wingSpeed = Math.random() * 0.12 + 0.08;      // Kecepatan kepakan sayap
+            }
+
+            update() {
+                this.x -= this.speedX;
+                this.y += this.speedY;
+                this.wingPhase += this.wingSpeed;
+
+                // Reset gagak ke kanan jika sudah melewati batas kiri layar
+                if (this.x + this.size * 2 < 0) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                
+                // Warna siluet gagak Akatsuki (Hitam pekat dengan pendaran merah genjutsu samar)
+                ctx.fillStyle = '#050304';
+                ctx.shadowColor = '#ff1e27';
+                ctx.shadowBlur = this.size > 14 ? 5 : 0; 
+
+                ctx.beginPath();
+                // Menggunakan sin untuk mengontrol pergerakan kepakan ujung sayap gagak
+                let wingY = Math.sin(this.wingPhase) * (this.size * 0.85);
+
+                // Menggambar siluet geometri burung gagak ninja terbang ke arah kiri
+                ctx.moveTo(0, 0); 
+                ctx.quadraticCurveTo(this.size * 0.4, -this.size * 0.3, this.size * 0.7, 0); 
+                ctx.lineTo(this.size * 1.2, -this.size * 0.1); 
+                ctx.lineTo(this.size * 0.8, this.size * 0.15); 
+
+                // Sayap Atas Utama
+                ctx.quadraticCurveTo(this.size * 0.4, wingY, 0, 0);
+                
+                // Sayap Belakang Perspektif
+                ctx.moveTo(this.size * 0.4, -this.size * 0.1);
+                ctx.quadraticCurveTo(this.size * 0.6, wingY - (this.size * 0.25), this.size * 0.6, 0);
+
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // Inisialisasi kawanan gagak
+        for (let i = 0; i < crowCount; i++) {
+            crows.push(new Crow());
+        }
+
+        // Loop animasi konstan
+        function animateCrows() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            crows.forEach(crow => {
+                crow.update();
+                crow.draw();
+            });
+            requestAnimationFrame(animateCrows);
+        }
+        animateCrows();
+
+
+        // ==========================================================================
+        // LOGIK BAWAAN SYSTEM PORTAL KAMU
+        // ==========================================================================
         const logsMasuk = [
             "Weaving Tsukuyomi signs...",
             "Expanding Genjutsu field...",
@@ -605,7 +715,7 @@
         }
 
         // ANIMASI LOADING OVERLAY CONTROLLER
-function jalankanLoadingAnimation(databaseLog, callbackSelesai, isSlow = false) {
+        function jalankanLoadingAnimation(databaseLog, callbackSelesai, isSlow = false) {
             const loadingScreen = document.getElementById('loadingScreen');
             const loadBar = document.getElementById('loadBar');
             const loadingLog = document.getElementById('loadingLog');
@@ -616,8 +726,6 @@ function jalankanLoadingAnimation(databaseLog, callbackSelesai, isSlow = false) 
 
             let persen = 0;
             
-            // Jika isSlow bernilai true, angka penambahannya kecil (0.8 - 2.3) sehingga loading jadi jauh lebih lama
-            // Jika false, tetap menggunakan kecepatan normal bawaan kamu yang cepat.
             let intervalLoading = setInterval(() => {
                 if (isSlow) {
                     persen += (Math.random() * 1.5) + 0.8; 
@@ -640,7 +748,7 @@ function jalankanLoadingAnimation(databaseLog, callbackSelesai, isSlow = false) 
                     if (persen > 25 && persen <= 55) loadingLog.innerText = databaseLog[1];
                     else if (persen > 55 && persen <= 85) loadingLog.innerText = databaseLog[2];
                 }
-            }, 25); // Kecepatan interval tetap 25ms agar pergerakan bar tetap halus
+            }, 25); 
         }
 
         // LIVE JAM KUALA LUMPUR INTERACTION
@@ -689,7 +797,6 @@ function jalankanLoadingAnimation(databaseLog, callbackSelesai, isSlow = false) 
                     iframe.style.display = 'none';
                     iframe.src = "";
 
-                    // DI SINI PERUBAHANNYA: Ditambahkan argumen 'true' di akhir agar loading pertama ini berjalan lama
                     jalankanLoadingAnimation(logsLogin, () => {
                         document.getElementById('mainMenuLayout').style.display = 'block';
                         sessionStorage.setItem('sudahLoginAwal', 'true'); 
@@ -703,12 +810,10 @@ function jalankanLoadingAnimation(databaseLog, callbackSelesai, isSlow = false) 
                 }
             }
 
-            // Integrasi tombol Enter key saat mengetik password
             document.getElementById('cyberPasswordInput').addEventListener('keyup', function(e) {
                 if (e.key === 'Enter') konfirmasiPassword();
             });
         };
-        
-        </script>
+    </script>
 </body>
 </html>
