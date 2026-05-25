@@ -16,7 +16,8 @@
             --neon-crimson: #9e0006;  /* Merah Darah Gelap */
             --neon-purple: #7000ad;   /* Ungu Genjutsu */
             --neon-orange: #ff5500;   /* Jingga Api */
-            --neon-gold: #ffaa00;
+            --neon-gold: #ffaa00;     /* Emas VIP */
+            --neon-blue: #00a2ff;     /* Biru Support */
         }
 
         * {
@@ -120,7 +121,7 @@
         /* GRID MENU RESPONSIF */
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 25px;
             margin-bottom: 40px;
             width: 100%;
@@ -205,25 +206,30 @@
         }
 
         /* Variasi Cahaya Pendaran Tiap Tombol */
-        .card-red:hover { box-shadow: 0 20px 40px rgba(255, 30, 39, 0.35); }
+        .card-red:hover { box-shadow: 0 20px 40px rgba(255, 30, 39, 0.35); border-color: var(--neon-red); }
         .card-red:hover i { color: var(--neon-red) !important; filter: drop-shadow(0 0 10px var(--neon-red)); }
         .card-red:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-red); }
 
-        .card-cyan:hover { box-shadow: 0 20px 40px rgba(255, 30, 39, 0.35); }
+        .card-cyan:hover { box-shadow: 0 20px 40px rgba(255, 30, 39, 0.35); border-color: var(--neon-red); }
         .card-cyan:hover i { color: var(--neon-red) !important; filter: drop-shadow(0 0 10px var(--neon-red)); }
         .card-cyan:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-red); }
 
-        .card-purple:hover { box-shadow: 0 20px 40px rgba(112, 0, 173, 0.4); }
+        .card-purple:hover { box-shadow: 0 20px 40px rgba(112, 0, 173, 0.4); border-color: var(--neon-purple); }
         .card-purple:hover i { color: var(--neon-purple) !important; filter: drop-shadow(0 0 10px var(--neon-purple)); }
         .card-purple:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-purple); }
 
-        .card-orange:hover { box-shadow: 0 20px 40px rgba(255, 85, 0, 0.4); }
+        .card-orange:hover { box-shadow: 0 20px 40px rgba(255, 85, 0, 0.4); border-color: var(--neon-orange); }
         .card-orange:hover i { color: var(--neon-orange) !important; filter: drop-shadow(0 0 10px var(--neon-orange)); }
         .card-orange:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-orange); }
 
-        .card-blue:hover { box-shadow: 0 20px 40px rgba(255, 170, 0, 0.4); }
-        .card-blue:hover i { color: var(--neon-gold) !important; filter: drop-shadow(0 0 10px var(--neon-gold)); }
-        .card-blue:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-gold); }
+        /* KARTU VIP EMAS */
+        .card-gold:hover { box-shadow: 0 20px 40px rgba(255, 170, 0, 0.4); border-color: var(--neon-gold); }
+        .card-gold:hover i { color: var(--neon-gold) !important; filter: drop-shadow(0 0 10px var(--neon-gold)); }
+        .card-gold:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-gold); }
+
+        .card-blue:hover { box-shadow: 0 20px 40px rgba(0, 162, 255, 0.4); border-color: var(--neon-blue); }
+        .card-blue:hover i { color: var(--neon-blue) !important; filter: drop-shadow(0 0 10px var(--neon-blue)); }
+        .card-blue:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-blue); }
 
         .central-footer {
             font-family: 'Orbitron', sans-serif;
@@ -479,8 +485,12 @@
                 <i class="material-icons">remove_red_eye</i>
                 <span>Tsukuyomi Genjutsu</span>
             </div>
-            
 
+            <div class="menu-card card-gold" onclick="bukaProyek('vip.html', 'Senarai VIP')">
+                <i class="material-icons">workspace_premium</i>
+                <span>Senarai VIP</span>
+            </div>
+            
             <a href="https://t.me/martissssssss" target="_blank" class="menu-card card-blue">
                 <i class="material-icons">headset_mic</i>
                 <span>Support</span>
@@ -658,7 +668,6 @@
                 sessionStorage.setItem('halamanTerakhir', namaFile);
 
                 // TAMBAHAN: Membuat titik riwayat baru di browser saat membuka proyek
-                // Supaya ketika tombol back HP ditekan, browser mendeteksi perubahan state ini
                 history.pushState({ proyekTerbuka: true }, "");
             });
         }
@@ -683,7 +692,6 @@
         window.addEventListener('popstate', function(event) {
             const halamanTerakhir = sessionStorage.getItem('halamanTerakhir');
             
-            // Jika user menekan tombol back HP DAN posisi saat ini sedang membuka halaman proyek
             if (halamanTerakhir) {
                 resetPortal();
             }
@@ -785,7 +793,6 @@
                 iframe.style.transform = 'scale(1)';
                 iframe.src = halamanTerakhir;
 
-                // TAMBAHAN: Jika di-refresh posisi di dalam proyek, daftarkan ulang state history back
                 if (history.state === null) {
                     history.pushState({ proyekTerbuka: true }, "");
                 }
