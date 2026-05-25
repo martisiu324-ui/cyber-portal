@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIP List Generator - Ultra Premium Dual Engine</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;800;900&family=Montserrat:wght@400;600;800&family=Poppins:wght@400;600;800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <style>
         :root {
             /* Tema Default (Midnight Aurora) */
@@ -13,13 +15,13 @@
             --cyber-cyan: #00f0ff;
             --cyber-pink: #ff007f;
             --glass-bg: rgba(15, 23, 42, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #f8fafc;
-            --bg-table-card: rgba(30, 37, 48, 1);
+            --bg-table-card: rgba(255, 255, 255, 0.03);
             --bg-table-inner: #11161f;
             --success-color: #15803d;
             --unavailable-color: #b91c1c;
-            --withdrawal-color: #0f172a; 
+            --withdrawal-color: #ffffff; 
             --star-color: #ef4444;
             
             /* Pengaturan Ukuran Huruf Dinamis Mandiri */
@@ -28,8 +30,14 @@
             --font-size-header: 12px;
             --font-size-row: 14px;
 
+            /* Pengaturan Ukuran dan Posisi Logo */
+            --logo-left-width: 140px;
+            --logo-left-margin: 0px;
+            --logo-right-width: 140px;
+            --logo-right-margin: 0px;
+
             --main-font-family: 'Inter', sans-serif;
-            --sidebar-width: 350px;
+            --sidebar-width: 320px;
         }
 
         * {
@@ -42,7 +50,9 @@
             background: radial-gradient(circle at 50% 0%, #1a233a 0%, var(--bg-body) 70%);
             color: var(--text-main);
             min-height: 100vh;
-            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             transition: background 0.5s ease;
             font-family: var(--main-font-family);
         }
@@ -54,19 +64,23 @@
             color: #ffffff;
             padding: 12px 0;
             font-size: 16px;
-            font-weight: 700;
-            letter-spacing: 2px;
+            font-weight: 1000;
+            letter-spacing: 1px;
             text-transform: uppercase;
             box-shadow: 0 5px 20px rgba(0,0,0,0.5);
             overflow: hidden;
             width: 100%;
             cursor: default;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            flex-shrink: 0;
         }
 
         .marquee-container {
             display: inline-block;
             white-space: nowrap;
-            animation: marquee 15s linear infinite;
+            animation: marquee 30s linear infinite;
             padding-left: 100%;
         }
 
@@ -75,259 +89,386 @@
             100% { transform: translate3d(-100%, 0, 0); }
         }
 
-        /* --- PERBAIKAN RESPONSIVITAS & KONTROL SIDEBAR --- */
         .container {
             display: flex;
-            padding: 20px;
-            gap: 20px;
             max-width: 100%;
             margin: 0 auto;
-            flex-wrap: nowrap;
+            flex-grow: 1;
+            height: calc(100vh - 45px);
+            width: 100%;
         }
 
-        .sidebar {
+        /* --- AREA BLOK KONTROL KIRI --- */
+        .left-control-container {
             width: var(--sidebar-width);
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            position: sticky;
-            top: 20px;
-            height: fit-content;
+            height: 100%;
+            padding: 15px;
+            gap: 15px;
+            transition: width 0.2s ease;
+            position: relative;
+            z-index: 10;
         }
 
-        .panel-box {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 0px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        /* FIX JIKA COLLAPSED: Hilangkan total display agar tidak menyeret main-content ke kiri */
+        .left-control-container.collapsed {
+            display: none !important;
         }
 
-        .panel-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--cyber-cyan);
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 8px;
-        }
-
-        /* PANEL CORE SYSTEM STYLING */
-        .btn-sidebar-portal {
-            width: 100%;
-            background: rgba(6, 11, 19, 0.85);
-            border: 1.5px solid var(--cyber-cyan); 
-            color: #ffffff;
-            padding: 14px;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            display: inline-flex;
+        /* TOMBOL PORTAL - Berada di luar Kotak Sidebar */
+        .gemini-btn-portal {
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            text-transform: uppercase;
-        }
-
-        .btn-sidebar-portal:hover {
-            background: rgba(0, 240, 255, 0.15);
-            box-shadow: 0 0 20px var(--cyber-cyan);
-            border-color: #ffffff;
-            transform: translateY(-2px);
-        }
-
-        /* --- ACCORDION CORE SYSTEM --- */
-        .accordion-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background-color: #1a1a1c;
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #ffffff;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
-            user-select: none;
+            width: 100%;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
-        
-        .accordion-arrow {
-            font-size: 10px;
-            transition: transform 0.3s ease;
+
+        .gemini-btn-portal:hover {
+            background-color: #242427;
+            border-color: var(--cyber-cyan);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+        }
+
+        .gemini-btn-portal i {
+            font-size: 15px;
             color: var(--cyber-cyan);
         }
-        
-        .panel-box.open .accordion-arrow {
+
+        /* KOTAK UTAMA SIDEBAR */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            background-color: #131314 !important; 
+            border: 1px solid #2d2d2e;
+            border-radius: 16px;
+            padding: 15px;
+            overflow-y: auto;
+            flex-grow: 1;
+            width: 100%;
+            user-select: none;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        .gemini-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #2d2d2e;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .gemini-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #e3e3e3;
+            letter-spacing: 0.5px;
+        }
+
+        .gemini-logo-icon {
+            background: linear-gradient(135deg, #4285f4, #9b72cb, #d96570);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 18px;
+        }
+
+        .gemini-toggle-btn {
+            background: #202124;
+            border: 1px solid rgba(255,255,255,0.05);
+            color: #c4c7c5;
+            font-size: 14px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .gemini-toggle-btn:hover {
+            background-color: #2d2e30;
+            color: #ffffff;
+        }
+
+        .gemini-menu-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 15px;
+        }
+
+        .gemini-section-title {
+            color: #8e918f;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .panel-box {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .gemini-menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #c4c7c5;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .gemini-menu-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gemini-menu-item i.menu-icon {
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+            color: #a8aab0;
+        }
+
+        .gemini-menu-item:hover, .panel-box.open .gemini-menu-item {
+            background-color: #202124;
+            color: #ffffff;
+        }
+
+        .gemini-arrow {
+            font-size: 10px;
+            color: #8e918f;
+            transition: transform 0.2s;
+        }
+
+        .panel-box.open .gemini-arrow {
             transform: rotate(180deg);
+            color: var(--cyber-cyan);
         }
 
         .accordion-body {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: max-height 0.25s ease-out;
+            padding: 0 10px;
+            background-color: #1a1a1c;
+            border-radius: 8px;
         }
         
         .panel-box.open .accordion-body {
-            max-height: 520px;
+            max-height: 450px;
             overflow-y: auto;
-            margin-top: 15px;
-            padding-right: 4px;
+            padding: 12px;
+            margin-top: 4px;
+            margin-bottom: 6px;
+            border: 1px solid rgba(255,255,255,0.03);
         }
-
-        .accordion-body::-webkit-scrollbar { width: 4px; }
-        .accordion-body::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-        .accordion-body::-webkit-scrollbar-thumb { background: var(--cyber-cyan); }
 
         .category-label {
-            font-family: 'Orbitron', sans-serif;
             font-size: 9px;
             font-weight: 700;
-            color: #64748b;
-            letter-spacing: 1px;
+            color: #8e918f;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
-            margin-top: 10px;
-            margin-bottom: 6px;
+            margin: 6px 0 4px 0;
         }
-        .category-label:first-child { margin-top: 0; }
 
         .box-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 8px;
         }
 
         .grid-item-btn {
-            background: rgba(17, 24, 39, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 0px;
-            padding: 12px 10px;
+            background: #232325;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 8px;
             cursor: pointer;
             text-align: left;
             transition: all 0.2s;
         }
 
-        .grid-item-btn:hover {
-            border-color: rgba(255, 255, 255, 0.3);
-            background: rgba(31, 41, 55, 0.9);
-        }
+        .grid-item-btn:hover { background: #2a2a2c; }
+        .grid-item-btn.active { border-color: var(--cyber-cyan); background: #1e242b; }
 
-        .grid-item-btn.active {
-            border-color: var(--cyber-cyan);
-            box-shadow: inset 0 0 8px rgba(0, 240, 255, 0.2);
-            background: rgba(15, 23, 42, 0.95);
-        }
+        .grid-item-title { font-size: 11px; font-weight: 600; color: #ffffff; text-overflow: ellipsis; overflow: hidden; }
+        .grid-item-sub { font-size: 9px; color: #8e918f; margin-top: 2px; }
 
-        .grid-item-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: #ffffff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .grid-item-sub {
-            font-size: 9px;
-            color: #64748b;
-            margin-top: 4px;
-        }
-
-        .theme-swatch-bar {
-            display: flex;
-            height: 4px;
-            width: 100%;
-            margin-top: 6px;
-            overflow: hidden;
-        }
+        .theme-swatch-bar { display: flex; height: 4px; width: 100%; margin-top: 5px; border-radius: 2px; overflow: hidden; }
         .swatch-item { flex: 1; }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group:last-child { margin-bottom: 0; }
-
-        .form-group label {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #94a3b8;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-        }
-
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 11px; color: #c4c7c5; margin-bottom: 4px; }
         .form-group select {
-            width: 100%;
-            background: #111827;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 10px 12px;
-            color: #ffffff;
+            width: 100%; background: #232325; border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 6px 8px; color: #ffffff; font-size: 12px; border-radius: 4px; outline: none;
+        }
+        .form-group input[type="range"] { width: 100%; accent-color: var(--cyber-cyan); cursor: pointer; }
+
+        .upload-zone { border: 1.5px dashed rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 6px; text-align: center; cursor: pointer; background: #232325; }
+        .upload-zone p { font-size: 10px; color: #8e918f; }
+        .uploaded-logo-preview { max-height: 35px; max-width: 80px; object-fit: contain; display: none; margin-top: 4px; }
+
+        .gemini-action-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: auto;
+            border-top: 1px solid #2d2d2e;
+            padding-top: 10px;
+        }
+
+        .gemini-recent-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #c4c7c5;
+            padding: 8px 12px;
+            border-radius: 10px;
             font-size: 12px;
-            font-weight: 600;
-            border-radius: 0px;
-            outline: none;
             cursor: pointer;
+            transition: background 0.2s;
         }
-        .form-group select option { background: #0c1322; }
+        .gemini-recent-item i { font-size: 13px; color: #8e918f; width: 18px; text-align: center; }
+        .gemini-recent-item:hover { background-color: #202124; color: #ffffff; }
 
-        .form-group input[type="range"] {
-            width: 100%;
-            padding: 5px 0;
+        /* --- RESIZER SIDEBAR --- */
+        .sidebar-resizer {
+            width: 4px;
             background: transparent;
-            border: none;
-            cursor: pointer;
+            cursor: col-resize;
+            height: 100%;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+        .sidebar-resizer:hover, .sidebar-resizer.dragging {
+            background: var(--cyber-cyan);
+            box-shadow: 0 0 8px var(--cyber-cyan);
         }
 
-        .grid-buttons { display: flex; flex-direction: column; gap: 12px; }
-        .btn-action {
-            width: 100%; padding: 14px; font-size: 12px; font-weight: 800; border-radius: 0px;
-            cursor: pointer; border: none; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;
-            text-align: center; text-decoration: none; display: inline-block;
-        }
-        .btn-green { background: linear-gradient(135deg, #059669, #10b981); color: white; }
-        .btn-green:hover { transform: translateY(-2px); }
-        .btn-blue { background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: white; }
-        .btn-blue:hover { transform: translateY(-2px); }
-        .btn-dark { background: linear-gradient(135deg, #1e293b, #334155); color: #00f0ff; border: 1px solid rgba(0, 240, 255, 0.3); font-family: 'Orbitron', sans-serif; }
-        .btn-dark:hover { transform: translateY(-2px); box-shadow: 0 0 12px rgba(0, 240, 255, 0.3); }
-        .btn-red { background: linear-gradient(135deg, #b91c1c, #ef4444); color: white; margin-top: 5px; }
-        .btn-red:hover { transform: translateY(-2px); }
-
+        /* --- LAYOUT UTAMA TABEL KANAN (RESPONSIF AUTO-FIT) --- */
         .main-content {
             flex-grow: 1;
-            min-width: 0;
-            overflow-x: auto;
+            flex-shrink: 1;
+            min-width: 0; 
+            overflow-y: auto;
+            overflow-x: auto; /* Izinkan jika di dalam resolusi ekstrim kecil */
+            height: 100%;
+            position: relative;
+            padding: 20px;
         }
-        .capture-wrapper { display: flex; flex-direction: column; gap: 30px; padding: 10px; background: transparent; }
+
+        #btnShowSidebar {
+            display: none; 
+            position: fixed; 
+            top: 65px; 
+            left: 15px; 
+            z-index: 999; 
+            background: #1e1f20; 
+            color: #c4c7c5; 
+            border: 1px solid #2d2d2e; 
+            width: 42px;
+            height: 42px;
+            font-size: 16px; 
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
+            transition: all 0.2s;
+        }
+        #btnShowSidebar:hover { 
+            background-color: #2d2e30; 
+            color: #ffffff; 
+            transform: scale(1.05);
+        }
+
+        .capture-wrapper { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 30px; 
+            width: 100%;
+        }
 
         .table-card {
-            background-color: var(--bg-table-card); border: 1px solid rgba(255,255,255,0.05);
-            padding: 35px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            background: var(--bg-table-card, rgba(255, 255, 255, 0.02));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px; 
+            width: 100%;
+            overflow: hidden;
+            transition: opacity 0.2s;
         }
+        
+        .table-card.shape-capsule { border-radius: 50px !important; }
+        .table-card.shape-modern { border-radius: 16px !important; border-left: 5px solid var(--cyber-cyan) !important; }
 
-        .table-header-section { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
-        .header-left { display: flex; align-items: center; gap: 20px; }
-
-        .icon-clipboard {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px; font-size: 26px; color: var(--cyber-cyan);
+        .table-header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 24px 14px 24px;
+            gap: 15px;
         }
+        .header-layout-center { justify-content: center !important; text-align: center; }
+        .header-layout-left { justify-content: flex-start !important; }
+        .header-left { flex-grow: 1; }
 
-        .title-text h2 { font-size: var(--font-size-title); font-weight: 800; color: #ffffff; cursor: pointer; }
-        .title-text p { font-size: var(--font-size-subtitle); color: #94a3b8; margin-top: 4px; cursor: pointer; }
-        .star-icon { font-size: 30px; color: var(--star-color); }
+        .custom-logo-container-left img, .custom-logo-container-right img { 
+            height: auto; object-fit: contain; 
+        }
+        .custom-logo-container-left img { width: var(--logo-left-width); margin-left: var(--logo-left-margin); }
+        .custom-logo-container-right img { width: var(--logo-right-width); margin-right: var(--logo-right-margin); }
+
+        .title-text h2 { font-size: var(--font-size-title); font-weight: 800; color: #ffffff; }
+        .title-text p { font-size: var(--font-size-subtitle); color: #94a3b8; margin-top: 4px; }
 
         .table-inner {
-            background-color: var(--bg-table-inner); padding: 24px;
-            border: 1px solid rgba(255,255,255,0.02); transition: background-color 0.4s ease;
+            background-color: var(--bg-table-inner); 
+            padding: 24px;
+            width: 100%;
+            overflow-x: auto;
+            display: block;
         }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 14px; }
-        
+        table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0 14px; 
+        }
         th { 
             font-size: var(--font-size-header); 
             font-weight: 800; 
@@ -336,85 +477,72 @@
             text-transform: uppercase; 
             letter-spacing: 1.5px;
             border-bottom: 2px solid rgba(255,255,255,0.1);
+            text-align: center;
         }
         
         td {
-            background-color: #ffffff; padding: 16px; text-align: center;
-            font-size: var(--font-size-row); font-weight: 700; color: #0f172a;
-            cursor: pointer; transition: all 0.2s; font-family: var(--main-font-family);
+            background-color: rgba(6, 11, 20, 0.9);
+            padding: 16px; 
+            text-align: center;
+            font-size: var(--font-size-row); 
+            font-weight: 700; 
+            color: #ffffff;
+            transition: background-color 0.2s;
+            font-family: var(--main-font-family);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);        
         }
-        td:hover { background-color: #f8fafc; transform: scale(1.01); }
+        td:hover { background-color: rgba(255, 255, 255, 0.12); }
 
-        tr td:first-child { width: 90px; font-weight: 800;}
+        /* FIX: Ubah ke min-width agar text Capital tidak hancur gepeng */
+        tr td:first-child { min-width: 100px; font-weight: 800; border-left: 1px solid rgba(255,255,255,0.03); }
+        tr td:last-child { border-right: 1px solid rgba(255,255,255,0.03); }
 
         .option-cell { position: relative; }
         .commission-cell, .bonus-cell { position: relative; padding-bottom: 24px; }
         
         .badge-pct {
             position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
-            background-color: #e2e8f0; color: #334155; font-size: 10px;
-            padding: 2px 10px; font-weight: 700; border: 1px solid #cbd5e1;
+            background-color: rgba(255, 255, 255, 0.15); color: var(--cyber-cyan); font-size: 10px;
+            padding: 2px 10px; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);
         }
 
         .badge-extra-bonus {
             position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, #ffd700, #ffa500); color: #000000;
-            font-size: 9px; padding: 2px 8px; font-weight: 800; box-shadow: 0 2px 5px rgba(255, 215, 0, 0.4);
-            border: 1px solid #b58900; white-space: nowrap;
+            font-size: 9px; padding: 2px 8px; font-weight: 800; border: 1px solid #b58900; white-space: nowrap;
         }
 
         .badge-hot {
             position: absolute; top: -2px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, #ff0055, #ef4444); color: #ffffff;
-            font-size: 8px; padding: 1px 6px; font-weight: 900; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.5);
-            letter-spacing: 0.5px;
+            font-size: 8px; padding: 1px 6px; font-weight: 900; letter-spacing: 0.5px;
         }
 
-        .gain-text { color: #1e40af; }
-        
+        .gain-text { color: var(--cyber-cyan); }
         .status-available { color: var(--success-color); font-size: var(--font-size-row); font-weight: 800; }
         .status-unavailable { color: var(--unavailable-color); font-size: var(--font-size-row); font-weight: 800; }
         .withdrawal-text { color: var(--withdrawal-color) !important; font-weight: 800; }
 
+        /* MODAL POPUP */
         .cyber-modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(4, 7, 12, 0.8); backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 99999;
         }
-
-        .cyber-menu-box {
-            background: #0b1321; border: 2px solid var(--cyber-cyan);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.25); width: 380px; padding: 25px; color: #ffffff;
-        }
-
-        .cyber-header {
-            font-family: 'Orbitron', sans-serif; font-size: 12px; text-transform: uppercase;
-            color: var(--cyber-cyan); letter-spacing: 2px; margin-bottom: 20px;
-            display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 10px;
-        }
-
-        .cyber-input-wrapper { margin-bottom: 20px; }
-
-        .cyber-input-wrapper input, .cyber-input-wrapper select {
-            width: 100%; background: #111827; border: 1px solid rgba(255,255,255,0.1);
-            padding: 14px; color: #ffffff; font-size: 16px; font-weight: 700; outline: none;
-        }
-        .cyber-input-wrapper select option { background: #0b1321; color: white; }
-
+        .cyber-menu-box { background: #0b1321; border: 2px solid var(--cyber-cyan); width: 380px; padding: 25px; color: #ffffff; }
+        .cyber-header { font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--cyber-cyan); display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 10px; margin-bottom: 20px;}
+        .cyber-input-wrapper input, .cyber-input-wrapper select { width: 100%; background: #111827; border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: #ffffff; font-size: 15px; font-weight: 700; outline: none; }
         .cyber-btn-group { display: flex; gap: 12px; }
         .cyber-btn { flex: 1; font-family: 'Orbitron', sans-serif; padding: 12px; font-size: 11px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; }
         .cyber-btn-save { background: linear-gradient(135deg, var(--cyber-cyan), #00b9d8); color: #060b13; }
         .cyber-btn-cancel { background: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid var(--glass-border); }
 
         @media (max-width: 1024px) {
-            .container {
-                flex-direction: column;
-                flex-wrap: wrap;
-            }
-            .sidebar {
-                width: 100% !important;
-                position: static;
-            }
+            .container { flex-direction: column; overflow-y: auto; }
+            .left-control-container { width: 100% !important; height: auto; }
+            .main-content { height: auto; overflow: visible; }
         }
     </style>
 </head>
@@ -423,13 +551,11 @@
     <div id="cyberModal" class="cyber-modal-overlay">
         <div class="cyber-menu-box">
             <div class="cyber-header">
-                <span>CORE ENGINE EDITOR v8.7</span>
+                <span>CORE ENGINE EDITOR v8.9</span>
                 <span style="color: var(--cyber-pink);">● ONLINE</span>
             </div>
             <label style="font-size: 11px; text-transform: uppercase; color: #64748b; display: block; margin-bottom: 8px;" id="cyberLabel">MANIPULASI DATA:</label>
-            
             <div class="cyber-input-wrapper" id="modalInputContainer"></div>
-            
             <div class="cyber-btn-group">
                 <button class="cyber-btn cyber-btn-cancel" onclick="closeCyberMenu()">CANCEL</button>
                 <button class="cyber-btn cyber-btn-save" id="cyberSaveBtn">SAVE_DATA</button>
@@ -444,98 +570,223 @@
     </div>
 
     <div class="container">
-        <div class="sidebar">
+        
+        <div class="left-control-container" id="leftControlContainer">
             
-            <div class="panel-box">
-                <div class="panel-title" style="margin-bottom:15px;">🌐 INTERCONNECTION CONSOLE</div>
-                <button class="btn-sidebar-portal" onclick="kembaliKePortal()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                    CORE SYSTEM
-                </button>
-            </div>
+            <button class="gemini-btn-portal" onclick="kembaliKePortal()">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Kembali ke Portal</span>
+            </button>
 
-            <div class="panel-box" id="themeAccordionPanel">
-                <div class="panel-title accordion-head" onclick="toggleAccordion('themeAccordionPanel')">
-                    <span>🎨 CUSTOM THEME ENGINE</span>
-                    <span class="accordion-arrow">▼</span>
+            <div class="sidebar">
+                <div class="gemini-header">
+                    <div class="gemini-brand">
+                        <i class="fa-solid fa-sparkles gemini-logo-icon"></i>
+                        <span>Martis Config</span>
+                    </div>
+                    <button id="btnToggleSidebar" class="gemini-toggle-btn" title="Sembunyikan Menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
                 </div>
-                <div class="accordion-body" id="themeGridContainer"></div>
-            </div>
 
-            <div class="panel-box" id="fontAccordionPanel">
-                <div class="panel-title accordion-head" onclick="toggleAccordion('fontAccordionPanel')">
-                    <span>🔤 PREMIUM FONT PACK</span>
-                    <span class="accordion-arrow">▼</span>
-                </div>
-                <div class="accordion-body" id="fontGridContainer"></div>
-            </div>
+                <div class="gemini-menu-section">
+                    <div class="gemini-section-title">Design Engine</div>
 
-            <div class="panel-box" id="sizeAccordionPanel">
-                <div class="panel-title accordion-head" onclick="toggleAccordion('sizeAccordionPanel')">
-                    <span>⚙️ TEXT SIZE MANAGER</span>
-                    <span class="accordion-arrow">▼</span>
-                </div>
-                <div class="accordion-body">
-                    
-                    <div class="form-group">
-                        <label>Ukuran Judul Utama (Title): <span id="titleSizeVal">26px</span></label>
-                        <input type="range" id="slider-title" min="16" max="45" value="26" oninput="updateTextSize('--font-size-title', this.value + 'px'); document.getElementById('titleSizeVal').innerText = this.value + 'px'; saveConfigToStorage();">
+                    <div class="panel-box" id="layoutAccordionPanel">
+                        <div class="gemini-menu-item" onclick="toggleAccordion('layoutAccordionPanel')">
+                            <div class="gemini-menu-item-left">
+                                <i class="fa-solid fa-table-cells-large menu-icon"></i>
+                                <span>Layout & Panel Style</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down gemini-arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <label>Posisi Judul:</label>
+                                <select onchange="updateHeaderPosition(this.value)">
+                                    <option value="header-layout-left">Kiri</option>
+                                    <option value="header-layout-center" selected>Tengah</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Bentuk Panel:</label>
+                                <select onchange="updatePanelShape(this.value)">
+                                    <option value="none">Default (Kotak)</option>
+                                    <option value="shape-capsule">Kapsul (Bulat penuh)</option>
+                                    <option value="shape-modern">Modern (Garis samping)</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Ukuran Sub-Judul (Subtitle): <span id="subtitleSizeVal">13px</span></label>
-                        <input type="range" id="slider-subtitle" min="10" max="25" value="13" oninput="updateTextSize('--font-size-subtitle', this.value + 'px'); document.getElementById('subtitleSizeVal').innerText = this.value + 'px'; saveConfigToStorage();">
+                    <div class="panel-box" id="logoLeftAccordionPanel">
+                        <div class="gemini-menu-item" onclick="toggleAccordion('logoLeftAccordionPanel')">
+                            <div class="gemini-menu-item-left">
+                                <i class="fa-solid fa-image menu-icon"></i>
+                                <span>Branding Logo Kiri</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down gemini-arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <div class="upload-zone" onclick="document.getElementById('logoLeftInput').click()">
+                                    <p id="uploadLeftText">Klik untuk Upload Logo Kiri</p>
+                                    <img id="sidebarLogoLeftPreview" class="uploaded-logo-preview" src="" alt="Preview">
+                                </div>
+                                <input type="file" id="logoLeftInput" accept="image/*" style="display: none;" onchange="handleDualLogoUpload(this, 'left')">
+                                <button style="background:#b91c1c; color:#fff; border:none; padding: 6px; font-size: 10px; margin-top: 8px; border-radius:4px; width:100%; cursor:pointer;" onclick="hapusDualLogo('left')">Hapus Logo Kiri</button>
+                            </div>
+                            <div class="form-group">
+                                <label>Ukuran Logo Kiri: <span id="logoLeftWidthVal">140px</span></label>
+                                <input type="range" min="50" max="250" value="140" oninput="updateLogoProperty('--logo-left-width', this.value + 'px'); document.getElementById('logoLeftWidthVal').innerText = this.value + 'px';">
+                            </div>
+                            <div class="form-group">
+                                <label>Posisi Margin Kiri: <span id="logoLeftMarginVal">0px</span></label>
+                                <input type="range" min="-50" max="150" value="0" oninput="updateLogoProperty('--logo-left-margin', this.value + 'px'); document.getElementById('logoLeftMarginVal').innerText = this.value + 'px';">
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Ukuran Header Kolom (Th Utama): <span id="headerSizeVal">12px</span></label>
-                        <input type="range" id="slider-header" min="9" max="24" value="12" oninput="updateTextSize('--font-size-header', this.value + 'px'); document.getElementById('headerSizeVal').innerText = this.value + 'px'; saveConfigToStorage();">
+                    <div class="panel-box" id="logoRightAccordionPanel">
+                        <div class="gemini-menu-item" onclick="toggleAccordion('logoRightAccordionPanel')">
+                            <div class="gemini-menu-item-left">
+                                <i class="fa-solid fa-image menu-icon"></i>
+                                <span>Branding Logo Kanan</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down gemini-arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <div class="upload-zone" onclick="document.getElementById('logoRightInput').click()">
+                                    <p id="uploadRightText">Klik untuk Upload Logo Kanan</p>
+                                    <img id="sidebarLogoRightPreview" class="uploaded-logo-preview" src="" alt="Preview">
+                                </div>
+                                <input type="file" id="logoRightInput" accept="image/*" style="display: none;" onchange="handleDualLogoUpload(this, 'right')">
+                                <button style="background:#b91c1c; color:#fff; border:none; padding: 6px; font-size: 10px; margin-top: 8px; border-radius:4px; width:100%; cursor:pointer;" onclick="hapusDualLogo('right')">Hapus Logo Kanan</button>
+                            </div>
+                            <div class="form-group">
+                                <label>Ukuran Logo Kanan: <span id="logoRightWidthVal">140px</span></label>
+                                <input type="range" min="50" max="250" value="140" oninput="updateLogoProperty('--logo-right-width', this.value + 'px'); document.getElementById('logoRightWidthVal').innerText = this.value + 'px';">
+                            </div>
+                            <div class="form-group">
+                                <label>Posisi Margin Kanan: <span id="logoRightMarginVal">0px</span></label>
+                                <input type="range" min="-50" max="150" value="0" oninput="updateLogoProperty('--logo-right-margin', this.value + 'px'); document.getElementById('logoRightMarginVal').innerText = this.value + 'px';">
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Ukuran Baris Isi & Status: <span id="rowSizeVal">14px</span></label>
-                        <input type="range" id="slider-row" min="10" max="28" value="14" oninput="updateTextSize('--font-size-row', this.value + 'px'); document.getElementById('rowSizeVal').innerText = this.value + 'px'; saveConfigToStorage();">
+                    <div class="panel-box" id="themeAccordionPanel">
+                        <div class="gemini-menu-item" onclick="toggleAccordion('themeAccordionPanel')">
+                            <div class="gemini-menu-item-left">
+                                <i class="fa-solid fa-palette menu-icon"></i>
+                                <span>Custom Theme Engine</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down gemini-arrow"></i>
+                        </div>
+                        <div class="accordion-body" id="themeGridContainer"></div>
                     </div>
 
-                </div>
-            </div>
+                    <div class="panel-box" id="fontAccordionPanel">
+                        <div class="gemini-menu-item" onclick="toggleAccordion('fontAccordionPanel')">
+                            <div class="gemini-menu-item-left">
+                                <i class="fa-solid fa-font menu-icon"></i>
+                                <span>Premium Font Pack</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down gemini-arrow"></i>
+                        </div>
+                        <div class="accordion-body" id="fontGridContainer"></div>
+                    </div>
 
-            <div class="panel-box">
-                <div class="panel-title" style="margin-bottom:15px;">🎛️ ADVANCED PANEL CONTROLLER</div>
-                <div class="form-group">
-                    <label>Keburaman Latar Lempeng: <span id="opacityVal">100%</span></label>
-                    <input type="range" id="opacitySlider" min="10" max="100" value="100" oninput="changeCardOpacity(this.value); saveConfigToStorage();">
-                </div>
-                <div class="form-group">
-                    <label>Lebar Panel Sidebar: <span id="sidebarWidthVal">350px</span></label>
-                    <input type="range" id="sidebarWidthSlider" min="280" max="450" value="350" oninput="adjustSidebarWidth(this.value); saveConfigToStorage();">
-                </div>
-            </div>
+                    <div class="panel-box" id="sizeAccordionPanel">
+                        <div class="gemini-menu-item" onclick="toggleAccordion('sizeAccordionPanel')">
+                            <div class="gemini-menu-item-left">
+                                <i class="fa-solid fa-sliders menu-icon"></i>
+                                <span>Text Size Manager</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down gemini-arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <label>Ukuran Judul Utama: <span id="titleSizeVal">26px</span></label>
+                                <input type="range" min="16" max="45" value="26" oninput="updateTextSize('--font-size-title', this.value + 'px'); document.getElementById('titleSizeVal').innerText = this.value + 'px';">
+                            </div>
+                            <div class="form-group">
+                                <label>Ukuran Sub-Judul: <span id="subtitleSizeVal">13px</span></label>
+                                <input type="range" min="10" max="25" value="13" oninput="updateTextSize('--font-size-subtitle', this.value + 'px'); document.getElementById('subtitleSizeVal').innerText = this.value + 'px';">
+                            </div>
+                            <div class="form-group">
+                                <label>Ukuran Header Kolom: <span id="headerSizeVal">12px</span></label>
+                                <input type="range" min="9" max="24" value="12" oninput="updateTextSize('--font-size-header', this.value + 'px'); document.getElementById('headerSizeVal').innerText = this.value + 'px';">
+                            </div>
+                            <div class="form-group">
+                                <label>Ukuran Baris Isi: <span id="rowSizeVal">14px</span></label>
+                                <input type="range" min="10" max="28" value="14" oninput="updateTextSize('--font-size-row', this.value + 'px'); document.getElementById('rowSizeVal').innerText = this.value + 'px';">
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="panel-box">
-                <div class="panel-title" style="margin-bottom:15px;">⚙️ EXPORT & MEMORY SYSTEM</div>
-                <div class="grid-buttons">
-                    <button class="btn-action btn-green" onclick="downloadTableAsImage('cardVIP2', 'Senarai_VIP2.png')">⚡ UNDUH GAMBAR VIP 2</button>
-                    <button class="btn-action btn-blue" onclick="downloadTableAsImage('cardVIP3', 'Senarai_VIP3.png')">⚡ UNDUH GAMBAR VIP 3</button>
-                    <button class="btn-action btn-dark" onclick="kembaliKePortal()">🏠 KEMBALI KE PORTAL</button>
-                    <button class="btn-action btn-red" onclick="resetAllDataData()">⚠️ RESET SEMUA DATA KE AWAL</button>
+                    <div class="panel-box" id="advancedAccordionPanel">
+                        <div class="gemini-menu-item" onclick="toggleAccordion('advancedAccordionPanel')">
+                            <div class="gemini-menu-item-left">
+                                <i class="fa-solid fa-chart-simple menu-icon"></i>
+                                <span>Advanced Controller</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down gemini-arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <label>Keburaman Latar Lempeng: <span id="opacityVal">100%</span></label>
+                                <input type="range" min="10" max="100" value="100" oninput="changeCardOpacity(this.value); ">
+                            </div>
+                            <div class="form-group">
+                                <label>Lebar Panel Control: <span id="sidebarWidthVal">320px</span></label>
+                                <input type="range" min="260" max="450" value="320" oninput="adjustSidebarWidth(this.value);">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+
+                <div class="gemini-action-section">
+                    <div class="gemini-section-title">Actions & Memory</div>
+                    <div class="gemini-recent-item" onclick="downloadTableAsImage('cardVIP2', 'Senarai_VIP2.png')">
+                        <i class="fa-solid fa-circle-down"></i>
+                        <span>Unduh Gambar VIP 2</span>
+                    </div>
+                    <div class="gemini-recent-item" onclick="downloadTableAsImage('cardVIP3', 'Senarai_VIP3.png')">
+                        <i class="fa-solid fa-circle-down"></i>
+                        <span>Unduh Gambar VIP 3</span>
+                    </div>
+                    <div class="gemini-recent-item" onclick="resetAllDataData()" style="color: #ff5252;">
+                        <i class="fa-solid fa-trash-can" style="color: #ff5252;"></i>
+                        <span>Reset Semua Data</span>
+                    </div>
+                </div>
+            </div> 
+        </div> 
+
+        <div class="sidebar-resizer" id="sidebarResizer"></div>
 
         <div class="main-content">
+            <button id="btnShowSidebar" title="Tampilkan Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
             <div id="captureArea" class="capture-wrapper">
                 
                 <div class="table-card" id="cardVIP2">
-                    <div class="table-header-section">
+                    <div class="table-header-section header-layout-center">
+                        <div class="custom-logo-container-left">
+                            <img class="logo-left-render" src="" alt="" style="display: none;">
+                        </div>
                         <div class="header-left">
-                            <div class="icon-clipboard">📋</div>
                             <div class="title-text">
                                 <h2 id="displayTitleVIP2" onclick="openCyberMenu(this, 'text', null, 'displayTitleVIP2')">SENARAI INSTRUCTION VIP2</h2>
                                 <p id="displaySubVIP2" onclick="openCyberMenu(this, 'text', null, 'displaySubVIP2')">Sila ikut arahan pembayaran dengan teliti</p>
                             </div>
                         </div>
-                        <div class="star-icon">★</div>
+                        <div class="custom-logo-container-right">
+                            <img class="logo-right-render" src="" alt="" style="display: none;">
+                        </div>
                     </div>
 
                     <div class="table-inner">
@@ -557,15 +808,19 @@
                 </div>
 
                 <div class="table-card" id="cardVIP3">
-                    <div class="table-header-section">
+                    <div class="table-header-section header-layout-center">
+                        <div class="custom-logo-container-left">
+                            <img class="logo-left-render" src="" alt="" style="display: none;">
+                        </div>
                         <div class="header-left">
-                            <div class="icon-clipboard">📋</div>
                             <div class="title-text">
                                 <h2 id="displayTitleVIP3" onclick="openCyberMenu(this, 'text', null, 'displayTitleVIP3')">SENARAI INSTRUCTION VIP3</h2>
                                 <p id="displaySubVIP3" onclick="openCyberMenu(this, 'text', null, 'displaySubVIP3')">Sila ikut arahan pembayaran dengan teliti</p>
                             </div>
                         </div>
-                        <div class="star-icon">★</div>
+                        <div class="custom-logo-container-right">
+                            <img class="logo-right-render" src="" alt="" style="display: none;">
+                        </div>
                     </div>
 
                     <div class="table-inner">
@@ -619,26 +874,22 @@
 
         const premiumThemes = {
             "NEON CYBER": [
-                { id: "aurora", name: "Midnight Aurora", bg: "radial-gradient(circle at 50% 0%, #1a233a 0%, #060b13 70%)", card: "#1e2530", inner: "#11161f", cyan: "#00f0ff", success: "#15803d", textW: "#0f172a", star: "#ef4444" },
-                { id: "neonPink", name: "Cyberpunk Pink", bg: "radial-gradient(circle at 50% 0%, #2d0b22 0%, #0a0208 70%)", card: "#24121f", inner: "#12050f", cyan: "#ff007f", success: "#34d399", textW: "#1e1b4b", star: "#ff007f" },
-                { id: "matrix", name: "Matrix Digital", bg: "radial-gradient(circle at 50% 0%, #051a05 0%, #010501 70%)", card: "#0a140a", inner: "#020702", cyan: "#00ff41", success: "#16a34a", textW: "#022c22", star: "#00ff41" },
-                { id: "glitch", name: "Vaporwave Glitch", bg: "radial-gradient(circle at 50% 0%, #170b2e 0%, #070214 70%)", card: "#1b0f33", inner: "#0b0518", cyan: "#22d3ee", success: "#ec4899", textW: "#4c1d95", star: "#ec4899" }
+                { id: "aurora", name: "Midnight Aurora", bg: "radial-gradient(circle at 50% 0%, #1a233a 0%, #060b13 70%)", card: "rgba(255,255,255,0.02)", inner: "#11161f", cyan: "#00f0ff", success: "#15803d", textW: "#ffffff", star: "#ef4444" },
+                { id: "neonPink", name: "Cyberpunk Pink", bg: "radial-gradient(circle at 50% 0%, #2d0b22 0%, #0a0208 70%)", card: "rgba(255,255,255,0.02)", inner: "#12050f", cyan: "#ff007f", success: "#34d399", textW: "#ffffff", star: "#ff007f" },
+                { id: "matrix", name: "Matrix Digital", bg: "radial-gradient(circle at 50% 0%, #051a05 0%, #010501 70%)", card: "rgba(255,255,255,0.02)", inner: "#020702", cyan: "#00ff41", success: "#16a34a", textW: "#ffffff", star: "#00ff41" }
             ],
             "LUXURY & METALLIC": [
-                { id: "goldCarbon", name: "Luxury Gold", bg: "radial-gradient(circle at 50% 0%, #2e2416 0%, #0d0a05 70%)", card: "#262017", inner: "#14110c", cyan: "#d4af37", success: "#165b33", textW: "#451a03", star: "#d4af37" },
-                { id: "platinum", name: "Platinum Standard", bg: "radial-gradient(circle at 50% 0%, #2d3139 0%, #0f1115 70%)", card: "#22252c", inner: "#14161b", cyan: "#e2e8f0", success: "#475569", textW: "#0f172a", star: "#e2e8f0" },
-                { id: "ruby", name: "Royal Ruby Red", bg: "radial-gradient(circle at 50% 0%, #340c11 0%, #0f0204 70%)", card: "#280f12", inner: "#140507", cyan: "#ef4444", success: "#991b1b", textW: "#450a0a", star: "#ef4444" },
-                { id: "obsidian", name: "Obsidian Onyx", bg: "radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 70%)", card: "#171717", inner: "#0d0d0d", cyan: "#ffffff", success: "#262626", textW: "#171717", star: "#ffffff" }
+                { id: "goldCarbon", name: "Luxury Gold", bg: "radial-gradient(circle at 50% 0%, #2e2416 0%, #0d0a05 70%)", card: "rgba(255,255,255,0.02)", inner: "#14110c", cyan: "#d4af37", success: "#165b33", textW: "#ffd700", star: "#d4af37" },
+                { id: "obsidian", name: "Obsidian Onyx", bg: "radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 70%)", card: "rgba(255,255,255,0.02)", inner: "#0d0d0d", cyan: "#ffffff", success: "#262626", textW: "#ffffff", star: "#ffffff" }
             ]
         };
 
         const fontPacks = {
             "SERIF & SANS MODERN": [
                 { id: "inter", name: "Inter UI", family: "'Inter', sans-serif", desc: "Clean & Highly Readable" },
-                { id: "poppins", name: "Poppins", family: "'Poppins', sans-serif", desc: "Geometric Round Modern" },
-                { id: "roboto", name: "Roboto Pro", family: "'Roboto', sans-serif", desc: "Neo-Grotesque Tech" }
+                { id: "poppins", name: "Poppins", family: "'Poppins', sans-serif", desc: "Geometric Round Modern" }
             ],
-            "PREMIUM PREMIUM TECH": [
+            "PREMIUM TECH": [
                 { id: "orbitron", name: "Orbitron HUD", family: "'Orbitron', sans-serif", desc: "Sci-Fi Cyber Display" },
                 { id: "montserrat", name: "Montserrat", family: "'Montserrat', sans-serif", desc: "Aggressive Premium Caps" }
             ]
@@ -646,18 +897,56 @@
 
         let activeTarget = null, activeType = '', activeIndex = null, activeField = '', activeTableId = '', storageKeyTextId = '';
 
-        function toggleAccordion(panelId) { document.getElementById(panelId).classList.toggle('open'); }
+        function toggleAccordion(panelId) { 
+            document.querySelectorAll('.panel-box').forEach(p => { if(p.id !== panelId) p.classList.remove('open'); });
+            document.getElementById(panelId).classList.toggle('open'); 
+        }
 
-        function updateTextSize(variableName, value) { document.documentElement.style.setProperty(variableName, value); }
-
+        function updateTextSize(variableName, value) { document.documentElement.style.setProperty(variableName, value); localStorage.setItem(variableName, value); }
+        function updateLogoProperty(variableName, value) { document.documentElement.style.setProperty(variableName, value); localStorage.setItem(variableName, value); }
+        
         function changeCardOpacity(val) {
             document.querySelectorAll('.table-card').forEach(card => card.style.opacity = val / 100);
             document.getElementById('opacityVal').innerText = val + '%';
+            localStorage.setItem('--card-opacity', val);
         }
-
+        
         function adjustSidebarWidth(val) {
             document.documentElement.style.setProperty('--sidebar-width', val + 'px');
             document.getElementById('sidebarWidthVal').innerText = val + 'px';
+        }
+
+        function handleDualLogoUpload(input, position) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('custom_logo_' + position, e.target.result);
+                    renderDualLogos(e.target.result, position);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function renderDualLogos(imgSrc, position) {
+            const sidePreview = (position === 'left') ? document.getElementById('sidebarLogoLeftPreview') : document.getElementById('sidebarLogoRightPreview');
+            const upText = (position === 'left') ? document.getElementById('uploadLeftText') : document.getElementById('uploadRightText');
+            const renderClass = (position === 'left') ? '.logo-left-render' : '.logo-right-render';
+
+            if(imgSrc) {
+                if(sidePreview) { sidePreview.src = imgSrc; sidePreview.style.display = 'inline-block'; }
+                if(upText) upText.style.display = 'none';
+                document.querySelectorAll(renderClass).forEach(img => { img.src = imgSrc; img.style.display = 'block'; });
+            } else {
+                if(sidePreview) { sidePreview.src = ''; sidePreview.style.display = 'none'; }
+                if(upText) upText.style.display = 'block';
+                document.querySelectorAll(renderClass).forEach(img => { img.src = ''; img.style.display = 'none'; });
+            }
+        }
+
+        function hapusDualLogo(position) {
+            localStorage.removeItem('custom_logo_' + position);
+            renderDualLogos(null, position);
         }
 
         function generateThemeGrid() {
@@ -669,7 +958,7 @@
                 themes.forEach(theme => {
                     let btn = document.createElement('button'); btn.className = `grid-item-btn ${theme.id===activeThemeId?'active':''}`; btn.id = `btn-th-${theme.id}`;
                     btn.onclick = () => { applyTheme(theme); };
-                    btn.innerHTML = `<div class="grid-item-title">${theme.name}</div><div class="theme-swatch-bar"><div class="swatch-item" style="background:${theme.cyan}"></div><div class="swatch-item" style="background:${theme.card}"></div><div class="swatch-item" style="background:${theme.success}"></div></div>`;
+                    btn.innerHTML = `<div class="grid-item-title">${theme.name}</div><div class="theme-swatch-bar"><div class="swatch-item" style="background:${theme.cyan}"></div><div class="swatch-item" style="background:${theme.inner}"></div><div class="swatch-item" style="background:${theme.success}"></div></div>`;
                     grid.appendChild(btn);
                 });
                 container.appendChild(grid);
@@ -678,15 +967,13 @@
 
         function applyTheme(theme) {
             document.querySelectorAll('[id^="btn-th-"]').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.getElementById(`btn-th-${theme.id}`);
-            if(activeBtn) activeBtn.classList.add('active');
+            const activeBtn = document.getElementById(`btn-th-${theme.id}`); if(activeBtn) activeBtn.classList.add('active');
             
             document.body.style.background = theme.bg;
             const r = document.documentElement;
             r.style.setProperty('--bg-table-card', theme.card); r.style.setProperty('--bg-table-inner', theme.inner);
             r.style.setProperty('--cyber-cyan', theme.cyan); r.style.setProperty('--success-color', theme.success);
             r.style.setProperty('--withdrawal-color', theme.textW); r.style.setProperty('--star-color', theme.star);
-            
             localStorage.setItem('activeThemeId', theme.id);
         }
 
@@ -699,12 +986,11 @@
                 fonts.forEach(font => {
                     let btn = document.createElement('button'); btn.className = `grid-item-btn ${font.id===activeFontId?'active':''}`; btn.id = `btn-ft-${font.id}`;
                     btn.onclick = () => {
-                        document.querySelectorAll('[id^="btn-ft-"]').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
+                        document.querySelectorAll('[id^="btn-ft-"]').forEach(b => b.classList.remove('active')); btn.classList.add('active');
                         document.documentElement.style.setProperty('--main-font-family', font.family);
                         localStorage.setItem('activeFontId', font.id);
                     };
-                    btn.innerHTML = `<div class="grid-item-title" style="font-family:${font.family}">${font.name}</div><div class="grid-item-sub">${font.desc}</div>`;
+                    btn.innerHTML = `<div class="grid-item-title" style="font-family:${font.family}">${font.name}</div>`;
                     grid.appendChild(btn);
                 });
                 container.appendChild(grid);
@@ -715,8 +1001,7 @@
             renderSingleTable('tableBodyVIP2', dataVIP2, 'VIP2');
             renderSingleTable('tableBodyVIP3', dataVIP3, 'VIP3');
             for (let id in customTextData) {
-                const el = document.getElementById(id);
-                if(el) el.innerText = customTextData[id];
+                const el = document.getElementById(id); if(el) el.innerText = customTextData[id];
             }
         }
 
@@ -747,38 +1032,16 @@
 
         function openCyberMenu(element, type, index = null, field = '', tableName = '') {
             activeTarget = element; activeType = type; activeIndex = index; activeField = field; activeTableId = tableName; storageKeyTextId = field;
-            const modal = document.getElementById('cyberModal');
-            const label = document.getElementById('cyberLabel');
-            const container = document.getElementById('modalInputContainer');
-
-            container.innerHTML = '';
-            modal.style.display = 'flex';
+            const modal = document.getElementById('cyberModal'); const label = document.getElementById('cyberLabel'); const container = document.getElementById('modalInputContainer');
+            container.innerHTML = ''; modal.style.display = 'flex';
 
             if (type === 'row') {
                 let targetData = (tableName === 'VIP2') ? dataVIP2[index] : dataVIP3[index];
                 label.innerText = `ENGINE [${tableName}] ROW [${targetData.option}] -> ${field.toUpperCase()}`;
-                
                 if (field === 'status') {
-                    container.innerHTML = `
-                        <select id="cyberInput">
-                            <option value="AVAILABLE" ${targetData.status==='AVAILABLE'?'selected':''}>AVAILABLE</option>
-                            <option value="UNAVAILABLE" ${targetData.status==='UNAVAILABLE'?'selected':''}>UNAVAILABLE</option>
-                        </select>
-                    `;
+                    container.innerHTML = `<select id="cyberInput"><option value="AVAILABLE" ${targetData.status==='AVAILABLE'?'selected':''}>AVAILABLE</option><option value="UNAVAILABLE" ${targetData.status==='UNAVAILABLE'?'selected':''}>UNAVAILABLE</option></select>`;
                 } else if (field === 'option') {
-                    container.innerHTML = `
-                        <div style="margin-bottom: 12px;">
-                            <label style="font-size:11px; color:#94a3b8; display:block; margin-bottom:5px;">NAMA OPTION:</label>
-                            <input type="text" id="cyberInput" autocomplete="off" value="${targetData.option}">
-                        </div>
-                        <div>
-                            <label style="font-size:11px; color:#94a3b8; display:block; margin-bottom:5px;">STATUS BADGE HOT:</label>
-                            <select id="cyberHotInput">
-                                <option value="false" ${!targetData.hot?'selected':''}>MATIKAN BADGE (NORMAL)</option>
-                                <option value="true" ${targetData.hot?'selected':''}>AKTIFKAN BADGE [HOT]</option>
-                            </select>
-                        </div>
-                    `;
+                    container.innerHTML = `<input type="text" id="cyberInput" autocomplete="off" value="${targetData.option}"><br><br><select id="cyberHotInput"><option value="false" ${!targetData.hot?'selected':''}>NORMAL</option><option value="true" ${targetData.hot?'selected':''}>BADGE HOT</option></select>`;
                 } else {
                     container.innerHTML = `<input type="text" id="cyberInput" autocomplete="off" value="${targetData[field]}">`;
                 }
@@ -786,12 +1049,7 @@
                 label.innerText = "CONFIG VALUE TARGET TEXT";
                 container.innerHTML = `<input type="text" id="cyberInput" autocomplete="off" value="${element.innerText}">`;
             }
-
-            const inputElement = document.getElementById('cyberInput');
-            inputElement.focus();
-            if(inputElement.tagName === 'INPUT') inputElement.select();
-
-            inputElement.addEventListener('keydown', function(e) { if (e.key === 'Enter') saveCyberData(); });
+            document.getElementById('cyberInput').focus();
         }
 
         function closeCyberMenu() { document.getElementById('cyberModal').style.display = 'none'; }
@@ -801,15 +1059,11 @@
             if (activeType === 'row') {
                 let currentDataset = (activeTableId === 'VIP2') ? dataVIP2 : dataVIP3;
                 if (['capital', 'pct', 'bonus', 'extraBonus'].includes(activeField)) {
-                    let cleanNum = parseFloat(inputVal.replace(/[^0-9.-]+/g, "")) || 0;
-                    currentDataset[activeIndex][activeField] = cleanNum;
+                    currentDataset[activeIndex][activeField] = parseFloat(inputVal.replace(/[^0-9.-]+/g, "")) || 0;
                 } else if (activeField === 'option') {
                     currentDataset[activeIndex]['option'] = inputVal;
                     currentDataset[activeIndex]['hot'] = (document.getElementById('cyberHotInput').value === 'true');
-                } else {
-                    currentDataset[activeIndex][activeField] = inputVal;
-                }
-                
+                } else { currentDataset[activeIndex][activeField] = inputVal; }
                 localStorage.setItem((activeTableId === 'VIP2') ? 'dataVIP2' : 'dataVIP3', JSON.stringify(currentDataset));
                 renderTables();
             } else {
@@ -822,101 +1076,123 @@
             closeCyberMenu();
         }
 
-        function saveConfigToStorage() {
-            const config = {
-                titleSize: document.getElementById('slider-title').value,
-                subtitleSize: document.getElementById('slider-subtitle').value,
-                headerSize: document.getElementById('slider-header').value,
-                rowSize: document.getElementById('slider-row').value,
-                opacity: document.getElementById('opacitySlider').value,
-                sidebarWidth: document.getElementById('sidebarWidthSlider').value
-            };
-            localStorage.setItem('vipsaver_config', JSON.stringify(config));
-        }
-
         function loadConfigFromStorage() {
-            const saved = JSON.parse(localStorage.getItem('vipsaver_config'));
-            if(saved) {
-                document.getElementById('slider-title').value = saved.titleSize;
-                updateTextSize('--font-size-title', saved.titleSize + 'px');
-                document.getElementById('titleSizeVal').innerText = saved.titleSize + 'px';
-
-                document.getElementById('slider-subtitle').value = saved.subtitleSize;
-                updateTextSize('--font-size-subtitle', saved.subtitleSize + 'px');
-                document.getElementById('subtitleSizeVal').innerText = saved.subtitleSize + 'px';
-
-                document.getElementById('slider-header').value = saved.headerSize;
-                updateTextSize('--font-size-header', saved.headerSize + 'px');
-                document.getElementById('headerSizeVal').innerText = saved.headerSize + 'px';
-
-                document.getElementById('slider-row').value = saved.rowSize;
-                updateTextSize('--font-size-row', saved.rowSize + 'px');
-                document.getElementById('rowSizeVal').innerText = saved.rowSize + 'px';
-                
-                document.getElementById('opacitySlider').value = saved.opacity; changeCardOpacity(saved.opacity);
-                document.getElementById('sidebarWidthSlider').value = saved.sidebarWidth; adjustSidebarWidth(saved.sidebarWidth);
-            }
-            
+            const leftLogo = localStorage.getItem('custom_logo_left'); if(leftLogo) renderDualLogos(leftLogo, 'left');
+            const rightLogo = localStorage.getItem('custom_logo_right'); if(rightLogo) renderDualLogos(rightLogo, 'right');
             const savedThemeId = localStorage.getItem('activeThemeId') || 'aurora';
             for (const category in premiumThemes) {
-                const found = premiumThemes[category].find(t => t.id === savedThemeId);
-                if(found) { applyTheme(found); break; }
+                const found = premiumThemes[category].find(t => t.id === savedThemeId); if(found) { applyTheme(found); break; }
             }
-
             const savedFontId = localStorage.getItem('activeFontId') || 'inter';
             for (const category in fontPacks) {
-                const found = fontPacks[category].find(f => f.id === savedFontId);
-                if(found) { document.documentElement.style.setProperty('--main-font-family', found.family); break; }
+                const found = fontPacks[category].find(f => f.id === savedFontId); if(found) { document.documentElement.style.setProperty('--main-font-family', found.family); break; }
             }
+            const sizes = ['--font-size-title', '--font-size-subtitle', '--font-size-header', '--font-size-row', '--logo-left-width', '--logo-left-margin', '--logo-right-width', '--logo-right-margin'];
+            sizes.forEach(v => { const val = localStorage.getItem(v); if(val) document.documentElement.style.setProperty(v, val); });
+            const savedOpacity = localStorage.getItem('--card-opacity'); if(savedOpacity) changeCardOpacity(savedOpacity);
+            const savedShape = localStorage.getItem('savedPanelShape'); if (savedShape) updatePanelShape(savedShape);
         }
 
-        function resetAllDataData() {
-            if(confirm("Apakah Anda yakin ingin menghapus semua kustomisasi data dan mengembalikan ke setelan pabrik?")) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
+        function resetAllDataData() { if(confirm("Reset semua pengaturan?")) { localStorage.clear(); location.reload(); } }
 
+        /* DOWNLOAD GAMBAR HD */
         function downloadTableAsImage(elementId, fileName) {
             const element = document.getElementById(elementId);
+            const activeThemeId = localStorage.getItem('activeThemeId') || 'aurora';
+            let currentBg = "#060b13";
+            for (const category in premiumThemes) {
+                const found = premiumThemes[category].find(t => t.id === activeThemeId);
+                if(found) { currentBg = found.bg; break; }
+            }
+
             const options = {
-                scale: 5, 
+                scale: 4, 
                 backgroundColor: null,
-                logging: false,
                 useCORS: true,
                 allowTaint: true,
-                imageTimeout: 0,
+                scrollX: 0,
+                scrollY: -window.scrollY,
                 onclone: (clonedDoc) => {
-                    const clonedElement = clonedDoc.getElementById(elementId);
-                    clonedElement.style.padding = '35px';
-                    clonedElement.style.opacity = '1';
+                    const targetNode = clonedDoc.getElementById(elementId);
+                    targetNode.style.background = currentBg;
+                    targetNode.style.padding = '32px';
+                    targetNode.style.borderRadius = '24px';
+                    targetNode.style.opacity = '1';
+                    targetNode.style.width = '1280px'; 
+                    
+                    const innerTable = targetNode.querySelector('.table-inner');
+                    if(innerTable) {
+                        innerTable.style.overflow = 'visible';
+                        innerTable.style.background = 'transparent';
+                    }
                 }
             };
 
             html2canvas(element, options).then(canvas => {
                 const link = document.createElement('a');
                 link.download = fileName;
-                link.href = canvas.toDataURL("image/png", 1.0); 
+                link.href = canvas.toDataURL("image/png", 1.0);
                 link.click();
-            }).catch(err => { console.error("Gagal mengekspor gambar:", err); });
+            });
         }
 
-        /* --- FUNGSI INTERKONEKSI PORTAL (SAMA SEPERTI SHARINGGAN) --- */
         function kembaliKePortal() {
-            console.log("Tombol kembali ditekan."); 
             try {
-                if (window.parent && typeof window.parent.resetPortal === 'function') {
-                    window.parent.resetPortal();
-                } else {
-                    window.history.back();
-                }
-            } catch (e) {
-                console.error("Gagal mengakses parent window:", e);
-                window.history.back();
-            }
+                if (window.parent && typeof window.parent.resetPortal === 'function') { window.parent.resetPortal(); } 
+                else { window.history.back(); }
+            } catch (e) { window.history.back(); }
+        }
+
+        function updateHeaderPosition(className) {
+            document.querySelectorAll('.table-header-section').forEach(el => { el.className = 'table-header-section ' + className; });
+        }
+
+        function updatePanelShape(shapeClass) {
+            document.querySelectorAll('.table-card').forEach(el => {
+                el.classList.remove('shape-capsule', 'shape-modern');
+                if(shapeClass !== 'none') el.classList.add(shapeClass);
+            });
+            localStorage.setItem('savedPanelShape', shapeClass);
         }
 
         document.getElementById('cyberSaveBtn').addEventListener('click', saveCyberData);
+
+        // --- SISTEM DRAG & COLLAPSE DINAMIS FIX TOTAL ---
+        const leftControlContainer = document.getElementById('leftControlContainer');
+        const resizer = document.getElementById('sidebarResizer');
+        const btnToggleSidebar = document.getElementById('btnToggleSidebar');
+        const btnShowSidebar = document.getElementById('btnShowSidebar');
+        let isDragging = false;
+
+        resizer.addEventListener('mousedown', function(e) {
+            e.preventDefault(); isDragging = true; resizer.classList.add('dragging');
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            let targetWidth = e.clientX;
+            if (targetWidth >= 260 && targetWidth <= 480) {
+                document.documentElement.style.setProperty('--sidebar-width', targetWidth + 'px');
+                document.getElementById('sidebarWidthVal').innerText = targetWidth + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            if (isDragging) { isDragging = false; resizer.classList.remove('dragging'); }
+        });
+
+        // FIX TOTAL: Saat ditutup, hilangkan elemen dengan display: none agar koordinat halaman aman
+        btnToggleSidebar.addEventListener('click', function() {
+            leftControlContainer.classList.add('collapsed');
+            resizer.style.display = 'none';
+            btnShowSidebar.style.display = 'block';
+        });
+
+        btnShowSidebar.addEventListener('click', function() {
+            leftControlContainer.classList.remove('collapsed');
+            resizer.style.display = 'block';
+            btnShowSidebar.style.display = 'none';
+        });
 
         generateThemeGrid();
         generateFontGrid();
