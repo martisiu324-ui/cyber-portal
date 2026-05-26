@@ -1005,7 +1005,7 @@
             }
         }
 
-        function renderSingleTable(tbodyId, dataSource, tableName) {
+function renderSingleTable(tbodyId, dataSource, tableName) {
             const tbody = document.getElementById(tbodyId); tbody.innerHTML = '';
             dataSource.forEach((row, index) => {
                 let commValue = (row.capital * row.pct) / 100;
@@ -1013,7 +1013,11 @@
                 let withdrawal = gain + row.bonus + (row.extraBonus || 0);
                 let tr = document.createElement('tr');
                 
-                let extraBadge = row.extraBonus > 0 ? `<span class="badge-extra-bonus" onclick="event.stopPropagation(); openCyberMenu(this.parentNode, 'row', ${index}, 'extraBonus', '${tableName}')">EXTRA BONUS RM ${row.extraBonus.toLocaleString()}</span>` : '';
+                // Menampilkan badge Extra Bonus jika nominalnya lebih besar dari 0
+                let extraBadge = (row.extraBonus && row.extraBonus > 0) 
+                    ? `<span class="badge-extra-bonus" onclick="event.stopPropagation(); openCyberMenu(this.parentNode, 'row', ${index}, 'extraBonus', '${tableName}')">EXTRA BONUS RM ${row.extraBonus.toLocaleString()}</span>` 
+                    : '';
+                
                 let hotBadge = row.hot ? `<span class="badge-hot">HOT</span>` : '';
                 let statusClass = row.status === 'AVAILABLE' ? 'status-available' : 'status-unavailable';
 
@@ -1038,10 +1042,26 @@
             if (type === 'row') {
                 let targetData = (tableName === 'VIP2') ? dataVIP2[index] : dataVIP3[index];
                 label.innerText = `ENGINE [${tableName}] ROW [${targetData.option}] -> ${field.toUpperCase()}`;
+                
                 if (field === 'status') {
                     container.innerHTML = `<select id="cyberInput"><option value="AVAILABLE" ${targetData.status==='AVAILABLE'?'selected':''}>AVAILABLE</option><option value="UNAVAILABLE" ${targetData.status==='UNAVAILABLE'?'selected':''}>UNAVAILABLE</option></select>`;
                 } else if (field === 'option') {
                     container.innerHTML = `<input type="text" id="cyberInput" autocomplete="off" value="${targetData.option}"><br><br><select id="cyberHotInput"><option value="false" ${!targetData.hot?'selected':''}>NORMAL</option><option value="true" ${targetData.hot?'selected':''}>BADGE HOT</option></select>`;
+                } else if (field === 'bonus') {
+                    // Menyediakan input ganda untuk Bonus Utama dan Extra Bonus secara bersamaan
+                    let currentExtra = targetData.extraBonus || 0;
+                    container.innerHTML = `
+                        <div style="margin-bottom: 12px;">
+                            <label style="font-size:11px; color:#8e918f; display:block; margin-bottom:4px;">Bonus Utama:</label>
+                            <input type="text" id="cyberInput" autocomplete="off" value="${targetData.bonus}">
+                        </div>
+                        <div>
+                            <label style="font-size:11px; color:#8e918f; display:block; margin-bottom:4px;">Extra Bonus (Isi 0 untuk hapus):</label>
+                            <input type="text" id="cyberExtraInput" autocomplete="off" value="${currentExtra}">
+                        </div>
+                    `;
+                } else if (field === 'extraBonus') {
+                    container.innerHTML = `<input type="text" id="cyberInput" autocomplete="off" value="${targetData.extraBonus || 0}">`;
                 } else {
                     container.innerHTML = `<input type="text" id="cyberInput" autocomplete="off" value="${targetData[field]}">`;
                 }
@@ -1049,21 +1069,75 @@
                 label.innerText = "CONFIG VALUE TARGET TEXT";
                 container.innerHTML = `<input type="text" id="cyberInput" autocomplete="off" value="${element.innerText}">`;
             }
-            document.getElementById('cyberInput').focus();
+            
+            const mainInput = document.getElementById('cyberInput');
+            const extraInput = document.getElementById('cyberExtraInput');
+
+            if (mainInput) {
+                mainInput.focus();
+                mainInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        // Jika ada input extra bonus di bawahnya, pindah fokus ke sana dulu
+                        if (extraInput) {
+                            extraInput.focus();
+                        } else {
+                            saveCyberData(); // Jika tidak ada, langsung save
+                        }
+                    }
+                });
+            }
+
+            if (extraInput) {
+                extraInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        saveCyberData(); // Enter di extra bonus langsung save data
+                    }
+                });
+            }
         }
 
-        function closeCyberMenu() { document.getElementById('cyberModal').style.display = 'none'; }
+        function closeCyberMenu() { 
+            document.getElementById('cyberModal').style.display = 'none'; 
+            // Reset variabel pelacak agar keadaan sistem kembali bersih
+            activeTarget = null; activeType = ''; activeIndex = null; activeField = ''; activeTableId = ''; storageKeyTextId = '';
+        }
 
         function saveCyberData() {
-            const inputVal = document.getElementById('cyberInput').value;
+            const inputEl = document.getElementById('cyberInput');
+            if (!inputEl) {
+                closeCyberMenu();
+                return;
+            }
+            
+            const inputVal = inputEl.value;
             if (activeType === 'row') {
                 let currentDataset = (activeTableId === 'VIP2') ? dataVIP2 : dataVIP3;
-                if (['capital', 'pct', 'bonus', 'extraBonus'].includes(activeField)) {
+                
+                if (activeField === 'bonus') {
+                    // Simpan Nilai Bonus Utama
+                    currentDataset[activeIndex]['bonus'] = parseFloat(inputVal.replace(/[^0-9.-]+/g, "")) || 0;
+                    
+                    // Cek ketersediaan elemen input Extra Bonus sebelum membaca nilainya
+                    const extraInputEl = document.getElementById('cyberExtraInput');
+                    if (extraInputEl) {
+                        currentDataset[activeIndex]['extraBonus'] = parseFloat(extraInputEl.value.replace(/[^0-9.-]+/g, "")) || 0;
+                    }
+                } else if (activeField === 'extraBonus') {
+                    currentDataset[activeIndex]['extraBonus'] = parseFloat(inputVal.replace(/[^0-9.-]+/g, "")) || 0;
+                } else if (['capital', 'pct'].includes(activeField)) {
                     currentDataset[activeIndex][activeField] = parseFloat(inputVal.replace(/[^0-9.-]+/g, "")) || 0;
                 } else if (activeField === 'option') {
                     currentDataset[activeIndex]['option'] = inputVal;
-                    currentDataset[activeIndex]['hot'] = (document.getElementById('cyberHotInput').value === 'true');
-                } else { currentDataset[activeIndex][activeField] = inputVal; }
+                    const hotInputEl = document.getElementById('cyberHotInput');
+                    if (hotInputEl) {
+                        currentDataset[activeIndex]['hot'] = (hotInputEl.value === 'true');
+                    }
+                } else { 
+                    currentDataset[activeIndex][activeField] = inputVal; 
+                }
+                
                 localStorage.setItem((activeTableId === 'VIP2') ? 'dataVIP2' : 'dataVIP3', JSON.stringify(currentDataset));
                 renderTables();
             } else {
@@ -1074,8 +1148,7 @@
                 }
             }
             closeCyberMenu();
-        }
-
+        }        
         function loadConfigFromStorage() {
             const leftLogo = localStorage.getItem('custom_logo_left'); if(leftLogo) renderDualLogos(leftLogo, 'left');
             const rightLogo = localStorage.getItem('custom_logo_right'); if(rightLogo) renderDualLogos(rightLogo, 'right');
