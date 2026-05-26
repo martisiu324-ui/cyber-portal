@@ -1,565 +1,1055 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Instruction - Premium Martis Dashboard</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&family=Orbitron:wght=700;900&display=swap">    
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>System Instruction - Gemini Style Sidebar Panel</title>
 
-    <style>
-        :root {
-            --bg-page: #090d16;
-            --bg-page-gradient: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #090d16 70%);
-            --bg-container: #0d1321;
-            --bg-card: rgba(17, 24, 39, 0.7);
-            --bg-table: rgba(15, 23, 42, 0.65);
-            --neon-purple: #a855f7;
-            --neon-cyan: #06b6d4;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --success-neon: #10b981;
-            --pending-neon: #f59e0b;
-            --danger-neon: #ff4646;
-        }
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Roboto+Mono:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-        /* Variasi Tema */
-        [data-theme="cyan"] {
-            --bg-page-gradient: radial-gradient(circle at 50% 0%, #083344 0%, #020617 70%);
-            --bg-container: #030712;
-            --neon-purple: #06b6d4;
-            --neon-cyan: #22d3ee;
-        }
+<style>
+/* PALET WARNA DEFAULT SYSTEM */
+:root {
+    --bg-page: #131314;
+    --bg-panel: #1e1f20;
+    --bg-sidebar: #1a1a1c;
+    --border-color: #444746;
+    --text-main: #e3e3e3;
+    --text-muted: #8e918f;
+    --accent-color: #a8c7fa;
+    --table-header-bg: #1a1a1a;
+    --table-row-hover: #282a2c;
+    --status-completed-bg: rgba(74, 222, 128, 0.15);
+    --status-completed-color: #4ade80;
+    --status-pending-bg: rgba(245, 158, 11, 0.1);
+    --status-pending-color: #f59e0b;
+}
 
-        [data-theme="purple"] {
-            --bg-page-gradient: radial-gradient(circle at 50% 0%, #3b0764 0%, #090514 70%);
-            --bg-container: #0b0518;
-            --neon-purple: #d946ef;
-            --neon-cyan: #a855f7;
-        }
+[data-theme="light"] {
+    --bg-page: #f0f4f9;
+    --bg-panel: #ffffff;
+    --bg-sidebar: #f8fafd;
+    --border-color: #c4c7c5;
+    --text-main: #1f1f1f;
+    --text-muted: #606260;
+    --accent-color: #0b57d0;
+    --table-header-bg: #f1f3f4;
+    --table-row-hover: #f8f9fa;
+    --status-completed-bg: rgba(22, 163, 74, 0.15);
+    --status-completed-color: #16a34a;
+    --status-pending-bg: rgba(189, 93, 0, 0.1);
+    --status-pending-color: #b05800;
+}
 
-        [data-theme="crimson"] {
-            --bg-page-gradient: radial-gradient(circle at 50% 0%, #450a0a 0%, #050202 70%);
-            --bg-container: #0a0303;
-            --neon-purple: #ef4444;
-            --neon-cyan: #f43f5e;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+body {
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    transition: background-color 0.2s, color 0.2s;
+}
 
-        body {
-            background: var(--bg-page-gradient);
-            color: var(--text-main);
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            transition: background 0.5s ease;
-        }
+.sidebar-panel {
+    width: 260px;
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid var(--border-color);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    z-index: 100;
+}
 
-        .main-container {
-            width: 100%;
-            max-width: 1150px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
+.sidebar-brand {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-        /* Top Action Controls Bar - Gaya Glassmorphism & Cyber Glow */
-        .top-controls {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 18px 28px;
-            border-radius: 16px;
-            border: 1px solid rgba(168, 85, 247, 0.2);
-            box-shadow: 0 0 25px rgba(168, 85, 247, 0.1);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            align-items: center;
-            transition: border 0.5s ease, box-shadow 0.5s ease;
-        }
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
 
-        .control-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--neon-cyan);
-            text-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
-            margin-right: auto;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: color 0.5s ease, text-shadow 0.5s ease;
-        }
+.control-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding-left: 2px;
+}
 
-        /* Dropdown Tema Premium */
-        .theme-select-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
-            border: 1px solid rgba(168, 85, 247, 0.4);
-            padding: 2px 12px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.1);
-        }
-        .theme-select-wrapper span {
-            font-size: 16px;
-            color: var(--neon-cyan);
-        }
-        .select-theme {
-            background: transparent;
-            color: #fff;
-            border: none;
-            padding: 9px 4px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            outline: none;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
-        }
-        .select-theme option {
-            background: #0d1321;
-            color: #fff;
-        }
+.control-select {
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+    transition: border-color 0.2s;
+}
 
-        /* Tombol Gaya Gaming/Cyberpunk Premium */
-        .btn-action {
-            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 11px 20px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            letter-spacing: 0.5px;
-        }
-        
-        .btn-action:hover { 
-            transform: translateY(-2px); 
-            border-color: rgba(255,255,255,0.3);
-            box-shadow: 0 5px 15px rgba(255,255,255,0.05);
-        }
+.control-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+}
+.control-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    cursor: pointer;
+}
 
-        .btn-secondary { 
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(6, 182, 212, 0.03) 100%);
-            border: 1px solid rgba(6, 182, 212, 0.4); 
-            color: #e0f7fa;
-        }
-        .btn-secondary:hover { 
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(6, 182, 212, 0.05) 100%);
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
-        }
-        
-        .btn-danger { 
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.03) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.4); 
-            color: #fee2e2;
-        }
-        .btn-danger:hover { 
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.05) 100%);
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
-        }
-        
-        .btn-success { 
-            background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
-            border: none;
-            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
-        }
-        .btn-success:hover { 
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
-            opacity: 0.95;
-        }
+.file-upload-wrapper {
+    position: relative;
+    width: 100%;
+}
+.file-upload-btn {
+    background-color: var(--bg-page);
+    color: var(--text-muted);
+    border: 1px dashed var(--border-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+.file-upload-wrapper input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
 
-        /* Dashboard Container Utama */
-        .dashboard-container {
-            background: var(--bg-container); 
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            padding: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: background 0.5s ease;
-        }
+.sidebar-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
 
-        .dashboard-header {
-            margin-bottom: 30px;
-            padding-bottom: 22px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
+.control-btn {
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+}
 
-        .system-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 22px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: #ffffff;
-            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: text-shadow 0.5s ease;
-        }
+.control-btn-core {
+    background-color: var(--text-main);
+    color: var(--bg-page);
+    border: 1px solid var(--text-main);
+    font-weight: 600;
+    margin-bottom: 5px;
+}
 
-        /* Pembungkus Tabel Kekinian */
-        .table-wrapper {
-            background-color: var(--bg-table);
-            padding: 6px;
-            border-radius: 16px;
-            overflow-x: auto;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
+/* AREA UTAMA STRUKTUR 2 KOLOM PANEL */
+.main-content {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Jarak renggang antar panel kontainer */
+    align-items: center;
+}
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; padding: 0 8px; }
-        
-        th { 
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700; 
-            text-transform: uppercase; 
-            color: var(--text-muted); 
-            letter-spacing: 1.5px; 
-            padding: 16px 20px;
-            font-size: 16px;
-        }
-        
-        td { 
-            padding: 18px 22px; 
-            text-align: center; 
-            font-size: 15px; 
-            background: rgba(30, 41, 59, 0.4);
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            white-space: nowrap; 
-            transition: all 0.2s; 
-        }
+.dashboard-container {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    max-width: 950px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-        td:first-child { border-left: 1px solid rgba(255, 255, 255, 0.03); border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
-        td:last-child { border-right: 1px solid rgba(255, 255, 255, 0.03); border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
-        
-        tr:hover td {
-            background: rgba(30, 41, 59, 0.8);
-            border-color: rgba(168, 85, 247, 0.3);
-        }
+.dashboard-header {
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-start;
+}
 
-        td[contenteditable="true"] { cursor: text; }
-        td[contenteditable="true"]:focus { 
-            outline: none; 
-            background: rgba(168, 85, 247, 0.15) !important;
-            box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.2);
-            color: #fff;
-        }
-        
-        .readonly-balance { color: var(--neon-cyan); font-weight: 700; transition: color 0.5s ease; }
-        .font-bold-data { font-weight: 600; color: #ffffff; }
-        .cell-vertical-flex { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.system-title-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
 
-        .badge-random-product {
-            display: inline-block; 
-            background: rgba(239, 68, 68, 0.1); 
-            color: #fca5a5; 
-            border: 1px solid rgba(239, 68, 68, 0.3);  
-            font-size: 9px; 
-            font-weight: 700; 
-            padding: 3px 8px; 
-            border-radius: 6px; 
-            margin-top: 4px; 
-            user-select: none;
-            letter-spacing: 1px;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.1);
-        }
+.title-logo-preview {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+    display: none;
+}
 
-        .status-badge {
-            display: inline-block; 
-            padding: 6px 14px; 
-            border-radius: 20px; 
-            font-size: 11px; 
-            font-weight: 700;
-            text-align: center; 
-            cursor: pointer; 
-            user-select: none;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            letter-spacing: 0.5px;
-        }
-        .status-badge:hover { transform: scale(1.05); }
-        
-        .status-pending { 
-            background-color: rgba(245, 158, 11, 0.1); 
-            color: var(--pending-neon); 
-            border: 1px solid rgba(245, 158, 11, 0.3); 
-            box-shadow: 0 0 10px rgba(245, 158, 11, 0.15);
-        }
-        .status-completed { 
-            background-color: rgba(16, 185, 129, 0.1); 
-            color: var(--success-neon); 
-            border: 1px solid rgba(16, 185, 129, 0.3); 
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
-        }
+.system-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-main);
+    outline: none;
+}
 
-        @media print {
-            .top-controls { display: none !important; }
-            body { padding: 0; background: #090d16; }
-            .dashboard-container { border: none; box-shadow: none; padding: 0; }
-        }
-    </style>
+.table-section-divider {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    border-left: 3px solid var(--accent-color);
+    padding-left: 8px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th {
+    background-color: var(--table-header-bg);
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 13px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+td {
+    padding: 16px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    white-space: nowrap;
+}
+
+tr:hover td {
+    background-color: var(--table-row-hover);
+}
+
+td[contenteditable="true"]:focus {
+    outline: 1px solid var(--accent-color);
+    background-color: var(--bg-page);
+}
+
+.cell-vertical-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4px;
+}
+
+.badge-random-product {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+}
+
+.status-pending {
+    background-color: var(--status-pending-bg);
+    color: var(--status-pending-color);
+}
+
+.status-completed {
+    background-color: var(--status-completed-bg) !important;
+    color: var(--status-completed-color) !important;
+}
+
+#cellColorPop {
+    position: absolute;
+    display: none;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+    padding: 5px;
+    border-radius: 6px;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    align-items: center;
+    gap: 5px;
+}
+#cellColorPop input[type="color"] {
+    width: 30px;
+    height: 25px;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+}
+#cellColorPop span {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+@media print {
+    .sidebar-panel, #cellColorPop { display: none !important; }
+    .main-content { margin-left: 0; width: 100%; padding: 0; }
+    body { background-color: #ffffff; color: #000000; }
+    .dashboard-container { border: none; padding: 0; margin-bottom: 50px; page-break-after: always; }
+}
+</style>
 </head>
 <body>
 
-<button onclick="kembaliKeHome()" style="position: fixed; top: 25px; left: 25px; z-index: 10000; padding: 12px 22px; background: rgba(6, 7, 17, 0.6); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(0, 210, 255, 0.4); color: #00d2ff; border-radius: 30px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1px; cursor: pointer; box-shadow: 0 0 15px rgba(0, 210, 255, 0.15), inset 0 0 10px rgba(0, 210, 255, 0.1); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;" onmouseover="this.style.background='rgba(0, 210, 255, 0.2)'; this.style.boxShadow='0 0 25px rgba(0, 210, 255, 0.4)'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='rgba(6, 7, 17, 0.6)'; this.style.boxShadow='0 0 15px rgba(0, 210, 255, 0.15)'; this.style.transform='scale(1)'">
-    <span style="font-size: 16px;">⟵</span> CORE SYSTEM
-</button>
+    <div id="cellColorPop">
+        <span>Warna:</span>
+        <input type="color" id="inlineColorInput" oninput="aplikasikanWarnaSel(this.value)">
+    </div>
 
-<script>
-function kembaliKeHome() {
-    window.parent.resetPortal();
-}
-</script>
-
-<div class="main-container">
-    
-    <div class="top-controls">
-        <div class="control-title">
-            <span class="material-icons" style="font-size: 16px;">vanguard</span>
-            CONTROL INTERFACE
+    <div class="sidebar-panel">
+        <div class="sidebar-brand">
+            <span class="material-icons" style="font-size:20px; color:var(--text-muted);">settings</span>
+            Sistem Konfigurasi
         </div>
-        
-        <div class="theme-select-wrapper">
-            <span class="material-icons">palette</span>
-            <select class="select-theme" onchange="gantiTema(this.value)">
-                <option value="default">MARTIS CLASSIC</option>
-                <option value="cyan">NEON CYAN</option>
-                <option value="purple">VOID PURPLE</option>
-                <option value="crimson">CRIMSON OVERLOAD</option>
+
+        <button class="control-btn control-btn-core" onclick="kembaliKeCore()">
+            <span class="material-icons" style="font-size:16px;">arrow_back</span> Core System
+        </button>
+
+        <div class="control-group">
+            <span class="control-label">Upload Logo Judul</span>
+            <div class="file-upload-wrapper">
+                <div class="file-upload-btn">
+                    <span class="material-icons" style="font-size:16px;">upload_file</span> Pilih File Logo
+                </div>
+                <input type="file" id="logoUploader" accept="image/*" onchange="prosesUploadLogo(this)">
+            </div>
+            <button class="control-btn" style="margin-top: 5px; border-color: #ef4444; color: #ef4444; background: transparent;" onclick="hapusLogoPermanen()">
+                <span class="material-icons" style="font-size:16px;">delete</span> Hapus Logo
+            </button>
+        </div>
+
+        <div class="control-group">
+            <span class="control-label">Ukuran Tinggi Logo</span>
+            <input type="range" id="logoSizeSlider" class="control-slider" min="15" max="80" value="32" oninput="ubahUkuranLogo()">
+        </div>
+
+        <div class="control-group">
+            <span class="control-label">Geser Posisi Judul & Logo</span>
+            <input type="range" id="alignSlider" class="control-slider" min="1" max="3" value="1" oninput="ubahPosisiJudul()">
+        </div>
+
+        <div class="control-group">
+            <span class="control-label">Tema Tampilan</span>
+            <select id="themeSelect" onchange="ubahTemaSistem()" class="control-select">
+                <option value="dark">Gelap (Default)</option>
+                <option value="light">Terang</option>
             </select>
         </div>
 
-        <button class="btn-action btn-secondary" onclick="tambahBaris()">➕ Tambah Baris</button>
-        <button class="btn-action btn-danger" onclick="kurangiBaris()">➖ Kurangi Baris</button>
-        <button class="btn-action" onclick="window.print()">🖨️ Cetak / Jadi PDF</button>
-        <button class="btn-action btn-success" onclick="unduhSebagaiGambar()">🖼️ Unduh Gambar (.PNG)</button>
-    </div>
+        <div class="control-group">
+            <span class="control-label">Gaya Tulisan (Font)</span>
+            <select id="fontSelect" onchange="ubahFontGlobal()" class="control-select">
+                <option value="'Inter', sans-serif">System Default</option>
+                <option value="'Plus Jakarta Sans', sans-serif">Jakarta Sans</option>
+                <option value="'Roboto Mono', monospace">Roboto Mono</option>
+            </select>
+        </div>
 
-    <div class="dashboard-container" id="area-cetak-gambar">
-        <div class="dashboard-header">
-            <div class="system-title" contenteditable="true">
-                <span class="material-icons" style="font-size: 24px; color: var(--neon-purple);">terminal</span>
-                SYSTEM INSTRUCTION
+        <div class="control-group">
+            <span class="control-label">Ukuran Teks Judul</span>
+            <input type="range" id="titleSizeSlider" class="control-slider" min="16" max="36" value="20" oninput="ubahUkuranJudul()">
+        </div>
+
+        <div class="control-group">
+            <span class="control-label">Ukuran Teks Tabel</span>
+            <input type="range" id="textSizeSlider" class="control-slider" min="10" max="24" value="14" oninput="ubahUkuranTeks()">
+        </div>
+
+        <div class="sidebar-actions">
+            <button class="control-btn" onclick="tambahBarisSemua()"><span class="material-icons" style="font-size:16px;">add</span> Baris Baru</button>
+            <button class="control-btn" onclick="kurangiBarisSemua()"><span class="material-icons" style="font-size:16px;">remove</span> Hapus Baris</button>
+            <button class="control-btn" onclick="window.print()"><span class="material-icons" style="font-size:16px;">print</span> Cetak PDF</button>
             </div>
+    </div>
+
+    <div class="main-content">
+        
+        <div style="width: 100%; max-width: 950px; display: flex; flex-direction: column; gap: 10px;">
+            <div class="dashboard-container" id="panel-malaysia-rm">
+                <div class="dashboard-header header-alignment-class">
+                    <div class="system-title-container">
+                        <img class="title-logo-preview logo-preview-class" src="#" alt="Logo">
+                        <div class="system-title system-title-class" contenteditable="true" oninput="sinkronisasiJudul(this, 'RM')">System Instruction</div>
+                    </div>
+                </div>
+                <div class="table-section">
+                    <div class="table-section-divider">PRODUCT REGION DATA</div>
+                    <div class="table-wrapper">
+                        <table id="tabelDataRM">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>ID Account</th>
+                                    <th>Balance</th>
+                                    <th>Product Price</th>
+                                    <th>System Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="isiTabelRM">
+                                <tr data-row="spesial">
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">777666</td>
+                                    <td class="readonly-balance" data-type="balance" onclick="aktifkanColorPicker(this, event)">RM105.00</td>
+                                    <td class="cell-vertical-flex" data-type="price-container">
+                                        <span id="angka-spesial-rm" contenteditable="true" data-type="price" onblur="formatUlangPrice('RM', 'isiTabelRM'); hitungOtomatis('RM', 'isiTabelRM');" oninput="hitungOtomatis('RM', 'isiTabelRM')" onclick="aktifkanColorPicker(this, event)">RM0.00</span>
+                                        <div class="badge-random-product">RANDOM PRODUCT</div>
+                                    </td>
+                                    <td><span class="status-badge status-pending" onclick="gantiStatus(this)">PENDING PAYMENT</span></td>
+                                </tr>
+                                <tr>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">777666</td>
+                                    <td class="readonly-balance" data-type="balance" onclick="aktifkanColorPicker(this, event)">RM330.00</td>
+                                    <td contenteditable="true" data-type="price" onblur="formatUlangPrice('RM', 'isiTabelRM'); hitungOtomatis('RM', 'isiTabelRM');" oninput="hitungOtomatis('RM', 'isiTabelRM')" onclick="aktifkanColorPicker(this, event)">-RM225.00</td>
+                                    <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                                </tr>
+                                <tr>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">777666</td>
+                                    <td class="readonly-balance" data-type="balance" onclick="aktifkanColorPicker(this, event)">RM630.00</td>
+                                    <td contenteditable="true" data-type="price" onblur="formatUlangPrice('RM', 'isiTabelRM'); hitungOtomatis('RM', 'isiTabelRM');" oninput="hitungOtomatis('RM', 'isiTabelRM')" onclick="aktifkanColorPicker(this, event)">-RM300.00</td>
+                                    <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                                </tr>
+                                <tr>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">777666</td>
+                                    <td class="readonly-balance" data-type="balance" onclick="aktifkanColorPicker(this, event)">RM1,125.00</td>
+                                    <td contenteditable="true" data-type="price" onblur="formatUlangPrice('RM', 'isiTabelRM'); hitungOtomatis('RM', 'isiTabelRM');" oninput="hitungOtomatis('RM', 'isiTabelRM')" onclick="aktifkanColorPicker(this, event)">-RM495.00</td>
+                                    <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                                </tr>
+                                <tr>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">777666</td>
+                                    <td class="readonly-balance" data-type="balance" onclick="aktifkanColorPicker(this, event)">RM1,500.00</td>
+                                    <td contenteditable="true" data-type="price" onblur="formatUlangPrice('RM', 'isiTabelRM'); hitungOtomatis('RM', 'isiTabelRM');" oninput="hitungOtomatis('RM', 'isiTabelRM')" onclick="aktifkanColorPicker(this, event)">-RM375.00</td>
+                                    <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="control-btn" style="background-color: var(--bg-panel); max-width: 220px;" onclick="unduhGambarPanel('panel-malaysia-rm', 'Malaysia-Verification.png')">
+                <span class="material-icons" style="font-size:16px;">image</span> Simpan Gambar
+            </button>
         </div>
 
-        <div class="table-wrapper">
-            <table id="tabelData">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>ID Account</th>
-                        <th>Balance</th>
-                        <th>Product Price</th>
-                        <th>System Status</th>
-                    </tr>
-                </thead>
-                <tbody id="isiTabel">
-                    <tr data-row="spesial">
-                        <td class="font-bold-data" contenteditable="true">MARTIS</td>
-                        <td class="font-bold-data" contenteditable="true">777666</td>
-                        <td class="font-bold-data readonly-balance" data-type="balance">RM0.00</td>
-                        <td class="cell-vertical-flex" data-type="price-container" style="font-weight: 700;">
-                            <span id="angka-spesial" contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtotmatis()">RM6,750.00</span>
-                            <div class="badge-random-product">RANDOM PRODUCT</div>
-                        </td>
-                        <td><span class="status-badge status-pending" onclick="gantiStatus(this)">PENDING PAYMENT</span></td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold-data" contenteditable="true">MARTIS</td>
-                        <td class="font-bold-data" contenteditable="true">777666</td>
-                        <td class="font-bold-data readonly-balance" data-type="balance">RM0.00</td>
-                        <td contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtotmatis()" style="font-weight: 700;">-RM225.00</td>
-                        <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold-data" contenteditable="true">MARTIS</td>
-                        <td class="font-bold-data" contenteditable="true">777666</td>
-                        <td class="font-bold-data readonly-balance" data-type="balance">RM0.00</td>
-                        <td contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtotmatis()" style="font-weight: 700;">-RM300.00</td>
-                        <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold-data" contenteditable="true">MARTIS</td>
-                        <td class="font-bold-data" contenteditable="true">777666</td>
-                        <td class="font-bold-data readonly-balance" data-type="balance">RM0.00</td>
-                        <td contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtotmatis()" style="font-weight: 700;">-RM495.00</td>
-                        <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold-data" contenteditable="true">MARTIS</td>
-                        <td class="font-bold-data" contenteditable="true">777666</td>
-                        <td class="font-bold-data readonly-balance" data-type="balance">RM1,500.00</td>
-                        <td contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtotmatis()" style="font-weight: 700;">-RM375.00</td>
-                        <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div style="width: 100%; max-width: 950px; display: flex; flex-direction: column; gap: 10px;">
+            <div class="dashboard-container" id="panel-indonesia-rp">
+                <div class="dashboard-header header-alignment-class">
+                    <div class="system-title-container">
+                        <img class="title-logo-preview logo-preview-class" src="#" alt="Logo">
+                        <div class="system-title system-title-class" contenteditable="true" oninput="sinkronisasiJudul(this, 'RP')">System Instruction</div>
+                    </div>
+                </div>
+                <div class="table-section">
+                    <div class="table-section-divider">PRODUCT REGION DATA</div>
+                    <div class="table-wrapper">
+                        <table id="tabelDataRP">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>ID Account</th>
+                                    <th>Balance</th>
+                                    <th>Product Price</th>
+                                    <th>System Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="isiTabelRP">
+                                <tr data-row="spesial">
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">777666</td>
+                                    <td class="readonly-balance" data-type="balance" onclick="aktifkanColorPicker(this, event)">Rp351.000,00</td>
+                                    <td class="cell-vertical-flex" data-type="price-container">
+                                        <span id="angka-spesial-rp" contenteditable="true" data-type="price" onblur="formatUlangPrice('Rp', 'isiTabelRP'); hitungOtomatis('Rp', 'isiTabelRP');" oninput="hitungOtomatis('Rp', 'isiTabelRP')" onclick="aktifkanColorPicker(this, event)">Rp0,00</span>
+                                        <div class="badge-random-product">RANDOM PRODUCT</div>
+                                    </td>
+                                    <td><span class="status-badge status-pending" onclick="gantiStatus(this)">PENDING PAYMENT</span></td>
+                                </tr>
+                                <tr>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">777666</td>
+                                    <td class="readonly-balance" data-type="balance" onclick="aktifkanColorPicker(this, event)">Rp1.101.000,00</td>
+                                    <td contenteditable="true" data-type="price" onblur="formatUlangPrice('Rp', 'isiTabelRP'); hitungOtomatis('Rp', 'isiTabelRP');" oninput="hitungOtomatis('Rp', 'isiTabelRP')" onclick="aktifkanColorPicker(this, event)">-Rp750.000,00</td>
+                                    <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                                </tr>
+                                <tr>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">777666</td>
+                                    <td class="readonly-balance" data-type="balance" onclick="aktifkanColorPicker(this, event)">Rp2.101.000,00</td>
+                                    <td contenteditable="true" data-type="price" onblur="formatUlangPrice('Rp', 'isiTabelRP'); hitungOtomatis('Rp', 'isiTabelRP');" oninput="hitungOtomatis('Rp', 'isiTabelRP')" onclick="aktifkanColorPicker(this, event)">-Rp1.000.000,00</td>
+                                    <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                                </tr>
+                                <tr>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">777666</td>
+                                    <td class="readonly-balance" data-type="balance" onclick="aktifkanColorPicker(this, event)">Rp3.751.000,00</td>
+                                    <td contenteditable="true" data-type="price" onblur="formatUlangPrice('Rp', 'isiTabelRP'); hitungOtomatis('Rp', 'isiTabelRP');" oninput="hitungOtomatis('Rp', 'isiTabelRP')" onclick="aktifkanColorPicker(this, event)">-Rp1.650.000,00</td>
+                                    <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                                </tr>
+                                <tr>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+                                    <td contenteditable="true" onclick="aktifkanColorPicker(this, event)">777666</td>
+                                    <td class="readonly-balance" data-type="balance" onclick="aktifkanColorPicker(this, event)">Rp5.001.000,00</td>
+                                    <td contenteditable="true" data-type="price" onblur="formatUlangPrice('Rp', 'isiTabelRP'); hitungOtomatis('Rp', 'isiTabelRP');" oninput="hitungOtomatis('Rp', 'isiTabelRP')" onclick="aktifkanColorPicker(this, event)">-Rp1.250.000,00</td>
+                                    <td><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="control-btn" style="background-color: var(--bg-panel); max-width: 220px;" onclick="unduhGambarPanel('panel-indonesia-rp', 'Indonesia-Verification.png')">
+                <span class="material-icons" style="font-size:16px;">image</span> Simpan Gambar
+            </button>
         </div>
+
     </div>
-</div>
 
 <script>
-    const WARNA_BARIS_SATU = "#ffffff"; 
-    const WARNA_BARIS_LAIN = "#ff4646"; 
+let targetSelPilihan = null;
 
-    // FUNGSI GANTI TEMA BARU
-    function gantiTema(tema) {
-        if (tema === "default") {
-            document.documentElement.removeAttribute("data-theme");
-        } else {
-            document.documentElement.setAttribute("data-theme", tema);
-        }
+function aktifkanColorPicker(element, event) {
+    targetSelPilihan = element;
+    const pop = document.getElementById("cellColorPop");
+    
+    let rgb = window.getComputedStyle(element).color;
+    if (rgb.includes("rgb")) {
+        let values = rgb.match(/\d+/g);
+        let hex = "#" + ((1 << 24) + (parseInt(values[0]) << 16) + (parseInt(values[1]) << 8) + parseInt(values[2])).toString(16).slice(1);
+        document.getElementById("inlineColorInput").value = hex;
     }
 
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter' && event.target.hasAttribute('contenteditable')) {
-            event.preventDefault(); 
-            event.target.blur();    
+    const mainContentArea = document.querySelector(".main-content").getBoundingClientRect();
+    pop.style.left = (event.clientX - mainContentArea.left + 270) + "px";
+    pop.style.top = (event.clientY + window.scrollY - 15) + "px";
+    pop.style.display = "flex";
+    
+    event.stopPropagation();
+}
+
+function aplikasikanWarnaSel(warna) {
+    if (targetSelPilihan) {
+        targetSelPilihan.style.color = warna;
+        targetSelPilihan.setAttribute('data-user-colored', 'true');
+        targetSelPilihan.setAttribute('data-custom-hex', warna);
+        simpanSemuaDataKeStorage();
+    }
+}
+
+document.addEventListener("click", function() {
+    document.getElementById("cellColorPop").style.display = "none";
+});
+
+/* LOGIKA SINKRONISASI JUDUL AGAR KETIKA DIKETIK LANGSUNG KEDUA PANEL SAMA */
+function sinkronisasiJudul(elemen, asal) {
+    const teksBaru = elemen.innerText;
+    const semuaJudul = document.querySelectorAll(".system-title-class");
+    semuaJudul.forEach(j => {
+        if(j !== elemen) j.innerText = teksBaru;
+    });
+    simpanSemuaDataKeStorage();
+}
+
+function kembaliKeCore() {
+    if (window.parent && typeof window.parent.resetPortal === "function") {
+        window.parent.resetPortal();
+    } else {
+        window.history.back();
+    }
+}
+
+function prosesUploadLogo(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            const dataBase64 = e.target.result;
+            const logoImgs = document.querySelectorAll('.logo-preview-class');
+            logoImgs.forEach(img => {
+                img.src = dataBase64;
+                img.style.display = 'block';
+            });
+            localStorage.setItem('sistem_logo_permanen', dataBase64);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function hapusLogoPermanen() {
+    localStorage.removeItem('sistem_logo_permanen');
+    const logoImgs = document.querySelectorAll('.logo-preview-class');
+    logoImgs.forEach(img => {
+        img.src = "#";
+        img.style.display = 'none';
+    });
+    document.getElementById('logoUploader').value = "";
+}
+
+function ubahUkuranLogo() {
+    const size = document.getElementById("logoSizeSlider").value;
+    const logoImgs = document.querySelectorAll('.logo-preview-class');
+    logoImgs.forEach(img => { img.style.height = size + "px"; });
+    localStorage.setItem('sistem_logo_size', size);
+}
+
+function ubahPosisiJudul() {
+    const val = document.getElementById("alignSlider").value;
+    const headers = document.querySelectorAll(".header-alignment-class");
+    headers.forEach(header => {
+        if (val == "1") header.style.justifyContent = "flex-start";
+        else if (val == "2") header.style.justifyContent = "center";
+        else if (val == "3") header.style.justifyContent = "flex-end";
+    });
+    localStorage.setItem('sistem_align_position', val);
+}
+
+function ubahUkuranJudul() {
+    const size = document.getElementById("titleSizeSlider").value;
+    const judulSeks = document.querySelectorAll(".system-title-class");
+    judulSeks.forEach(j => { j.style.fontSize = size + "px"; });
+    localStorage.setItem('sistem_title_size', size);
+}
+
+function ubahUkuranTeks() {
+    const size = document.getElementById("textSizeSlider").value;
+    const cells = document.querySelectorAll(".dashboard-container th, .dashboard-container td");
+    cells.forEach(cell => { cell.style.fontSize = size + "px"; });
+    localStorage.setItem('sistem_text_size', size);
+}
+
+function ubahTemaSistem() {
+    const tema = document.getElementById("themeSelect").value;
+    if (tema === "light") document.documentElement.setAttribute("data-theme", "light");
+    else document.documentElement.removeAttribute("data-theme");
+    localStorage.setItem('sistem_theme', tema);
+
+    const allCells = document.querySelectorAll(".dashboard-container td, .system-title-class");
+    allCells.forEach(cell => {
+        if (!cell.hasAttribute('data-user-colored') && cell.getAttribute('data-type') !== 'price') {
+            cell.style.color = "var(--text-main)";
         }
     });
 
-    function parseDuit(teks) {
-        let bersih = teks.replace(/RM|\s+|-|\s|,/gi, '');
-        let angka = parseFloat(cleanString(bersih));
-        function cleanString(str) { return str.replace(/[^\d.-]/g, ''); }
-        return isNaN(angka) ? 0 : angka;
+    formatUlangPrice('RM', 'isiTabelRM');
+    formatUlangPrice('Rp', 'isiTabelRP');
+    simpanSemuaDataKeStorage();
+}
+
+function ubahFontGlobal() {
+    const font = document.getElementById("fontSelect").value;
+    const kontainers = document.querySelectorAll(".dashboard-container");
+    kontainers.forEach(k => { k.style.fontFamily = font; });
+    localStorage.setItem('sistem_font', font);
+}
+
+document.addEventListener('keydown', function(event){
+    if(event.key === 'Enter' && event.target.hasAttribute('contenteditable')){
+        event.preventDefault();
+        event.target.blur();
     }
+});
 
-    function formatRM(angka) { return "RM" + angka.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-    function formatRMNegatif(angka) { return "-RM" + angka.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+function parseDuit(teks){
+    teks = teks.trim();
+    if(teks.includes("Rp")){
+        let bersih = teks.replace(/Rp|\s/g, '').replace(/\./g, '').replace(',', '.');
+        bersih = bersih.replace(/[^\d.-]/g, '');
+        return parseFloat(bersih) || 0;
+    }
+    let bersih = teks.replace(/[^\d.-]/g,'');
+    return parseFloat(bersih) || 0;
+}
 
-    function formatUlangBalance() {
-        let baris = document.querySelectorAll("#isiTabel tr");
-        let totalBaris = baris.length;
-        if (totalBaris > 0) {
-            let cellBalanceBawah = baris[totalBaris - 1].querySelector('[data-type="balance"]');
-            if (cellBalanceBawah) {
-                let angka = parseDuit(cellBalanceBawah.innerText);
-                cellBalanceBawah.innerText = formatRM(angka);
-            }
+function formatUang(angka, simbol){
+    if(simbol === "Rp"){
+        let formatted = angka.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return "Rp" + formatted;
+    } else {
+        let formatted = angka.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return simbol + formatted;
+    }
+}
+
+function formatUlangBalance(simbol, tbodyId){
+    let baris = document.querySelectorAll(`#${tbodyId} tr`);
+    let totalBaris = baris.length;
+    if(totalBaris > 0){
+        let cellBalanceBawah = baris[totalBaris - 1].querySelector('[data-type="balance"]');
+        if(cellBalanceBawah){
+            let angka = parseDuit(cellBalanceBawah.innerText);
+            cellBalanceBawah.innerText = formatUang(angka, simbol);
         }
     }
+}
 
-    function formatUlangPrice() {
-        let baris = document.querySelectorAll("#isiTabel tr");
-        baris.forEach(row => {
-            let cellPrice = row.querySelector('[data-type="price"]');
-            if(cellPrice) {
-                let angka = parseDuit(cellPrice.innerText);
-                if(row.getAttribute("data-row") === "spesial") {
-                    cellPrice.innerText = formatRM(angka); 
-                    cellPrice.style.color = WARNA_BARIS_SATU;
+function formatUlangPrice(simbol, tbodyId){
+    let baris = document.querySelectorAll(`#${tbodyId} tr`);
+    baris.forEach(row => {
+        let cellPrice = row.querySelector('[data-type="price"]');
+        if(cellPrice){
+            let angka = parseDuit(cellPrice.innerText);
+            let isMinus = cellPrice.innerText.includes('-');
+            if (isMinus && angka > 0) angka = -angka;
+
+            if (angka < 0) {
+                let angkaAbsolut = Math.abs(angka);
+                cellPrice.innerText = "-" + formatUang(angkaAbsolut, simbol);
+                cellPrice.style.color = "#ef4444"; 
+            } else {
+                cellPrice.innerText = formatUang(angka, simbol);
+                if(!cellPrice.hasAttribute('data-user-colored')) {
+                    cellPrice.style.color = "var(--text-main)";
                 } else {
-                    cellPrice.innerText = formatRMNegatif(angka); 
-                    cellPrice.style.color = WARNA_BARIS_LAIN;
+                    cellPrice.style.color = cellPrice.getAttribute('data-custom-hex');
                 }
             }
-        });
-    }
-
-    function hitungOtomatis() {
-        let baris = document.querySelectorAll("#isiTabel tr");
-        let totalBaris = baris.length;
-        if (totalBaris === 0) return;
-
-        for (let i = 0; i < totalBaris; i++) {
-            let cellBal = baris[i].querySelector('[data-type="balance"]');
-            let cellPrice = baris[i].querySelector('[data-type="price"]');
-            if(cellPrice) {
-                if(baris[i].getAttribute("data-row") === "spesial") { cellPrice.style.color = WARNA_BARIS_SATU; } 
-                else { cellPrice.style.color = WARNA_BARIS_LAIN; }
-            }
-            if (i === totalBaris - 1) {
-                cellBal.setAttribute("contenteditable", "true");
-                cellBal.classList.remove("readonly-balance");
-                cellBal.setAttribute("onblur", "formatUlangBalance()");
-            } else {
-                cellBal.removeAttribute("contenteditable");
-                cellBal.classList.add("readonly-balance");
-                cellBal.removeAttribute("onblur");
-            }
         }
+    });
+}
 
-        let barisPalingBawah = baris[totalBaris - 1];
-        let cellBalanceBawah = barisPalingBawah.querySelector('[data-type="balance"]');
-        let currentBalance = parseDuit(cellBalanceBawah.innerText);
+function hitungOtomatis(simbol, tbodyId){
+    let baris = document.querySelectorAll(`#${tbodyId} tr`);
+    let totalBaris = baris.length;
+    if(totalBaris === 0) return;
 
-        for (let i = totalBaris - 2; i >= 0; i--) {
-            let barisDiBawahnya = baris[i + 1];
-            let hargaProdukDiBawahnya = parseDuit(barisDiBawahnya.querySelector('[data-type="price"]').innerText);
-            currentBalance = currentBalance - hargaProdukDiBawahnya;
-            baris[i].querySelector('[data-type="balance"]').innerText = formatRM(currentBalance);
-        }
-    }
-
-    function gantiStatus(elemen) {
-        if (elemen.classList.contains('status-pending')) {
-            elemen.classList.remove('status-pending'); elemen.classList.add('status-completed');
-            elemen.innerText = 'TRANSACTION COMPLETED';
+    for(let i = 0; i < totalBaris; i++){
+        let cellBal = baris[i].querySelector('[data-type="balance"]');
+        if(i === totalBaris - 1){
+            cellBal.setAttribute("contenteditable","true");
+            cellBal.setAttribute("onblur",`formatUlangBalance('${simbol}', '${tbodyId}'); hitungOtomatis('${simbol}', '${tbodyId}');`);
         } else {
-            elemen.classList.remove('status-completed'); elemen.classList.add('status-pending');
-            elemen.innerText = 'PENDING PAYMENT';
+            cellBal.removeAttribute("contenteditable");
+            cellBal.removeAttribute("onblur");
         }
     }
 
-    function tambahBaris() {
-        var table = document.getElementById("isiTabel");
-        var row = table.insertRow(-1);
-        row.innerHTML = `
-            <td class="font-bold-data" contenteditable="true">MARTIS</td>
-            <td class="font-bold-data" contenteditable="true">777666</td>
-            <td class="font-bold-data readonly-balance" data-type="balance">RM0.00</td>
-            <td contenteditable="true" data-type="price" onblur="formatUlangPrice()" oninput="hitungOtomatis()" style="font-weight: 700; color: ${WARNA_BARIS_LAIN};">-RM0.00</td>
-            <td><span class="status-badge status-pending" onclick="gantiStatus(this)">PENDING PAYMENT</span></td>
-        `;
-        hitungOtomatis();
+    let barisPalingBawah = baris[totalBaris - 1];
+    let cellBalanceBawah = barisPalingBawah.querySelector('[data-type="balance"]');
+    let initialBalance = parseDuit(cellBalanceBawah.innerText);
+
+    let hargaProduk = [];
+    for(let i = totalBaris - 1; i >= 0; i--) {
+        let cellPrice = baris[i].querySelector('[data-type="price"]');
+        if(cellPrice) {
+            let txt = cellPrice.innerText;
+            let harga = parseDuit(txt);
+            if(txt.includes('-') && harga > 0) harga = -harga;
+            hargaProduk.push(harga);
+        } else {
+            hargaProduk.push(0);
+        }
     }
 
-    function kurangiBaris() {
-        var table = document.getElementById("isiTabel");
-        if (table.rows.length > 1) { table.deleteRow(-1); hitungOtomatis(); } 
-        else { alert("Sistem Keamanan: Minimal harus menyisakan 1 data!"); }
+    baris[totalBaris - 1].querySelector('[data-type="balance"]').innerText = formatUang(initialBalance, simbol);
+    
+    let currentBalance = initialBalance;
+    for(let i = totalBaris - 2; i >= 0; i--) {
+        let hargaBarisBawahnya = hargaProduk[(totalBaris - 1) - (i + 1)];
+        currentBalance = currentBalance - hargaBarisBawahnya;
+        baris[i].querySelector('[data-type="balance"]').innerText = formatUang(currentBalance, simbol);
     }
+    
+    simpanSemuaDataKeStorage();
+}
 
-    function unduhSebagaiGambar() {
-        const targetElement = document.getElementById("area-cetak-gambar");
-        // Mengambil background color dinamis dari CSS variable agar export gambar mendeteksi tema yang aktif
-        const currentBg = getComputedStyle(document.documentElement).getPropertyValue('--bg-container').trim();
-        html2canvas(targetElement, { 
-            scale: 2, 
-            useCORS: true, 
-            backgroundColor: currentBg
-        }).then(canvas => {
-            const linkDesc = document.createElement("a");
-            linkDesc.download = "Cyber-System-Verification.png";
-            linkDesc.href = canvas.toDataURL("image/png");
-            linkDesc.click();
+function gantiStatus(elemen){
+    if(elemen.classList.contains('status-pending')){
+        elemen.classList.remove('status-pending');
+        elemen.classList.add('status-completed');
+        elemen.innerText = 'TRANSACTION COMPLETED';
+    }else{
+        elemen.classList.remove('status-completed');
+        elemen.classList.add('status-pending');
+        elemen.innerText = 'PENDING PAYMENT';
+    }
+    simpanSemuaDataKeStorage();
+}
+
+function tambahBarisSemua(){
+    const activeSize = document.getElementById("textSizeSlider").value;
+    
+    let tableRM = document.getElementById("isiTabelRM");
+    let rowRM = tableRM.insertRow(tableRM.rows.length - 1);
+    rowRM.innerHTML = `
+        <td contenteditable="true" style="font-size:${activeSize}px; color:var(--text-main);" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+        <td contenteditable="true" style="font-size:${activeSize}px; color:var(--text-main);" onclick="aktifkanColorPicker(this, event)">777666</td>
+        <td class="readonly-balance" data-type="balance" style="font-size:${activeSize}px; color:var(--text-main);" onclick="aktifkanColorPicker(this, event)">RM0.00</td>
+        <td contenteditable="true" data-type="price" onblur="formatUlangPrice('RM', 'isiTabelRM'); hitungOtomatis('RM', 'isiTabelRM');" oninput="hitungOtomatis('RM', 'isiTabelRM')" style="font-weight:500;font-size:${activeSize}px; color:var(--text-main);" onclick="aktifkanColorPicker(this, event)">RM0.00</td>
+        <td style="font-size:${activeSize}px;"><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+    `;
+
+    let tableRP = document.getElementById("isiTabelRP");
+    let rowRP = tableRP.insertRow(tableRP.rows.length - 1);
+    rowRP.innerHTML = `
+        <td contenteditable="true" style="font-size:${activeSize}px; color:var(--text-main);" onclick="aktifkanColorPicker(this, event)">MARTIS</td>
+        <td contenteditable="true" style="font-size:${activeSize}px; color:var(--text-main);" onclick="aktifkanColorPicker(this, event)">777666</td>
+        <td class="readonly-balance" data-type="balance" style="font-size:${activeSize}px; color:var(--text-main);" onclick="aktifkanColorPicker(this, event)">Rp0,00</td>
+        <td contenteditable="true" data-type="price" onblur="formatUlangPrice('Rp', 'isiTabelRP'); hitungOtomatis('Rp', 'isiTabelRP');" oninput="hitungOtomatis('Rp', 'isiTabelRP')" style="font-weight:500;font-size:${activeSize}px; color:var(--text-main);" onclick="aktifkanColorPicker(this, event)">Rp0,00</td>
+        <td style="font-size:${activeSize}px;"><span class="status-badge status-completed" onclick="gantiStatus(this)">TRANSACTION COMPLETED</span></td>
+    `;
+
+    hitungOtomatis('RM', 'isiTabelRM');
+    hitungOtomatis('Rp', 'isiTabelRP');
+    ubahUkuranTeks();
+}
+
+function kurangiBarisSemua(){
+    let tableRM = document.getElementById("isiTabelRM");
+    let tableRP = document.getElementById("isiTabelRP");
+    if(tableRM.rows.length > 2 && tableRP.rows.length > 2){
+        tableRM.deleteRow(tableRM.rows.length - 2);
+        tableRP.deleteRow(tableRP.rows.length - 2);
+        hitungOtomatis('RM', 'isiTabelRM');
+        hitungOtomatis('Rp', 'isiTabelRP');
+    }else{
+        alert("Sistem Keamanan: Minimal harus menyisakan baris data utama!");
+    }
+}
+
+function ekstrakDataTabel(tbodyId) {
+    let dataBaris = [];
+    let baris = document.querySelectorAll(`#${tbodyId} tr`);
+    baris.forEach(row => {
+        let cells = row.querySelectorAll("td");
+        if(cells.length >= 5) {
+            let isSpesial = row.getAttribute("data-row") === "spesial";
+            let cellPrice = row.querySelector('[data-type="price"]');
+            let statusSpan = row.querySelector(".status-badge");
+            
+            dataBaris.push({
+                isSpesial: isSpesial,
+                name: cells[0].innerText,
+                nameColor: cells[0].hasAttribute('data-user-colored') ? cells[0].style.color : 'var(--text-main)',
+                isNameCustom: cells[0].hasAttribute('data-user-colored'),
+                idAccount: cells[1].innerText,
+                idColor: cells[1].hasAttribute('data-user-colored') ? cells[1].style.color : 'var(--text-main)',
+                isIdCustom: cells[1].hasAttribute('data-user-colored'),
+                balance: cells[2].innerText,
+                balanceColor: cells[2].hasAttribute('data-user-colored') ? cells[2].style.color : 'var(--text-main)',
+                isBalCustom: cells[2].hasAttribute('data-user-colored'),
+                price: cellPrice ? cellPrice.innerText : cells[3].innerText,
+                priceColor: cellPrice && cellPrice.hasAttribute('data-user-colored') ? cellPrice.style.color : 'var(--text-main)',
+                isPriceCustom: cellPrice ? cellPrice.hasAttribute('data-user-colored') : false,
+                customHex: cellPrice ? cellPrice.getAttribute('data-custom-hex') : '',
+                statusText: statusSpan ? statusSpan.innerText : "",
+                statusClass: statusSpan ? statusSpan.className : ""
+            });
+        }
+    });
+    return dataBaris;
+}
+
+function simpanSemuaDataKeStorage() {
+    const judulTeks = document.querySelector(".system-title-class").innerText;
+    localStorage.setItem("sistem_judul", judulTeks);
+    localStorage.setItem("sistem_data_rm", JSON.stringify(ekstrakDataTabel("isiTabelRM")));
+    localStorage.setItem("sistem_data_rp", JSON.stringify(ekstrakDataTabel("isiTabelRP")));
+}
+
+function bangunUlangTabel(data, tbodyId, simbol) {
+    let htmlBaru = "";
+    data.forEach(d => {
+        let nAttr = d.isNameCustom ? `data-user-colored="true" style="color:${d.nameColor};"` : `style="color:var(--text-main);"`;
+        let iAttr = d.isIdCustom ? `data-user-colored="true" style="color:${d.idColor};"` : `style="color:var(--text-main);"`;
+        let bAttr = d.isBalCustom ? `data-user-colored="true" style="color:${d.balanceColor};"` : `style="color:var(--text-main);"`;
+        let pAttr = d.isPriceCustom ? `data-user-colored="true" data-custom-hex="${d.customHex}" style="color:${d.priceColor};"` : `style="color:var(--text-main);"`;
+
+        if(d.isSpesial) {
+            htmlBaru += `
+            <tr data-row="spesial">
+                <td contenteditable="true" ${nAttr} onclick="aktifkanColorPicker(this, event)">${d.name}</td>
+                <td contenteditable="true" ${iAttr} onclick="aktifkanColorPicker(this, event)">${d.idAccount}</td>
+                <td class="readonly-balance" data-type="balance" ${bAttr} onclick="aktifkanColorPicker(this, event)">${d.balance}</td>
+                <td class="cell-vertical-flex" data-type="price-container">
+                    <span id="angka-spesial-${simbol.toLowerCase()}" contenteditable="true" data-type="price" ${pAttr} onblur="formatUlangPrice('${simbol}', '${tbodyId}'); hitungOtomatis('${simbol}', '${tbodyId}');" oninput="hitungOtomatis('${simbol}', '${tbodyId}')" onclick="aktifkanColorPicker(this, event)">${d.price}</span>
+                    <div class="badge-random-product">RANDOM PRODUCT</div>
+                </td>
+                <td><span class="${d.statusClass}" onclick="gantiStatus(this)">${d.statusText}</span></td>
+            </tr>`;
+        } else {
+            htmlBaru += `
+            <tr>
+                <td contenteditable="true" ${nAttr} onclick="aktifkanColorPicker(this, event)">${d.name}</td>
+                <td contenteditable="true" ${iAttr} onclick="aktifkanColorPicker(this, event)">${d.idAccount}</td>
+                <td class="readonly-balance" data-type="balance" ${bAttr} onclick="aktifkanColorPicker(this, event)">${d.balance}</td>
+                <td contenteditable="true" data-type="price" ${pAttr} onblur="formatUlangPrice('${simbol}', '${tbodyId}'); hitungOtomatis('${simbol}', '${tbodyId}');" oninput="hitungOtomatis('${simbol}', '${tbodyId}')" onclick="aktifkanColorPicker(this, event)">${d.price}</td>
+                <td><span class="${d.statusClass}" onclick="gantiStatus(this)">${d.statusText}</span></td>
+            </tr>`;
+        }
+    });
+    document.getElementById(tbodyId).innerHTML = htmlBaru;
+}
+
+function muatDataOtomatis() {
+    const logoTersimpan = localStorage.getItem('sistem_logo_permanen');
+    if (logoTersimpan) {
+        const logoImgs = document.querySelectorAll('.logo-preview-class');
+        logoImgs.forEach(img => {
+            img.src = logoTersimpan;
+            img.style.display = 'block';
         });
     }
 
-    window.onload = function() {
-        hitungOtomatis();
-    };
+    const judulTersimpan = localStorage.getItem("sistem_judul");
+    if(judulTersimpan) {
+        const judulSeks = document.querySelectorAll(".system-title-class");
+        judulSeks.forEach(j => { j.innerText = judulTersimpan; });
+    }
+
+    if(localStorage.getItem('sistem_theme')) {
+        let t = localStorage.getItem('sistem_theme');
+        document.getElementById("themeSelect").value = t;
+        if (t === "light") document.documentElement.setAttribute("data-theme", "light");
+    }
+    if(localStorage.getItem('sistem_font')) {
+        let f = localStorage.getItem('sistem_font');
+        document.getElementById("fontSelect").value = f;
+        const kontainers = document.querySelectorAll(".dashboard-container");
+        kontainers.forEach(k => { k.style.fontFamily = f; });
+    }
+    if(localStorage.getItem('sistem_logo_size')) {
+        let s = localStorage.getItem('sistem_logo_size');
+        document.getElementById("logoSizeSlider").value = s;
+        const logoImgs = document.querySelectorAll('.logo-preview-class');
+        logoImgs.forEach(img => { img.style.height = s + "px"; });
+    }
+    if(localStorage.getItem('sistem_title_size')) {
+        let s = localStorage.getItem('sistem_title_size');
+        document.getElementById("titleSizeSlider").value = s;
+        const judulSeks = document.querySelectorAll(".system-title-class");
+        judulSeks.forEach(j => { j.style.fontSize = s + "px"; });
+    }
+    if(localStorage.getItem('sistem_align_position')) {
+        let p = localStorage.getItem('sistem_align_position');
+        document.getElementById("alignSlider").value = p;
+        const headers = document.querySelectorAll(".header-alignment-class");
+        headers.forEach(header => {
+            if (p == "1") header.style.justifyContent = "flex-start";
+            else if (p == "2") header.style.justifyContent = "center";
+            else if (p == "3") header.style.justifyContent = "flex-end";
+        });
+    }
+
+    const savedRM = localStorage.getItem("sistem_data_rm");
+    if(savedRM) bangunUlangTabel(JSON.parse(savedRM), "isiTabelRM", "RM");
+    
+    const savedRP = localStorage.getItem("sistem_data_rp");
+    if(savedRP) bangunUlangTabel(JSON.parse(savedRP), "isiTabelRP", "Rp");
+
+    if(localStorage.getItem('sistem_text_size')) {
+        let s = localStorage.getItem('sistem_text_size');
+        document.getElementById("textSizeSlider").value = s;
+        ubahUkuranTeks();
+    } else {
+        hitungOtomatis('RM', 'isiTabelRM');
+        hitungOtomatis('Rp', 'isiTabelRP');
+    }
+    
+    const allCells = document.querySelectorAll(".dashboard-container td, .system-title-class");
+    allCells.forEach(cell => {
+        if (!cell.hasAttribute('data-user-colored') && cell.getAttribute('data-type') !== 'price') {
+            cell.style.color = "var(--text-main)";
+        }
+    });
+    formatUlangPrice('RM', 'isiTabelRM');
+    formatUlangPrice('Rp', 'isiTabelRP');
+}
+
+/* FUNGSI UTAMAKAN UNDUH PER PANEL KONTAINER SECARA TERPISAH */
+function unduhGambarPanel(idPanel, namaFile) {
+    const targetElement = document.getElementById(idPanel);
+    html2canvas(targetElement,{
+        scale: 2,
+        useCORS: true,
+        backgroundColor: document.documentElement.getAttribute("data-theme") === "light" ? "#ffffff" : "#1e1f20"
+    }).then(canvas => {
+        const linkDesc = document.createElement("a");
+        linkDesc.download = namaFile;
+        linkDesc.href = canvas.toDataURL("image/png");
+        linkDesc.click();
+    });
+}
+
+document.querySelector(".main-content").addEventListener("input", function() {
+    simpanSemuaDataKeStorage();
+});
+
+window.onload = function(){
+    muatDataOtomatis();
+};
 </script>
 </body>
 </html>
