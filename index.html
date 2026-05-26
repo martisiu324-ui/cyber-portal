@@ -44,17 +44,15 @@
             padding: 20px;
         }
 
-        /* ==========================================================================
-           STYLE TAMBAHAN: CANVAS MODE GAGAK TERBANG
-           ========================================================================== */
+        /* CANVAS MODE GAGAK TERBANG */
         #crowCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 1;          /* Berada tepat di atas background, di bawah menu */
-            pointer-events: none; /* Supaya klik mouse tembus dan tombol menu tetap bisa diklik */
+            z-index: 1;          
+            pointer-events: none; 
         }
 
         /* CONTAINER UTAMA */
@@ -64,7 +62,7 @@
             margin: auto;
             padding: 20px;
             text-align: center;
-            z-index: 10; /* Berada di atas canvas gagak */
+            z-index: 10; 
             animation: popInContainer 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -73,7 +71,7 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 11px;
             letter-spacing: 3px;
-            color: #7a5257; /* Merah pudar agar tidak terlalu mencolok */
+            color: #7a5257; 
             text-transform: uppercase;
             font-weight: 700;
             margin-bottom: 20px;
@@ -160,7 +158,6 @@
         }
         .menu-card:hover::before { left: 150%; }
 
-        /* GAGAK ITACHI BERSEMBUNYI DI SETIAP KARTU */
         .menu-card::after {
             content: '';
             position: absolute;
@@ -222,7 +219,6 @@
         .card-orange:hover i { color: var(--neon-orange) !important; filter: drop-shadow(0 0 10px var(--neon-orange)); }
         .card-orange:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-orange); }
 
-        /* KARTU VIP EMAS */
         .card-gold:hover { box-shadow: 0 20px 40px rgba(255, 170, 0, 0.4); border-color: var(--neon-gold); }
         .card-gold:hover i { color: var(--neon-gold) !important; filter: drop-shadow(0 0 10px var(--neon-gold)); }
         .card-gold:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-gold); }
@@ -269,13 +265,14 @@
 
         .martis-loader-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 48px;
+            font-size: calc(24px + 1.5vw); /* Disesuaikan dinamis agar nama panjang tidak berantakan */
             font-weight: 900;
             color: #ffffff;
-            letter-spacing: 12px;
+            letter-spacing: 8px;
             margin-bottom: 20px;
             text-transform: uppercase;
             position: relative;
+            text-align: center;
             text-shadow: 0 0 15px var(--neon-red), 0 0 30px var(--neon-crimson);
             animation: martisGlow 1.5s infinite alternate, martisGlitch 1.2s infinite;
         }
@@ -372,7 +369,6 @@
             line-height: 1.5;
             transition: color 0.3s ease;
         }
-        /* Style teks dinamis ketika password salah */
         .crypto-modal-box p.error-text {
             color: var(--neon-red) !important;
             font-weight: 700;
@@ -456,7 +452,7 @@
     <div class="central-container" id="mainMenuLayout">
         
         <div class="mini-clock-box">
-            <span id="live-date">MINGGU, 17 MEI 2026</span>
+            <span id="live-date">KAMIS, 26 MEI 2026</span>
             <span>•</span>
             <span id="live-time">12:00:00 AM</span>
         </div>
@@ -465,28 +461,29 @@
         <div class="portal-subtitle">Selamat menikmati</div>
         
         <div class="menu-grid">
-            <div class="menu-card card-red" onclick="bukaProyek('dashboard_elite.html', 'Dashboard Digital MYT')">
+            <div class="menu-card card-red" onclick="bukaProyek('dashboard_elite.html', 'ELITE DASHBOARD')">
                 <i class="material-icons">dashboard</i>
                 <span>Dashboard Digital MYT</span>
             </div>
             
-            <div class="menu-card card-cyan" onclick="bukaProyek('ngetik.html', 'Tes Typing')">
+            <div class="menu-card card-cyan" onclick="bukaProyek('ngetik.html', 'SPEED TYPING')">
                 <i class="material-icons">keyboard</i>
                 <span>Tes Typing</span>
             </div>
             
-            <div class="menu-card card-purple" onclick="bukaProyek('Martispanel.html', 'Details Last Product')" style="position: relative;">
+            <div class="menu-card card-purple" onclick="bukaProyek('Martispanel.html', 'ULTIMATE PANEL')" style="position: relative;">
                 <i class="material-icons" style="position: absolute; top: 15px; right: 15px; font-size: 18px; color: var(--neon-purple); opacity: 0.7;">lock</i>
                 <i class="material-icons">verified_user</i>
                 <span>Details Last Product</span>
             </div>
             
-            <div class="menu-card card-orange" onclick="bukaProyek('sharinggan.html', 'Tsukuyomi')">
+            <div class="menu-card card-orange" onclick="bukaProyek('sharinggan.html', 'TSUKUYOMI REALM')">
                 <i class="material-icons">remove_red_eye</i>
                 <span>Tsukuyomi Genjutsu</span>
             </div>
 
-            <div class="menu-card card-gold" onclick="bukaProyek('vip.html', 'Senarai VIP')">
+            <div class="menu-card card-gold" onclick="bukaProyek('vip.html', 'VIP VAULT')" style="position: relative;">
+                <i class="material-icons" style="position: absolute; top: 15px; right: 15px; font-size: 18px; color: var(--neon-gold); opacity: 0.7;">lock</i>
                 <i class="material-icons">workspace_premium</i>
                 <span>Senarai VIP</span>
             </div>
@@ -505,7 +502,7 @@
     <iframe src="" id="portalFrame" class="content-frame" style="display: none; opacity: 0;"></iframe>
 
     <div class="loading-overlay" id="loadingScreen">
-        <div class="martis-loader-text">MARTIS</div>
+        <div class="martis-loader-text" id="loaderTitle">MARTIS</div>
         <div class="loading-log" id="loadingLog">Casting Genjutsu spell...</div>
         <div class="progress-container">
             <div class="progress-bar" id="loadBar"></div>
@@ -614,7 +611,7 @@
 
 
         // ==========================================================================
-        // LOGIK UTAMA NAVIGATION & ROUTER SYSTEM PORTAL
+        // LOGIK UTAMA NAVIGATION & ROUTER SYSTEM PORTAL (DYNAMIC LOADING TITLE)
         // ==========================================================================
         const logsMasuk = [
             "Weaving Tsukuyomi signs...",
@@ -631,16 +628,28 @@
         ];
         
         let fileAntrean = "";
+        let namaLoadingAntrean = "";
 
-        function bukaProyek(namaFile, namaMenu) {
-            if (namaFile === 'Martispanel.html') {
+        // UPDATE: Menerima parameter nama loader keren dari klik menu kartu
+        function bukaProyek(namaFile, namaLoaderKeren) {
+            if (namaFile === 'Martispanel.html' || namaFile === 'vip.html') {
                 fileAntrean = namaFile; 
+                namaLoadingAntrean = namaLoaderKeren; // Simpan nama keren ke antrean
                 
                 const hintText = document.getElementById('modalHintText');
                 const modalIcon = document.getElementById('modalIcon');
                 const passwordInput = document.getElementById('cyberPasswordInput');
                 
-                hintText.innerText = "Masukkan kunci chakra untuk mendekripsi data Martis Panel.";
+                if (namaFile === 'vip.html') {
+                    hintText.innerText = "Masukkan kunci chakra untuk mendekripsi data Senarai VIP.";
+                    modalIcon.style.color = "var(--neon-gold)";
+                    modalIcon.style.filter = "drop-shadow(0 0 15px var(--neon-gold))";
+                } else {
+                    hintText.innerText = "Masukkan kunci chakra untuk mendekripsi data Martis Panel.";
+                    modalIcon.style.color = "var(--neon-purple)";
+                    modalIcon.style.filter = "drop-shadow(0 0 15px var(--neon-purple))";
+                }
+                
                 hintText.classList.remove('error-text');
                 modalIcon.classList.remove('error-state');
                 passwordInput.classList.remove('error-field');
@@ -650,10 +659,13 @@
                 setTimeout(() => { passwordInput.focus(); }, 400);
                 return; 
             }
-            eksekusiBukaProyek(namaFile);
+            eksekusiBukaProyek(namaFile, namaLoaderKeren);
         }
 
-        function eksekusiBukaProyek(namaFile) {
+        // UPDATE: Menyuntikkan namaLoaderKeren ke elemen loader sebelum animasi dijalankan
+        function eksekusiBukaProyek(namaFile, namaLoaderKeren) {
+            document.getElementById('loaderTitle').innerText = namaLoaderKeren;
+            
             jalankanLoadingAnimation(logsMasuk, () => {
                 const iframe = document.getElementById('portalFrame');
                 document.getElementById('mainMenuLayout').style.display = 'none';
@@ -666,13 +678,11 @@
                 }, 50);
                 
                 sessionStorage.setItem('halamanTerakhir', namaFile);
-
-                // TAMBAHAN: Membuat titik riwayat baru di browser saat membuka proyek
                 history.pushState({ proyekTerbuka: true }, "");
             });
         }
 
-        // SISTEM KEMBALI KORPORAT: Menutup proyek dengan transisi rilis Genjutsu asli
+        // KEMBALI KE PORTAL / CORE SYSTEM: Tetap dikunci menggunakan tulisan "MARTIS"
         function resetPortal() {
             sessionStorage.removeItem('halamanTerakhir');
             const iframe = document.getElementById('portalFrame');
@@ -682,30 +692,40 @@
             
             setTimeout(() => {
                 iframe.style.display = 'none';
+                // Reset teks loader screen kembali ke "MARTIS" sesuai instruksi
+                document.getElementById('loaderTitle').innerText = "MARTIS";
+                
                 jalankanLoadingAnimation(logsKeluar, () => {
                     location.reload();
                 });
             }, 300);
         }
 
-        // TAMBAHAN: Mendengarkan aksi tombol back bawaan HP / Browser Google
         window.addEventListener('popstate', function(event) {
             const halamanTerakhir = sessionStorage.getItem('halamanTerakhir');
-            
             if (halamanTerakhir) {
                 resetPortal();
             }
         });
 
         function konfirmasiPassword() {
-            const passwordBenar = "martis420"; 
+            const passwordMartisPanel = "martis420"; 
+            const passwordVIP = "elmar107"; 
+            
             const passwordInput = document.getElementById('cyberPasswordInput');
             const hintText = document.getElementById('modalHintText');
             const modalIcon = document.getElementById('modalIcon');
 
+            let passwordBenar = "";
+            if (fileAntrean === "vip.html") {
+                passwordBenar = passwordVIP;
+            } else {
+                passwordBenar = passwordMartisPanel;
+            }
+
             if (passwordInput.value === passwordBenar) {
                 document.getElementById('passwordModal').classList.remove('show');
-                eksekusiBukaProyek(fileAntrean);
+                eksekusiBukaProyek(fileAntrean, namaLoadingAntrean);
             } else {
                 modalIcon.classList.remove('error-state');
                 void modalIcon.offsetWidth; 
@@ -721,6 +741,7 @@
         function tutupModalPassword() {
             document.getElementById('passwordModal').classList.remove('show');
             fileAntrean = "";
+            namaLoadingAntrean = "";
         }
 
         function jalankanLoadingAnimation(databaseLog, callbackSelesai, isSlow = false) {
@@ -803,6 +824,9 @@
                     const iframe = document.getElementById('portalFrame');
                     iframe.style.display = 'none';
                     iframe.src = "";
+
+                    // Saat booting awal system, nama loader tetap "MARTIS"
+                    document.getElementById('loaderTitle').innerText = "MARTIS";
 
                     jalankanLoadingAnimation(logsLogin, () => {
                         document.getElementById('mainMenuLayout').style.display = 'block';
