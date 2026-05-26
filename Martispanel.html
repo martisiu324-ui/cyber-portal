@@ -818,7 +818,7 @@ function hitungOtomatis(simbol, tbodyId){
     let currentBalance = initialBalance;
     for(let i = totalBaris - 2; i >= 0; i--) {
         let hargaBarisBawahnya = hargaProduk[(totalBaris - 1) - (i + 1)];
-        currentBalance = currentBalance - hargaBarisBawahnya;
+        currentBalance = currentBalance + hargaBarisBawahnya;
         baris[i].querySelector('[data-type="balance"]').innerText = formatUang(currentBalance, simbol);
     }
     
