@@ -8,16 +8,54 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
-        /* PALET WARNA AKATSUKI / GENJUTSU TOTAL */
+        /* PALET WARNA DASAR & VARIASI TEMA KEKINIAN */
         :root {
             --bg-dark: #020204;
-            --panel-glass: rgba(15, 5, 8, 0.65); /* Kaca gelap dengan tint merah tua */
-            --neon-red: #ff1e27;      /* Merah Akatsuki Utama */
-            --neon-crimson: #9e0006;  /* Merah Darah Gelap */
-            --neon-purple: #7000ad;   /* Ungu Genjutsu */
-            --neon-orange: #ff5500;   /* Jingga Api */
-            --neon-gold: #ffaa00;     /* Emas VIP */
-            --neon-blue: #00a2ff;     /* Biru Support */
+            --panel-glass: rgba(15, 5, 8, 0.65); 
+            --neon-red: #ff1e27;      
+            --neon-crimson: #9e0006;  
+            --neon-purple: #7000ad;   
+            --neon-orange: #ff5500;   
+            --neon-gold: #ffaa00;     
+            --neon-blue: #00a2ff;     
+        }
+
+        body.theme-akatsuki {
+            --bg-dark: #020204;
+            --panel-glass: rgba(15, 5, 8, 0.65);
+            --neon-red: #ff1e27;
+            --neon-crimson: #9e0006;
+            --neon-purple: #7000ad;
+        }
+
+        body.theme-cyberpunk {
+            --bg-dark: #090214;
+            --panel-glass: rgba(22, 10, 35, 0.65);
+            --neon-red: #00f0ff;      
+            --neon-crimson: #ff0055;  
+            --neon-purple: #9d00ff;
+            --neon-orange: #00ffaa;
+            --neon-gold: #ff00aa;
+        }
+
+        body.theme-hacker {
+            --bg-dark: #010804;
+            --panel-glass: rgba(5, 20, 10, 0.65);
+            --neon-red: #39ff14;      
+            --neon-crimson: #008f11;
+            --neon-purple: #00ff88;
+            --neon-orange: #adff2f;
+            --neon-gold: #ffff00;
+        }
+
+        body.theme-gold {
+            --bg-dark: #080601;
+            --panel-glass: rgba(22, 18, 10, 0.65);
+            --neon-red: #ffcc00;      
+            --neon-crimson: #997700;
+            --neon-purple: #ff6600;
+            --neon-orange: #ffaa00;
+            --neon-gold: #ffffff;
         }
 
         * {
@@ -28,11 +66,6 @@
 
         body {
             background-color: var(--bg-dark);
-            /* Background Dunia Genjutsu (Merah & Hitam) */
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 30, 39, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 90% 80%, rgba(112, 0, 173, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at center, #0d0406 0%, #020204 100%);
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: #ffffff;
             min-height: 100vh;
@@ -42,20 +75,42 @@
             overflow-x: hidden;
             perspective: 1000px;
             padding: 20px;
+            transition: background-color 0.5s ease;
         }
 
-        /* CANVAS MODE GAGAK TERBANG */
+        body.theme-akatsuki {
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 30, 39, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(112, 0, 173, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at center, #0d0406 0%, #020204 100%);
+        }
+        body.theme-cyberpunk {
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 85, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at center, #110521 0%, #090214 100%);
+        }
+        body.theme-hacker {
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(57, 255, 20, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 136, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at center, #02140a 0%, #010804 100%);
+        }
+        body.theme-gold {
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 204, 0, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(255, 102, 0, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at center, #1c1405 0%, #080601 100%);
+        }
+
         #crowCanvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             z-index: 1;          
             pointer-events: none; 
         }
 
-        /* CONTAINER UTAMA */
         .central-container {
             width: 100%;
             max-width: 1200px;
@@ -66,11 +121,11 @@
             animation: popInContainer 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* LIVE CLOCK MINI DI ATAS BRAND */
+        /* LIVE CLOCK & CONTROLS */
         .mini-clock-box {
             font-family: 'Orbitron', sans-serif;
             font-size: 11px;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             color: #7a5257; 
             text-transform: uppercase;
             font-weight: 700;
@@ -83,6 +138,7 @@
             padding: 6px 16px;
             border-radius: 20px;
             border: 1px solid rgba(255, 30, 39, 0.05);
+            position: relative;
         }
 
         .mini-clock-box #live-time {
@@ -90,7 +146,77 @@
             text-shadow: 0 0 10px var(--neon-red);
         }
 
-        /* HEADER BRAND - MERAH TSURUGI GLOW */
+        /* DROPDOWN CONTAINER TEMA */
+        .theme-selector-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .theme-btn {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--neon-red);
+            font-weight: 900;
+            transition: all 0.3s ease;
+        }
+
+        .theme-btn:hover {
+            filter: brightness(1.3);
+            text-shadow: 0 0 8px var(--neon-red);
+        }
+
+        .theme-dropdown {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            background: rgba(10, 5, 8, 0.95);
+            border: 1px solid var(--neon-red);
+            border-radius: 12px;
+            padding: 6px 0;
+            width: 180px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(255,30,39,0.1);
+            display: none;
+            z-index: 1001;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-dropdown.show {
+            display: block;
+            animation: dropdownFade 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .theme-option {
+            padding: 10px 14px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            color: #a38588;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-option:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+        }
+
+        .theme-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-akatsuki { background: #ff1e27; box-shadow: 0 0 6px #ff1e27; }
+        .dot-cyberpunk { background: #00f0ff; box-shadow: 0 0 6px #00f0ff; }
+        .dot-hacker { background: #39ff14; box-shadow: 0 0 6px #39ff14; }
+        .dot-gold { background: #ffcc00; box-shadow: 0 0 6px #ffcc00; }
+
         .portal-brand {
             font-family: 'Orbitron', sans-serif;
             font-size: calc(24px + 2vw);
@@ -116,7 +242,6 @@
             text-shadow: 0 0 10px rgba(255, 30, 39, 0.2);
         }
 
-        /* GRID MENU RESPONSIF */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -125,7 +250,6 @@
             width: 100%;
         }
 
-        /* KARTU MENU AKATSUKI GLASSMORPHISM */
         .menu-card {
             background: var(--panel-glass);
             -webkit-backdrop-filter: blur(16px);
@@ -146,7 +270,6 @@
             z-index: 1;
         }
 
-        /* Efek kilatan merah saat di-hover */
         .menu-card::before {
             content: '';
             position: absolute;
@@ -190,7 +313,6 @@
             transition: all 0.4s ease;
         }
 
-        /* HOVER KARTU */
         .menu-card:hover {
             transform: translateY(-8px) scale(1.02);
             background: rgba(22, 6, 10, 0.9);
@@ -202,7 +324,6 @@
             transform: translate(-50%, -50%) scale(1.15);
         }
 
-        /* Variasi Cahaya Pendaran Tiap Tombol */
         .card-red:hover { box-shadow: 0 20px 40px rgba(255, 30, 39, 0.35); border-color: var(--neon-red); }
         .card-red:hover i { color: var(--neon-red) !important; filter: drop-shadow(0 0 10px var(--neon-red)); }
         .card-red:hover span { color: #fff; text-shadow: 0 0 8px var(--neon-red); }
@@ -234,7 +355,6 @@
             letter-spacing: 2px;
         }
 
-        /* IFRAME JENDELA KONTEN */
         .content-frame {
             position: fixed;
             top: 0; left: 0;
@@ -246,7 +366,6 @@
             transform: scale(0.97);
         }
 
-        /* OVERLAY LOADING SCREEN */
         .loading-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -265,7 +384,7 @@
 
         .martis-loader-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: calc(24px + 1.5vw); /* Disesuaikan dinamis agar nama panjang tidak berantakan */
+            font-size: calc(24px + 1.5vw); 
             font-weight: 900;
             color: #ffffff;
             letter-spacing: 8px;
@@ -307,14 +426,19 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* STYLING DIALOG MODAL PASSWORD */
+        @keyframes dropdownFade {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* STYLING DIALOG MODAL PASSWORD DEKRIPSI GLOBAL */
         .crypto-modal-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: rgba(2, 2, 4, 0.85);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
+            background: rgba(2, 2, 4, 0.9);
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
             z-index: 10005;
             display: flex;
             justify-content: center;
@@ -328,13 +452,13 @@
             pointer-events: auto;
         }
         .crypto-modal-box {
-            background: rgba(20, 8, 12, 0.9);
+            background: rgba(20, 8, 12, 0.95);
             border: 2px solid var(--neon-purple);
             box-shadow: 0 0 35px rgba(112, 0, 173, 0.4), inset 0 0 15px rgba(112, 0, 173, 0.2);
             border-radius: 24px;
-            padding: 35px 30px;
+            padding: 40px 30px;
             width: 90%;
-            max-width: 380px;
+            max-width: 400px;
             text-align: center;
             transform: scale(0.85) translateY(20px);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -404,7 +528,7 @@
         }
         .modal-btn-group button {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             border: none;
             border-radius: 12px;
             font-family: 'Orbitron', sans-serif;
@@ -414,15 +538,6 @@
             cursor: pointer;
             text-transform: uppercase;
             transition: all 0.3s ease;
-        }
-        .btn-cancel {
-            background: rgba(255, 255, 255, 0.05);
-            color: #a38588;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        }
-        .btn-cancel:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
         }
         .btn-confirm {
             background: linear-gradient(135deg, var(--neon-purple), #a800ff);
@@ -445,16 +560,36 @@
         }
     </style>
 </head>
-<body>
+<body class="theme-akatsuki">
 
     <canvas id="crowCanvas"></canvas>
 
-    <div class="central-container" id="mainMenuLayout">
+    <div class="central-container" id="mainMenuLayout" style="display: none;">
         
         <div class="mini-clock-box">
             <span id="live-date">KAMIS, 26 MEI 2026</span>
             <span>•</span>
             <span id="live-time">12:00:00 AM</span>
+            <span>•</span>
+            <div class="theme-selector-container">
+                <span class="theme-btn" onclick="toggleThemeDropdown(event)">
+                    <i class="material-icons" style="font-size: 13px; vertical-align: middle;">palette</i> TEMA
+                </span>
+                <div class="theme-dropdown" id="themeDropdown">
+                    <div class="theme-option" onclick="gantiTema('akatsuki')">
+                        <span class="theme-dot dot-akatsuki"></span> GENJUTSU DEFAULT
+                    </div>
+                    <div class="theme-option" onclick="gantiTema('cyberpunk')">
+                        <span class="theme-dot dot-cyberpunk"></span> CYBER NEON
+                    </div>
+                    <div class="theme-option" onclick="gantiTema('hacker')">
+                        <span class="theme-dot dot-hacker"></span> MATRIX DIGITAL
+                    </div>
+                    <div class="theme-option" onclick="gantiTema('gold')">
+                        <span class="theme-dot dot-gold"></span> MONARCH VIP
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="portal-brand">Core System</div>
@@ -471,8 +606,7 @@
                 <span>Tes Typing</span>
             </div>
             
-            <div class="menu-card card-purple" onclick="bukaProyek('Martispanel.html', 'ULTIMATE PANEL')" style="position: relative;">
-                <i class="material-icons" style="position: absolute; top: 15px; right: 15px; font-size: 18px; color: var(--neon-purple); opacity: 0.7;">lock</i>
+            <div class="menu-card card-purple" onclick="bukaProyek('Martispanel.html', 'ULTIMATE PANEL')">
                 <i class="material-icons">verified_user</i>
                 <span>Details Last Product</span>
             </div>
@@ -482,8 +616,7 @@
                 <span>Tsukuyomi Genjutsu</span>
             </div>
 
-            <div class="menu-card card-gold" onclick="bukaProyek('vip.html', 'VIP VAULT')" style="position: relative;">
-                <i class="material-icons" style="position: absolute; top: 15px; right: 15px; font-size: 18px; color: var(--neon-gold); opacity: 0.7;">lock</i>
+            <div class="menu-card card-gold" onclick="bukaProyek('vip.html', 'VIP VAULT')">
                 <i class="material-icons">workspace_premium</i>
                 <span>Senarai VIP</span>
             </div>
@@ -495,7 +628,7 @@
         </div>
 
         <div class="central-footer">
-            GENJUTSU OVERLAY ACTIVE // INFINITE TSUKUYOMI DEPLOYED
+            CORE LINK ESTABLISHED // SYSTEM ONLINE
         </div>
     </div>
 
@@ -511,22 +644,21 @@
 
     <div class="crypto-modal-overlay" id="passwordModal">
         <div class="crypto-modal-box">
-            <i class="material-icons modal-lock-icon" id="modalIcon">security</i>
-            <h3>Akses Terkunci</h3>
-            <p id="modalHintText">Masukkan kunci chakra untuk mendekripsi data Martis Panel.</p>
+            <i class="material-icons modal-lock-icon" id="modalIcon">vpn_key</i>
+            <h3>Dekripsi Portal</h3>
+            <p id="modalHintText">Masukkan kunci akses core system untuk membongkar enkripsi.</p>
             
             <input type="password" id="cyberPasswordInput" placeholder="ENTER ACCESS KEY..." autocomplete="off">
             
             <div class="modal-btn-group">
-                <button class="btn-cancel" onclick="tutupModalPassword()">Batal</button>
-                <button class="btn-confirm" onclick="konfirmasiPassword()">Akses</button>
+                <button class="btn-confirm" style="width: 100%;" onclick="konfirmasiPassword()">Otorisasi Akses</button>
             </div>
         </div>
     </div>
 
 <script>
         // ==========================================================================
-        // ENGINE ANIMASI MODE GAGAK (CANVAS LOOP) - HIGH DENSITY
+        // ENGINE ANIMASI MODE GAGAK (CANVAS LOOP) - DYNAMIC COLOR MATCHING
         // ==========================================================================
         const canvas = document.getElementById('crowCanvas');
         const ctx = canvas.getContext('2d');
@@ -572,8 +704,11 @@
                 ctx.translate(this.x, this.y);
                 ctx.fillStyle = '#050304';
                 
+                // Mengambil nilai variabel CSS neon-red secara real-time berdasarkan tema aktif
+                let neonColor = getComputedStyle(document.body).getPropertyValue('--neon-red').trim();
+
                 if (this.size > 11) {
-                    ctx.shadowColor = '#ff1e27';
+                    ctx.shadowColor = neonColor;
                     ctx.shadowBlur = this.size > 15 ? 6 : 3; 
                 }
 
@@ -611,7 +746,28 @@
 
 
         // ==========================================================================
-        // LOGIK UTAMA NAVIGATION & ROUTER SYSTEM PORTAL (DYNAMIC LOADING TITLE)
+        // FITUR PENGATURAN GANTI TEMA PORTAL
+        // ==========================================================================
+        function toggleThemeDropdown(event) {
+            event.stopPropagation();
+            document.getElementById('themeDropdown').classList.toggle('show');
+        }
+
+        function gantiTema(namaTema) {
+            document.body.className = ''; 
+            document.body.classList.add('theme-' + namaTema);
+            localStorage.setItem('portalAksesTema', namaTema);
+            document.getElementById('themeDropdown').classList.remove('show');
+        }
+
+        // Tutup dropdown otomatis jika nge-klik di luar area menu
+        window.addEventListener('click', function() {
+            document.getElementById('themeDropdown').classList.remove('show');
+        });
+
+
+        // ==========================================================================
+        // LOGIK NAVIGATION & INITIALIZATION ENGINE
         // ==========================================================================
         const logsMasuk = [
             "Weaving Tsukuyomi signs...",
@@ -626,44 +782,8 @@
             "Rebuilding Akatsuki Core UI...",
             "WELCOME BACK TO THE RED WORLD!"
         ];
-        
-        let fileAntrean = "";
-        let namaLoadingAntrean = "";
 
-        // UPDATE: Menerima parameter nama loader keren dari klik menu kartu
         function bukaProyek(namaFile, namaLoaderKeren) {
-            if (namaFile === 'Martispanel.html' || namaFile === 'vip.html') {
-                fileAntrean = namaFile; 
-                namaLoadingAntrean = namaLoaderKeren; // Simpan nama keren ke antrean
-                
-                const hintText = document.getElementById('modalHintText');
-                const modalIcon = document.getElementById('modalIcon');
-                const passwordInput = document.getElementById('cyberPasswordInput');
-                
-                if (namaFile === 'vip.html') {
-                    hintText.innerText = "Masukkan kunci chakra untuk mendekripsi data Senarai VIP.";
-                    modalIcon.style.color = "var(--neon-gold)";
-                    modalIcon.style.filter = "drop-shadow(0 0 15px var(--neon-gold))";
-                } else {
-                    hintText.innerText = "Masukkan kunci chakra untuk mendekripsi data Martis Panel.";
-                    modalIcon.style.color = "var(--neon-purple)";
-                    modalIcon.style.filter = "drop-shadow(0 0 15px var(--neon-purple))";
-                }
-                
-                hintText.classList.remove('error-text');
-                modalIcon.classList.remove('error-state');
-                passwordInput.classList.remove('error-field');
-                passwordInput.value = ""; 
-
-                document.getElementById('passwordModal').classList.add('show'); 
-                setTimeout(() => { passwordInput.focus(); }, 400);
-                return; 
-            }
-            eksekusiBukaProyek(namaFile, namaLoaderKeren);
-        }
-
-        // UPDATE: Menyuntikkan namaLoaderKeren ke elemen loader sebelum animasi dijalankan
-        function eksekusiBukaProyek(namaFile, namaLoaderKeren) {
             document.getElementById('loaderTitle').innerText = namaLoaderKeren;
             
             jalankanLoadingAnimation(logsMasuk, () => {
@@ -682,7 +802,6 @@
             });
         }
 
-        // KEMBALI KE PORTAL / CORE SYSTEM: Tetap dikunci menggunakan tulisan "MARTIS"
         function resetPortal() {
             sessionStorage.removeItem('halamanTerakhir');
             const iframe = document.getElementById('portalFrame');
@@ -692,7 +811,6 @@
             
             setTimeout(() => {
                 iframe.style.display = 'none';
-                // Reset teks loader screen kembali ke "MARTIS" sesuai instruksi
                 document.getElementById('loaderTitle').innerText = "MARTIS";
                 
                 jalankanLoadingAnimation(logsKeluar, () => {
@@ -708,24 +826,30 @@
             }
         });
 
+        // OTORISASI AKSES GLOBAL (ENTRY GATE PASSWORD)
         function konfirmasiPassword() {
-            const passwordMartisPanel = "elmar107"; 
-            const passwordVIP = "elmar107"; 
-            
+            const passwordAksesUtama = "elmar107"; 
             const passwordInput = document.getElementById('cyberPasswordInput');
             const hintText = document.getElementById('modalHintText');
             const modalIcon = document.getElementById('modalIcon');
 
-            let passwordBenar = "";
-            if (fileAntrean === "vip.html") {
-                passwordBenar = passwordVIP;
-            } else {
-                passwordBenar = passwordMartisPanel;
-            }
-
-            if (passwordInput.value === passwordBenar) {
+            if (passwordInput.value === passwordAksesUtama) {
                 document.getElementById('passwordModal').classList.remove('show');
-                eksekusiBukaProyek(fileAntrean, namaLoadingAntrean);
+                
+                const logsLogin = [
+                    "Connecting to Cyber Shinobi Network...",
+                    "Authenticating chakra signature...",
+                    "Bypassing security barriers...",
+                    "ACCESS GRANTED. INITIALIZING PORTAL!"
+                ];
+
+                document.getElementById('loaderTitle').innerText = "MARTIS";
+                
+                // Jalankan Loading boot system setelah password benar
+                jalankanLoadingAnimation(logsLogin, () => {
+                    document.getElementById('mainMenuLayout').style.display = 'block';
+                    sessionStorage.setItem('sudahLoginAwal', 'true'); 
+                }, true); 
             } else {
                 modalIcon.classList.remove('error-state');
                 void modalIcon.offsetWidth; 
@@ -736,12 +860,6 @@
                 passwordInput.value = "";
                 passwordInput.focus();
             }
-        }
-
-        function tutupModalPassword() {
-            document.getElementById('passwordModal').classList.remove('show');
-            fileAntrean = "";
-            namaLoadingAntrean = "";
         }
 
         function jalankanLoadingAnimation(databaseLog, callbackSelesai, isSlow = false) {
@@ -779,13 +897,15 @@
             }, 25); 
         }
 
+        // JAM MENYESUAIKAN WILAYAH DAN FORMAT LOKAL PENGGUNJA
         function jalankanJamRealTime() {
-            const opsiWaktu = { timeZone: 'Asia/Kuala_Lumpur', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            const opsiTanggal = { timeZone: 'Asia/Kuala_Lumpur', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            const opsiWaktu = { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const opsiTanggal = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
 
             const waktuSekarang = new Date();
-            let teksWaktu = waktuSekarang.toLocaleTimeString('id-ID', opsiWaktu).toUpperCase();
-            let teksTanggal = waktuSekarang.toLocaleDateString('id-ID', opsiTanggal).toUpperCase();
+            // Menghapus argumen lokasi spesifik agar sistem otomatis membaca locale default user
+            let teksWaktu = waktuSekarang.toLocaleTimeString(undefined, opsiWaktu).toUpperCase();
+            let teksTanggal = waktuSekarang.toLocaleDateString(undefined, opsiTanggal).toUpperCase();
             teksWaktu = teksWaktu.replace(/\./g, ':');
 
             document.getElementById('live-time').innerText = teksWaktu;
@@ -796,15 +916,12 @@
             setInterval(jalankanJamRealTime, 1000);
             jalankanJamRealTime();
 
+            // Memuat preferensi tema terakhir jika ada
+            const temaTersimpan = localStorage.getItem('portalAksesTema') || 'akatsuki';
+            gantiTema(temaTersimpan);
+
             const halamanTerakhir = sessionStorage.getItem('halamanTerakhir');
             const sudahLoginAwal = sessionStorage.getItem('sudahLoginAwal'); 
-            
-            const logsLogin = [
-                "Connecting to Cyber Shinobi Network...",
-                "Authenticating chakra signature...",
-                "Bypassing security barriers...",
-                "ACCESS GRANTED. INITIALIZING PORTAL!"
-            ];
 
             if (halamanTerakhir) {
                 const iframe = document.getElementById('portalFrame');
@@ -820,18 +937,10 @@
             } 
             else {
                 if (!sudahLoginAwal) {
+                    // Tahan interface, tampilkan gerbang password utama terlebih dahulu
                     document.getElementById('mainMenuLayout').style.display = 'none';
-                    const iframe = document.getElementById('portalFrame');
-                    iframe.style.display = 'none';
-                    iframe.src = "";
-
-                    // Saat booting awal system, nama loader tetap "MARTIS"
-                    document.getElementById('loaderTitle').innerText = "MARTIS";
-
-                    jalankanLoadingAnimation(logsLogin, () => {
-                        document.getElementById('mainMenuLayout').style.display = 'block';
-                        sessionStorage.setItem('sudahLoginAwal', 'true'); 
-                    }, true); 
+                    document.getElementById('passwordModal').classList.add('show');
+                    setTimeout(() => { document.getElementById('cyberPasswordInput').focus(); }, 400);
                 } 
                 else {
                     document.getElementById('mainMenuLayout').style.display = 'block';
@@ -846,5 +955,5 @@
             });
         };
     </script>
-    </body>
+</body>
 </html>
